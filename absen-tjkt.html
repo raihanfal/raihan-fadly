@@ -8,13 +8,12 @@
     * { box-sizing: border-box; }
     html,body { height: 100%; }
     body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0; padding: 0;
-      background: linear-gradient(270deg,#0f172a,#2563eb,#06b6d4,#7c3aed,#a90ddc);
-      background-size: 600% 600%;
-      animation: gradientBG 20s ease infinite;
-      color: #f8fafc;
-    }
+  background-color: #0c1320;
+  color: #e2e8f0;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
     @keyframes gradientBG {
       0%{background-position:0% 50%}
       50%{background-position:100% 50%}
@@ -61,17 +60,27 @@
       gap:18px; justify-content:center; list-style:none; margin:0; padding:0;
     }
     .daftar-siswa li {
-      background:linear-gradient(135deg,#062d6b,#6815b4,#c2156b);
+      background:#1e293b);
+      border: solid #334155 3px;
       color:white; font-weight:650; text-align:center;
       padding:18px 12px; border-radius:12px; cursor:pointer;
       transition:transform .25s, box-shadow .25s; opacity:0; animation:fadeInUp .5s forwards;
       min-height:90px; display:flex; align-items:center; gap:12px;
       box-shadow:0 6px 18px rgba(2,6,23,0.6);
     }
-    .daftar-siswa li:hover {
-      transform:translateY(-5px) scale(1.03);
-      box-shadow:0 0 20px rgba(59,130,246,0.8),0 0 40px rgba(147,51,234,0.6);
-    }
+  .daftar-siswa li {
+  background-color: #1a2233;       /* sedikit lebih terang dari body */
+  border: 3px solid #424d5f;       /* outline halus */
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: all 0.25s ease;
+}
+
+.daftar-siswa li:hover {
+  transform: translateY(-3px);
+  border-color: #475569;
+  box-shadow: 0 0 12px rgba(71,85,105,0.4);
+}
     .daftar-siswa li img.thumb {
       width:56px; height:56px; border-radius:8px; object-fit:cover; border:2px solid rgba(255,255,255,0.12);
     }
@@ -121,14 +130,112 @@
     @media (min-width: 1024px) {
       .daftar-siswa { grid-template-columns: repeat(3, 1fr); }
     }
+    /* === NAVBAR TAMBAHAN === */
+.hamburger {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 34px;
+  height: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  z-index: 9999;
+}
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 4px;
+  background: white;
+  border-radius: 3px;
+  transition: all 0.3s;
+}
+.hamburger.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+.side-nav {
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 230px;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(14px);
+  padding: 70px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+  transition: right 0.35s ease;
+  z-index: 9998;
+}
+.side-nav.show { right: 0; }
+
+.side-nav button {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+/* === Perbaikan warna tombol sidebar biar tidak kembali ke gradient === */
+.side-nav .filter-btn {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  color: #e2e8f0;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Hover baru (gelap lembut, bukan gradient) */
+.side-nav .filter-btn:hover {
+  background-color: #334155 !important;
+  border-color: #475569 !important;
+}
+
+/* Tombol aktif */
+.side-nav .filter-btn.active {
+  background-color: #334155 !important;
+  border-color: #64748b !important;
+}
+}
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #fff;
+}
+#pageSiswa .filter-btns {
+  display: none;
+}
   </style>
 </head>
 <body>
-  <header>
-    <h1>Absensi QRCode XI TJKT</h1>
-    <p>Klik nama siswa untuk melihat biodata & QR Code (semua kelas TJKT 1–4)</p>
-  </header>
+<header>
+  <h1>Absensi QRCode XI TJKT</h1>
+  <p>Klik nama siswa untuk melihat biodata & QR Code</p>
 
+  <!-- === NAVBAR / HAMBURGER BARU === -->
+  <div class="hamburger" id="menuBtn">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="side-nav" id="sideNav">
+    <div id="closeNav" class="close-btn"></div>
+    <button class="filter-btn" onclick="setKelas('TJKT 1', this)">TJKT 1</button>
+    <button class="filter-btn" onclick="setKelas('TJKT 2', this)">TJKT 2</button>
+    <button class="filter-btn" onclick="setKelas('TJKT 3', this)">TJKT 3</button>
+    <button class="filter-btn" onclick="setKelas('TJKT 4', this)">TJKT 4</button>
+    <hr style="border:0;border-top:1px solid rgba(255,255,255,0.2);margin:8px 0;">
+    <button class="filter-btn" onclick="showRekap()">📊 Laporan Absen</button>
+  </div>
+</header>
   <div class="container">
     <div id="pageSiswa">
       <div class="filter-btns">
@@ -840,6 +947,38 @@
 
 })();
  /* ---- realtime-poller ---- */
+  const menuBtn = document.getElementById('menuBtn');
+  const sideNav = document.getElementById('sideNav');
+  const closeNav = document.getElementById('closeNav');
+
+  // buka/tutup saat klik garis tiga
+  menuBtn.addEventListener('click', () => {
+    menuBtn.classList.toggle('active');
+    sideNav.classList.toggle('show');
+  });
+
+  // tombol X buat nutup
+  closeNav.addEventListener('click', () => {
+    menuBtn.classList.remove('active');
+    sideNav.classList.remove('show');
+  });
+
+  // klik luar sidebar nutup otomatis
+  document.addEventListener('click', (e) => {
+    const klikDiLuar = !sideNav.contains(e.target) && !menuBtn.contains(e.target);
+    if (klikDiLuar && sideNav.classList.contains('show')) {
+      sideNav.classList.remove('show');
+      menuBtn.classList.remove('active');
+    }
+  });
+  // Reset tombol aktif di sidebar saat pilih kelas baru
+  const navButtons = document.querySelectorAll('#sideNav .filter-btn');
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      navButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
   </script>
 </body>
 </html>
