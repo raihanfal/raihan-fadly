@@ -1,0 +1,347 @@
+<!DOCTYPE html>  <html lang="id">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <title>Absensi QRCode Voli</title>  
+  <style>  
+    * { box-sizing: border-box; }  
+    body {  
+      font-family: 'Poppins', sans-serif;  
+      margin: 0; padding: 0;  
+      background: linear-gradient(180deg, #e3f2fd, #fffbea);  
+      color: #222;  
+    }  header {  
+  background: linear-gradient(90deg, #004aad, #fcd307);  
+  color: white;  
+  text-align: center;  
+  padding: 40px 20px;  
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);  
+}  
+
+header h1 {  
+  margin: 0;  
+  font-size: 2em;  
+  text-transform: uppercase;  
+  letter-spacing: 2px;  
+}  
+
+header p {  
+  font-size: 1.1em;  
+  margin-top: 8px;  
+}  
+
+.container {  
+  max-width: 1000px;  
+  margin: 0 auto;  
+  padding: 20px;  
+}  
+
+.filter-btns {  
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;  
+  margin-bottom: 20px;  
+}  
+
+.filter-btn {  
+  background: #fcd307;  
+  color: #004aad;  
+  border: none;  
+  padding: 10px 18px;  
+  border-radius: 8px;  
+  font-weight: 600;  
+  cursor: pointer;  
+  transition: 0.3s;  
+}  
+
+.filter-btn:hover, .filter-btn.active {  
+  background: #004aad;  
+  color: #fff;  
+}  
+
+#searchInput {  
+  display: block;  
+  width: 100%;  
+  padding: 12px 14px;  
+  border-radius: 8px;  
+  border: 1px solid #ccc;  
+  font-size: 15px;  
+  margin-bottom: 20px;  
+}  
+
+ul.daftar-anggota {  
+  display: grid;  
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));  
+  gap: 16px;  
+  list-style: none;  
+  padding: 0;  
+  margin: 0;  
+}  
+
+ul.daftar-anggota li {  
+  background: #004aad;  
+  border: 3px solid #fcd307;  
+  border-radius: 10px;  
+  text-align: center;  
+  padding: 16px 10px;  
+  font-weight: 600;  
+  color: white;  
+  cursor: pointer;  
+  transition: 0.3s;  
+}  
+
+ul.daftar-anggota li:hover {  
+  background: #fcd307;  
+  color: #004aad;  
+}  
+
+.biodata {  
+  display: none;  
+  background: #fff;  
+  border-radius: 12px;  
+  padding: 20px;  
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);  
+  margin-top: 20px;  
+}  
+
+.biodata img {  
+  border-radius: 10px;  
+  max-width: 140px;  
+  border: 3px solid #004aad;  
+}  
+
+.back-btn {  
+  background: #fcd307;  
+  color: #004aad;  
+  padding: 10px 18px;  
+  border: none;  
+  border-radius: 6px;  
+  font-weight: bold;  
+  cursor: pointer;  
+  margin-top: 15px;  
+  transition: 0.3s;  
+}  
+
+.back-btn:hover {  
+  background: #004aad;  
+  color: white;  
+}  
+
+footer {  
+  text-align: center;  
+  font-size: 13px;  
+  color: #444;  
+  margin-top: 30px;  
+  padding: 12px 0;  
+  border-top: 2px solid #fcd307;  
+  background: #e3f2fd;  
+}  
+
+table {  
+  border-collapse: collapse;  
+  width: 90%;  
+  margin: 0 auto;  
+  background: white;  
+  border-radius: 8px;  
+  overflow: hidden;  
+}  
+
+th {  
+  background: #004aad;  
+  color: white;  
+  padding: 10px;  
+}  
+
+td {  
+  padding: 8px;  
+  border: 1px solid #ccc;  
+}  
+
+tr:nth-child(even) {  
+  background: #f9f9f9;  
+}
+
+  </style>  
+</head>  
+<body>  
+  <header>  
+    <h1>Absensi QRCode Voli</h1>  
+    <p>SMKN 1 KANDANGHAUR — Ekstrakurikuler Voli</p>  
+  </header>    <div class="container">  
+    <div id="pageAnggota">  
+      <div class="filter-btns" id="kelasBtns"></div>  <input type="text" id="searchInput" placeholder="Cari nama anggota..." onkeyup="cariAnggota()">  
+  <ul class="daftar-anggota" id="daftarAnggota"></ul>  
+
+  <div class="biodata" id="biodataBox">  
+    <div style="text-align:center;">  
+      <img id="photo" src="" alt="Foto anggota">  
+      <h2 id="namaB"></h2>  
+      <p><b>ID:</b> <span id="idB">-</span></p>  
+      <p><b>Kelas:</b> <span id="kelasB">-</span></p>  
+      <p><b>Kelompok:</b> Voli</p>  
+      <div>  
+        <h3>QR Code Absensi</h3>  
+        <img id="qr" src="" alt="QR Code">  
+      </div>  
+      <button class="back-btn" onclick="kembali()">← Kembali</button>  
+    </div>  
+  </div>  
+</div>  
+
+<div id="pageRekap" style="display:none; text-align:center; margin-top:20px;">  
+  <button class="back-btn" onclick="backToAnggota()">🏐 Kembali ke Data Anggota</button>  
+  <h2 style="margin-top:20px;">📊 Laporan Absensi Voli</h2>  
+  <table border="1" cellpadding="6" cellspacing="0">  
+    <thead>  
+      <tr><th>Waktu</th><th>Nama</th><th>ID</th><th>Kelas</th><th>Status</th></tr>  
+    </thead>  
+    <tbody id="rekapBody">  
+      <tr><td colspan="5">Data akan muncul otomatis...</td></tr>  
+    </tbody>  
+  </table>  
+</div>
+
+  </div>    <footer>  
+    &copy; 2025 By Emah Rahmawati | Ekstrakurikuler Voli  
+  </footer>    <script>  
+  const anggotaVoli = [
+    { nama: "AGUNG", id: "P009", kelas: "XI", qr: "agung.jpg", photo: "pp.jpg" },
+    { nama: "ATUL", id: "P002", kelas: "XI", qr: "atul.jpg", photo: "pp.jpg" },
+    { nama: "DANI", id: "P010", kelas: "XI", qr: "dani.jpg", photo: "pp.jpg" },
+    { nama: "DEWI", id: "P004", kelas: "XI", qr: "dewi.jpg", photo: "pp.jpg" },
+    { nama: "ELANG", id: "P008", kelas: "XI", qr: "elang.jpg", photo: "pp.jpg" },
+    { nama: "EMAH", id: "P003", kelas: "XI", qr: "emah.jpg", photo: "pp.jpg" },
+    { nama: "EON", id: "P014", kelas: "X", qr: "eon.jpg", photo: "pp.jpg" },
+    { nama: "FAHRI", id: "P015", kelas: "XI", qr: "fahri.jpg", photo: "pp.jpg" },
+    { nama: "GUNTUR", id: "P007", kelas: "XI", qr: "guntur.jpg", photo: "pp.jpg" },
+    { nama: "HAMDAN", id: "P012", kelas: "XI", qr: "hamdan.jpg", photo: "pp.jpg" },
+    { nama: "HUSNI", id: "P011", kelas: "XI", qr: "husni.jpg", photo: "pp.jpg" },
+    { nama: "MIRANDA", id: "P005", kelas: "X", qr: "miranda.jpg", photo: "pp.jpg" },
+    { nama: "NANDA", id: "P016", kelas: "X", qr: "nanda.jpg", photo: "pp.jpg" },
+    { nama: "NAWANG", id: "P001", kelas: "XI", qr: "nawang.jpg", photo: "pp.jpg" },
+    { nama: "PURI", id: "P006", kelas: "X", qr: "puri.jpg", photo: "pp.jpg" },
+    { nama: "WIRA", id: "P013", kelas: "XI", qr: "wira.jpg", photo: "pp.jpg" }
+    ];  
+  
+    let currentKelas = "Semua";  
+  
+    const daftar = document.getElementById('daftarAnggota');  
+    const biodataBox = document.getElementById('biodataBox');  
+    const kelasBtns = document.getElementById('kelasBtns');  
+  
+    function buatTombolKelas() {  
+      const kelasList = ["Semua", "X", "XI"];  
+      kelasList.forEach(kls => {  
+        const btn = document.createElement('button');  
+        btn.textContent = "Kelas " + kls;  
+        btn.className = "filter-btn" + (kls === "Semua" ? " active" : "");  
+        btn.onclick = () => setKelas(kls, btn);  
+        kelasBtns.appendChild(btn);  
+      });  
+  
+      const laporanBtn = document.createElement('button');  
+      laporanBtn.textContent = "📊 Laporan Absen";  
+      laporanBtn.className = "filter-btn";  
+      laporanBtn.onclick = showRekap;  
+      kelasBtns.appendChild(laporanBtn);  
+    }  
+  
+    function setKelas(kelas, el) {  
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));  
+      el.classList.add('active');  
+      currentKelas = kelas;  
+      renderList();  
+    }  
+  
+    function renderList() {  
+      daftar.innerHTML = '';  
+      const filter = document.getElementById('searchInput').value.toLowerCase();  
+      let found = false;  
+      anggotaVoli.forEach(a => {  
+        if ((currentKelas === "Semua" || a.kelas === currentKelas) &&  
+            a.nama.toLowerCase().includes(filter)) {  
+          found = true;  
+          const li = document.createElement('li');  
+          li.innerHTML = `${a.nama}<br><small>Kelas ${a.kelas}</small>`;  
+          li.onclick = () => tampilBiodata(a);  
+          daftar.appendChild(li);  
+        }  
+      });  
+      if (!found) daftar.innerHTML = '<li>Tidak ditemukan</li>';  
+    }  
+  
+    function tampilBiodata(a) {  
+      document.getElementById('searchInput').style.display = 'none';  
+      daftar.style.display = 'none';  
+      biodataBox.style.display = 'block';  
+      document.getElementById('namaB').textContent = a.nama;  
+      document.getElementById('idB').textContent = a.id;  
+      document.getElementById('kelasB').textContent = a.kelas;  
+      document.getElementById('photo').src = a.photo;  
+      document.getElementById('qr').src = a.qr;  
+    }  
+  
+    function kembali() {  
+      biodataBox.style.display = 'none';  
+      daftar.style.display = 'grid';  
+      document.getElementById('searchInput').style.display = 'block';  
+    }  
+  
+    function cariAnggota() { renderList(); }  
+  
+    function showRekap() {  
+      document.getElementById('pageAnggota').style.display = 'none';  
+      document.getElementById('pageRekap').style.display = 'block';  
+    }  
+  
+    function backToAnggota() {  
+      document.getElementById('pageRekap').style.display = 'none';  
+      document.getElementById('pageAnggota').style.display = 'block';  
+    }  
+  
+    window.onload = () => {  
+      buatTombolKelas();  
+      renderList();  
+    };  
+    async function loadRekap() {
+  const url = "https://opensheet.elk.sh/1HATmV5leGHaIk-A-S8gpP6nO8M4dRa8dGtxvWPtAyNc/Absensi"; 
+  const tbody = document.getElementById("rekapBody");
+
+  tbody.innerHTML = `<tr><td colspan="4">Memuat data...</td></tr>`;
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="4">Tidak ada data</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = ""; // reset tabel
+
+    data.forEach(row => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+  <td>${row.Timestamp || "-"}</td>
+  <td>${row.Nama || "-"}</td>
+  <td>${row.ID || "-"}</td>
+  <td>${row.Status || "-"}</td>
+`;
+
+      tbody.appendChild(tr);
+    });
+
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="4">Gagal memuat data!</td></tr>`;
+    console.error(e);
+  }
+}
+
+// panggil saat buka menu laporan
+function showRekap() {
+  document.getElementById("pageAnggota").style.display = "none";
+  document.getElementById("pageRekap").style.display = "block";
+  loadRekap(); // <-- load otomatis
+}
+  </script>  </body>  
+</html>
