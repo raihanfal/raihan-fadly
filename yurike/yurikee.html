@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Absensi QRCode NGAJI</title>
+  <style>
+    /* Menggunakan nuansa cokelat muda */
+    :root {
+      --primary-color: #A0522D; /* Sienna (Cokelat Tanah) */
+      --secondary-color: #D2B48C; /* Tan (Cokelat Muda/Krem) */
+      --light-bg: #FAEBD7; /* AntiqueWhite (Latar belakang yang lebih terang) */
+      --text-color: #333;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0; padding: 0;
+      background: var(--light-bg); /* Latar belakang cokelat muda terang */
+      color: var(--text-color);
+    }
+    header {
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); /* Gradient cokelat */
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+    .filter-btns {
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .filter-btn {
+      background: var(--primary-color); /* Tombol cokelat tua */
+      color: #fff; border: none; padding: 8px 14px;
+      border-radius: 8px; font-weight: 600; cursor: pointer;
+    }
+    .filter-btn.active {
+      background: var(--secondary-color); /* Warna tombol aktif sedikit berbeda */
+    }
+
+    #searchInput {
+      display: block; width: 100%; padding: 12px 14px; border-radius: 8px;
+      border: 1px solid #ccc; font-size: 15px; margin-bottom: 20px;
+    }
+
+    ul.daftar-anggota {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px; list-style: none; padding: 0; margin: 0;
+    }
+    ul.daftar-anggota li {
+      background: #fff; border: 2px solid var(--primary-color); /* Border cokelat tua */
+      border-radius: 10px;
+      text-align: center; padding: 16px 10px; font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    ul.daftar-anggota li:hover {
+      background: var(--secondary-color);
+      color: var(--text-color);
+    }
+
+    .biodata {
+      display: none; background: #fff; border-radius: 12px; padding: 20px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin-top: 20px;
+    }
+    .biodata img { border-radius: 10px; max-width: 140px; }
+
+    .back-btn {
+      background: var(--primary-color); /* Tombol kembali cokelat tua */
+      color: white; padding: 10px 18px; border: none;
+      border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px;
+    }
+
+    /* Styling tabel rekap */
+    #pageRekap table {
+      border: 1px solid var(--primary-color);
+    }
+    #pageRekap thead {
+      background: var(--primary-color); /* Header tabel cokelat tua */
+      color: white;
+    }
+    #pageRekap td, #pageRekap th {
+      border: 1px solid #ccc;
+    }
+
+
+    footer {
+      text-align: center; font-size: 13px; color: #666; margin-top: 30px;
+      padding: 12px 0; border-top: 1px solid #ddd;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Absensi QRCode NGAJI</h1>
+    <p>NGAJI SORE — KANDANGHAUR</p>
+  </header>
+  <div class="container">
+    <div id="pageAnggota">
+      <div class="filter-btns">
+        <button class="filter-btn active" onclick="setKelompok('NGAJI', this)">MURID</button>
+        <button class="filter-btn" onclick="showRekap()">📊 Laporan Absen</button>
+      </div>
+      <input type="text" id="searchInput" placeholder="Cari nama anggota..." onkeyup="cariAnggota()">
+
+      <ul class="daftar-anggota" id="daftarAnggota"></ul>
+
+      <div class="biodata" id="biodataBox">
+        <div style="text-align:center;">
+          <img id="photo" src="" alt="Foto anggota">
+          <h2 id="namaB"></h2>
+          <p><b>ID:</b> <span id="idB">-</span></p>
+          <p><b>ANGGOTA:</b> MURID</p>
+          <div>
+            <h3>QR Code Absensi</h3>
+            <img id="qr" src="" alt="QR Code">
+          </div>
+          <button class="back-btn" onclick="kembali()">← Kembali</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pageRekap" style="display:none; text-align:center; margin-top:20px;">
+      <h2>📊 Laporan Absensi Ngaji</h2>
+      <table border="1" cellpadding="6" cellspacing="0" style="margin:0 auto; border-collapse:collapse;">
+        <thead style="background:var(--primary-color); color:white;">
+          <tr><th>Waktu</th><th>Nama</th><th>ID</th><th>Status</th></tr>
+        </thead>
+        <tbody id="rekapBody">
+          <tr><td colspan="4">Data akan muncul otomatis...</td></tr>
+        </tbody>
+      </table>
+      <button class="back-btn" onclick="backToAnggota()" style="margin-top:20px;">← Kembali</button>
+    </div>
+
+  </div>
+  <footer>
+    &copy; 2025 By Yurike Prastika | Kegiatan Ngaji Sore
+  </footer>
+  <script>
+    // ** Daftar Anggota Murid Diperbarui **
+    // Catatan: Nama variabel diubah dari 'anggotaPaskibra' menjadi 'anggotaNgaji'
+    const anggotaNgaji = [
+      { nama: "ANIS SORAYA", id: "N001", qr: "a.png", photo: "POTO.jpg" },
+      { nama: "ANGGUN SIPANA", id: "N002", qr: "b.png", photo: "POTO.jpg" },
+      { nama: "AINUN MUPIA", id: "N003", qr: "c.png", photo: "POTO.jpg" },
+      { nama: "ANIN", id: "N004", qr: "d.png", photo: "POTO.jpg" },
+      { nama: "DIFA", id: "N005", qr: "e.png", photo: "POTO.jpg" },
+      { nama: "FANIA", id: "N006", qr: "f.png", photo: "POTO.jpg" },
+      { nama: "FAHRIL", id: "N007", qr: "g.png", photo: "POTO.jpg" },
+      { nama: "KEYSHA", id: "N008", qr: "h.png", photo: "POTO.jpg" },
+      // 7 Murid Tambahan
+      { nama: "KIYA", id: "N009", qr: "i.png", photo: "POTO.jpg" },
+      { nama: "MUTIARA APRILIA", id: "N010", qr: "j.png", photo: "POTO.jpg" },
+      { nama: "SALSABILA", id: "N011", qr: "k.png", photo: "POTO.jpg" },
+      { nama: "SHAKILA ATMAJA", id: "N012", qr: "l.png", photo: "POTO.jpg" },
+      { nama: "TARA AISYAH", id: "N013", qr: "m.png", photo: "POTO.jpg" },
+      { nama: "TION SANDIKA", id: "N014", qr: "n.png", photo: "POTO.jpg" },
+      { nama: "VINO", id: "N015", qr: "o.png", photo: "POTO.jpg" }
+      
+    ];
+    // ** Akhir Daftar Anggota Murid Diperbarui **
+
+    let currentKelompok = 'NGAJI'; // Diubah dari 'PASKIBRA' menjadi 'NGAJI'
+
+    const daftar = document.getElementById('daftarAnggota');
+    const biodataBox = document.getElementById('biodataBox');
+
+    function setKelompok(k, el) {
+      currentKelompok = k;
+      // Tambahkan/Hapus kelas 'active' untuk visualisasi
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+      renderList();
+    }
+
+    function renderList() {
+      daftar.innerHTML = '';
+      const filter = document.getElementById('searchInput').value.toLowerCase();
+      let found = false;
+      // Menggunakan anggotaNgaji
+      anggotaNgaji.forEach(a => {
+        if (a.nama.toLowerCase().includes(filter)) {
+          found = true;
+          const li = document.createElement('li');
+          li.textContent = a.nama;
+          li.onclick = () => tampilBiodata(a);
+          daftar.appendChild(li);
+        }
+      });
+      if (!found) daftar.innerHTML = '<li>Tidak ditemukan</li>';
+    }
+
+    function tampilBiodata(a) {
+      document.getElementById('searchInput').style.display = 'none';
+      daftar.style.display = 'none';
+      biodataBox.style.display = 'block';
+      document.getElementById('namaB').textContent = a.nama;
+      document.getElementById('idB').textContent = a.id;
+      // Catatan: Pastikan file gambar (foto/rudi.jpg, qr/rudi.png, dst.) benar-benar ada di folder yang sesuai
+      document.getElementById('photo').src = a.photo;
+      document.getElementById('qr').src = a.qr;
+    }
+
+    function kembali() {
+      biodataBox.style.display = 'none';
+      daftar.style.display = 'grid';
+      document.getElementById('searchInput').style.display = 'block';
+    }
+
+    function cariAnggota() { renderList(); }
+
+    function showRekap() {
+      document.getElementById('pageAnggota').style.display = 'none';
+      document.getElementById('pageRekap').style.display = 'block';
+    }
+
+    function backToAnggota() {
+      document.getElementById('pageRekap').style.display = 'none';
+      document.getElementById('pageAnggota').style.display = 'block';
+    }
+
+    window.onload = renderList;
+  </script>
+</body>
+
+</html>
