@@ -227,6 +227,48 @@
     }
 
     window.onload = renderList;
+    async function loadRekap() {
+  const url = "https://opensheet.elk.sh/15Ko5XBCPgQ9tRT-YiVIRsjcfxKywJEMXPx0mm15-gE8/Absensi"; 
+  const tbody = document.getElementById("rekapBody");
+
+  tbody.innerHTML = `<tr><td colspan="4">Memuat data...</td></tr>`;
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="4">Tidak ada data</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = ""; // reset tabel
+
+    data.forEach(row => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+  <td>${row.Timestamp || "-"}</td>
+  <td>${row.Nama || "-"}</td>
+  <td>${row.ID || "-"}</td>
+  <td>${row.Status || "-"}</td>
+`;
+
+      tbody.appendChild(tr);
+    });
+
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="4">Gagal memuat data!</td></tr>`;
+    console.error(e);
+  }
+}
+
+// panggil saat buka menu laporan
+function showRekap() {
+  document.getElementById("pageAnggota").style.display = "none";
+  document.getElementById("pageRekap").style.display = "block";
+  loadRekap(); // <-- load otomatis
+}
   </script>
 </body>
 
