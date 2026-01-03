@@ -1,664 +1,106 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Absensi QRCode XI TJKT</title>
-  <style>
-    * { box-sizing: border-box; }
-    html,body { height: 100%; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0; padding: 0;
-      background: linear-gradient(270deg,#0f172a,#2563eb,#06b6d4,#7c3aed,#a90ddc);
-      background-size: 600% 600%;
-      animation: gradientBG 20s ease infinite;
-      color: #f8fafc;
-    }
-    @keyframes gradientBG {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
-    }
-    header {
-      background: url('smk.jpg') no-repeat center center;
-      background-size: cover;
-      color: white;
-      text-align: center;
-      padding: 60px 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      position: relative;
-    }
-    header::before { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.45); z-index:0; }
-    header h1, header p { position:relative; z-index:1; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR & Barcode Scanner Web</title>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
 
-    .container { width:100%; max-width:1100px; margin:0 auto; padding:0 20px 40px; }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
 
-    .filter-btns { display:flex; gap:10px; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
-    .filter-btn {
-      padding:8px 14px; border-radius:10px; border:none;
-      background:rgba(255,255,255,0.12); color:#fff; cursor:pointer;
-      font-weight:600; transition:background .18s, transform .12s;
-    }
-    .filter-btn:hover { transform:translateY(-2px); }
-    .filter-btn.active {
-      background:linear-gradient(90deg,#3b82f6,#9333ea);
-      box-shadow:0 6px 18px rgba(59,130,246,0.18);
-    }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-    .search-wrap { width:100%; margin:0 auto 22px; position:relative; }
-    #searchInput {
-      display:block; width:100%; padding:14px 18px; border-radius:12px;
-      border:none; outline:none; font-size:16px;
-      box-shadow:0 6px 18px rgba(2,6,23,0.6);
-      color:#111827; background:#ffffff;
-    }
-    .highlight { background:#06e706; color:black; padding:2px 4px; border-radius:3px; }
+        #reader {
+            width: 100%;
+            border-radius: 5px;
+            overflow: hidden;
+        }
 
-    .daftar-siswa {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:18px; justify-content:center; list-style:none; margin:0; padding:0;
-    }
-    .daftar-siswa li {
-      background:linear-gradient(135deg,#062d6b,#6815b4,#c2156b);
-      color:white; font-weight:650; text-align:center;
-      padding:18px 12px; border-radius:12px; cursor:pointer;
-      transition:transform .25s, box-shadow .25s; opacity:0; animation:fadeInUp .5s forwards;
-      min-height:90px; display:flex; align-items:center; gap:12px;
-      box-shadow:0 6px 18px rgba(2,6,23,0.6);
-    }
-    .daftar-siswa li:hover {
-      transform:translateY(-5px) scale(1.03);
-      box-shadow:0 0 20px rgba(59,130,246,0.8),0 0 40px rgba(147,51,234,0.6);
-    }
-    .daftar-siswa li img.thumb {
-      width:56px; height:56px; border-radius:8px; object-fit:cover; border:2px solid rgba(255,255,255,0.12);
-    }
-    @keyframes fadeInUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+        #result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 5px;
+            display: none; /* Sembunyikan jika belum ada hasil */
+        }
 
-    .biodata {
-      display:none; background:#0b1220; color:white; padding:25px; border-radius:14px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.3); margin-top:25px;
-    }
-    .biodata .top {
-      display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap;
-    }
-    .biodata img.photo {
-      width:140px; height:140px; border-radius:10px; object-fit:cover; border:3px solid rgba(255,255,255,0.06);
-    }
-    .biodata .info { text-align:left; min-width:240px; }
-    .biodata .info h2 { margin:0 0 6px; font-size:20px; }
-    .biodata .info p { margin:6px 0; color:#cbd5e1; font-weight:600; }
-
-    .qrcode { text-align:center; margin-top:14px; }
-    .qrcode img { margin-top:8px; max-width:220px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.3); background:white; padding:8px; }
-
-    .back-btn {
-      margin-top:20px; display:inline-block; padding:12px 20px;
-      background:linear-gradient(135deg,#9333ea,#3b82f6);
-      color:white; font-weight:bold; border-radius:8px; text-decoration:none; cursor:pointer;
-    }
-
-    footer { margin-top:30px; color:#cbd5e1; font-size:13px; text-align:center; padding:12px 0; }
-
-    #loading {
-      position:fixed; inset:0; background:rgba(0,0,0,0.7);
-      display:flex; justify-content:center; align-items:center; z-index:9999;
-    }
-    .spinner { width:60px; height:60px; border:6px solid #ddd; border-top:6px solid #3498db; border-radius:50%; animation:spin 1s linear infinite; }
-    @keyframes spin { to{ transform:rotate(360deg);} }
-    #loading.fade-out { opacity:0; pointer-events:none; }
-
-    /* Rekap style */
-    #rekapTable th, #rekapTable td { padding:10px; text-align:center; border:1px solid #334155; white-space:nowrap; }
-    #rekapTable { border-collapse:collapse; background:#1e293b; color:white; border-radius:10px; min-width:700px; margin:0 auto; }
-    @media(max-width:640px){ #rekapTable{min-width:600px;} }
-
-    /* helper */
-    .controls label { color:#e6eefc; font-size:13px; }
-    .controls input, .controls select { padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:#fff; }
-    @media (min-width: 1024px) {
-      .daftar-siswa { grid-template-columns: repeat(3, 1fr); }
-    }
-  </style>
+        #result-text {
+            font-weight: bold;
+            color: #2e7d32;
+            word-break: break-all;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Absensi QRCode XI TJKT</h1>
-    <p>Klik nama siswa untuk melihat biodata & QR Code (semua kelas TJKT 1–4)</p>
-  </header>
 
-  <div class="container">
-    <div id="pageSiswa">
-      <div class="filter-btns">
-        <button class="filter-btn active" onclick="setKelas('TJKT 1', this)">TJKT 1</button>
-        <button class="filter-btn" onclick="setKelas('TJKT 2', this)">TJKT 2</button>
-        <button class="filter-btn" onclick="setKelas('TJKT 3', this)">TJKT 3</button>
-        <button class="filter-btn" onclick="setKelas('TJKT 4', this)">TJKT 4</button>
-        <button class="filter-btn" onclick="showRekap()">📊 Rekap</button>
-      </div>
+    <div class="container">
+        <h1>Scan QR / Barcode</h1>
+        
+        <div id="reader"></div>
 
-      <div class="search-wrap">
-        <input type="text" id="searchInput" placeholder="🧑‍🎓 Cari nama siswa..." onkeyup="cariSiswa()">
-      </div>
-
-      <ul class="daftar-siswa" id="daftarSiswa"></ul>
-
-      <div class="biodata" id="biodataBox">
-        <div class="top">
-          <img class="photo" id="photo" src="" alt="Foto siswa">
-          <div class="info">
-            <h2 id="namaB"></h2>
-            <p><strong>NISN:</strong> <span id="nisn">-</span></p>
-            <p><strong>Kelas:</strong> <span id="kelasB">-</span></p>
-            <p><strong>Jurusan:</strong> TEKNIK JARINGAN KOMPUTER DAN TELEKOMUNIKASI</p>
-            <p><strong>Sekolah:</strong> SMKN 1 KANDANGHAUR</p>
-          </div>
+        <div id="result-container">
+            <p>Hasil Scan:</p>
+            <div id="result-text"></div>
         </div>
-
-        <div class="qrcode">
-          <h3 style="margin:10px 0 6px;">QR Code Absensi</h3>
-          <img id="qr" src="" alt="QR Code">
-        </div>
-
-        <div style="text-align:center;">
-          <a class="back-btn" onclick="kembali()">← Kembali</a>
-        </div>
-      </div>
     </div>
 
-    <!-- REKAP -->
-    <div id="pageRekap" style="display:none; margin-top:20px; text-align:center;">
-      <h2 style="margin-bottom:14px;">📊 Rekap Absensi</h2>
-      <div class="filter-btns">
-        <button class="filter-btn active" onclick="setRekapKelas('TJKT 1', this)">TJKT 1</button>
-        <button class="filter-btn" onclick="setRekapKelas('TJKT 2', this)">TJKT 2</button>
-        <button class="filter-btn" onclick="setRekapKelas('TJKT 3', this)">TJKT 3</button>
-        <button class="filter-btn" onclick="setRekapKelas('TJKT 4', this)">TJKT 4</button>
-      </div>
+    <script>
+        // Fungsi ini dipanggil ketika QR Code berhasil dibaca
+        function onScanSuccess(decodedText, decodedResult) {
+            // Tampilkan hasil di console (untuk debugging)
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+            
+            // Tampilkan hasil di halaman web
+            document.getElementById('result-text').innerText = decodedText;
+            document.getElementById('result-container').style.display = "block";
 
-      <div class="controls" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:15px;">
-        <label>Filter:
-          <select id="filterType">
-            <option value="all">Semua</option>
-            <option value="date">Per Tanggal</option>
-            <option value="month">Per Bulan</option>
-            <option value="year">Per Tahun</option>
-          </select>
-        </label>
-        <label id="dateLabel" style="display:none">Tanggal: <input type="date" id="dateInput"></label>
-        <label id="monthLabel" style="display:none">Bulan: <input type="month" id="monthInput"></label>
-        <label id="yearLabel" style="display:none">Tahun: <select id="yearInput"></select></label>
-        <label>Urut:
-          <select id="sortOrder">
-            <option value="desc">Terbaru</option>
-            <option value="asc">Terlama</option>
-          </select>
-        </label>
-        <button class="filter-btn" id="applyBtn">Terapkan</button>
-      </div>
-
-      <div id="summary" style="font-size:13px; color:#cbd5e1;">Memuat data...</div>
-
-      <div class="rekap-wrapper" style="overflow-x:auto; margin-top:12px;">
-        <table id="rekapTable">
-          <thead>
-            <tr style="background:#3b82f6; color:white;">
-              <th>Waktu</th><th>Nama</th><th>ID</th><th>Status</th><th>Durasi Telat</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <div style="margin-top:20px;">
-        <button class="back-btn" onclick="backToSiswa()">← Kembali</button>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <marquee>&copy; 2025 By Raihan Fadly Al Ichsani | XI TJKT | Dibuat dengan ❤️</marquee>
-  </footer>
-
-  <div id="loading"><div class="spinner"></div></div>
-
-  <script>
-    /* ===========================
-       Data awal (sudah ada) --- tetap kita pakai
-       Kamu bisa update/isi properti 'nisn' dan 'photo' di sini nanti,
-       atau biarkan kosong dan sistem akan coba fallback ke foto Sxx.jpg
-       di folder foto/tjktN/
-       =========================== */
-    const siswaPerKelas = {
-      "TJKT 1": [
-                { nama: "ACHMAD RAFI HAKIM", qr: "qr1/achmadrafi.png", nisn: "0089887252", photo: "foto1/.jpg"  },
-        { nama: "AISYAH AMELIA", qr: "qr1/aisyah.png", nisn: "0097406184", photo: "foto1/.jpg"  },
-        { nama: "ANA ROSTIANA", qr: "qr1/ana.png", nisn: "0089647856", photo: "foto1/.jpg"  },
-        { nama: "ANGGI JUBAEDAH", qr: "qr1/anggi.png", nisn: "3091588497", photo: "foto1/.jpg"  },
-        { nama: "AYU YUNITA", qr: "qr1/ayu.png", nisn: "0095191499", photo: "foto1/.jpg" },
-        { nama: "BELA SAFITRI", qr: "qr1/bela.png", nisn: "0086166078", photo: "foto1/.jpg"  },
-        { nama: "DELA OKTAVIA", qr: "qr1/dela.png", nisn: "0088520413", photo: "foto1/.jpg"  },
-        { nama: "DIKA ARDIANTO", qr: "qr1/dika.png", nisn: "0085031711", photo: "foto1/.jpg"  },
-        { nama: "DIYAS RESTYANA PUTRI", qr: "qr1/diyas.png", nisn: "0097205434", photo: "foto1/.jpg"  },
-        { nama: "EMAH RAHMAWATI", qr: "qr1/emah.png", nisn: "0092069217", photo: "foto1/.jpg"  },
-        { nama: "HESTI DAMAYANTI", qr: "qr1/hesti.png", nisn: "0102409668", photo: "foto1/.jpg"  },
-        { nama: "KIRANA", qr: "qr1/kirana.png", nisn: "0086570404", photo: "foto1/.jpg"  },
-        { nama: "LAILATUR FAZRIYAH", qr: "qr1/laila.png", nisn: "0091736162", photo: "foto1/.jpg"  },
-        { nama: "MIFTAH FAUZIYAH", qr: "qr1/miftah.png", nisn: "0095615224", photo: "foto1/.jpg"  },
-        { nama: "MUHAMAD ARIF SUBAGJA", qr: "qr1/marif.png", nisn: "3088245928", photo: "foto1/.jpg"  },
-        { nama: "NABILA TUZ ZAHRO", qr: "qr1/nabila.png", nisn: "0083803667", photo: "foto1/.jpg"  },
-        { nama: "NELISA AGUSTINA", qr: "qr1/nelisah.png", nisn: "0097437742", photo: "foto1/.jpg"  },
-        { nama: "NINDITA APRILIYANI", qr: "qr1/nindita.png", nisn: "0087030940", photo: "foto1/.jpg"  },
-        { nama: "NUNING WULANDARI", qr: "qr1/nuning.png", nisn: "0093068664", photo: "foto1/.jpg"  },
-        { nama: "NURJANAH", qr: "qr1/nurjanah.png", nisn: "0083860266", photo: "foto1/.jpg"  },
-        { nama: "PUTRI EKO NUR HIDAYAH", qr: "qr1/putri.png", nisn: "0089209267", photo: "foto1/.jpg" },
-        { nama: "RAIHAN FADLY AL ICHSANI", qr: "qr1/raihan.png", nisn: "0081033979", photo: "foto1/.jpg" },
-        { nama: "RENITA AGUSTINA", qr: "qr1/renita.png", nisn: "0087917987", photo: "foto1/.jpg"  },
-        { nama: "RIFANA AULIYA FIZKA", qr: "qr1/rifana.png", nisn: "0084878776", photo: "foto1/.jpg"  },
-        { nama: "RIRIS RISKA AGUSTIN", qr: "qr1/riris.png", nisn: "0097679628", photo: "foto1/.jpg"  },
-        { nama: "SALSABILA AZZAHRA", qr: "qr1/salsa.png", nisn: "0099949688", photo: "foto1/.jpg"  },
-        { nama: "SINDI TRIYA MAULANI", qr: "qr1/sindi.png", nisn: "0092984023", photo: "foto1/.jpg"  },
-        { nama: "SITI HASNAH", qr: "qr1/sitihasna.png", nisn: "0082242988", photo: "foto1/.jpg"  },
-        { nama: "SITI SAROFAH", qr: "qr1/sitisarofah.png", nisn: "0086799205", photo: "foto1/.jpg"  },
-        { nama: "SURYA PRIKA YOGA", qr: "qr1/surya.png", nisn: "0096390075", photo: "foto1/.jpg"  },
-        { nama: "SYIFA ALIYA", qr: "qr1/syifa.png", nisn: "0097968090", photo: "foto1/.jpg"  },
-        { nama: "TASYA APRIL YANI", qr: "qr1/tasya.png", nisn: "0087292095", photo: "foto1/.jpg"  },
-        { nama: "TRIANA PUTRI", qr: "qr1/triana.png", nisn: "0096020885", photo: "foto1/.jpg"  },
-        { nama: "YURIKE PRASTIKA", qr: "qr1/yurike.png", nisn: "0085656976", photo: "foto1/.jpg"  }
-      ],
-      "TJKT 2": [
-                { nama:"ADE NURUL SRI ANISAH", qr: "qr2/ade.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"ADNIN NURFIILLAH", qr: "qr2/adnin.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"AHMAD YUNUS", qr: "qr2/ahmad.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"ALYA NURUZZAHADA", qr: "qr2/alya.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"ANDANI SHIFATUN JANNAH NORMA DONI", qr: "qr2/andani.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"ANI ARDELA", qr: "qr2/ani.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"AZ ZAHRA BINTANG AL MUSTOFA", qr: "qr2/azzahra.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"CICILIA PUTRI ZAHRA", qr: "qr2/cicilia.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"DEVI RAHMAWATI", qr: "qr2/devi.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"DINDA KHOERIYAH", qr: "qr2/dinda.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"DWI SUROTUL ZANNAH", qr: "qr2/dwi.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"FARA SALSABILA RAHMA", qr: "qr2/fara.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"IMAH", qr: "qr2/imah.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"JULITA ANJAYANI", qr: "qr2/julita.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"KRISTIYANTI APRILLIA", qr: "qr2/kristiyanti.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"MAYA NINGRUM", qr: "qr2/maya.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"MITA BUNGA NEVANY", qr: "qr2/mita.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"NABILAH", qr: "qr2/nabilah.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"NAZRA MAULAN ADHANI", qr: "qr2/nazra.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"NIA RAMAH DANI", qr: "qr2/nia.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"NOVA", qr: "qr2/nova.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"NUR FATIQKAH", qr: "qr2/nur.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"NURUL HIDAYAH", qr: "qr2/nurul.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"PRIMA ADE RINANTO", qr: "qr2/prima.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"RAIHANAH AQILA AZZAKIYYAH", qr: "qr2/raihanah.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"RESNA ALIN", qr: "qr2/resna.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"RINI SAFITRI", qr: "qr2/rini.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"RISKA ESTIYANA", qr: "qr2/riska.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"SARMILA", qr: "qr2/sarmila.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"SITI FATIMAH NURAFNI", qr: "qr2/sitifatimah.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"SITI KHOERUNISA", qr: "qr2/sitikhoerunisa.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"SRI KUNENTI", qr: "qr2/sri.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"SYAEBA", qr: "qr2/syaeba.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"TESYA APRILYANI", qr: "qr2/tesya.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"ULUL AZMI", qr: "qr2/ulul.png", nisn: "1", photo: "foto2/.jpg" },
-        { nama:"YUSUF", qr: "qr2/yusuf.png", nisn: "1", photo: "foto2/.jpg" }
-      ],
-      "TJKT 3": [
-        { nama:"ADELIA ANZANI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"AGNES CHINTYA SARI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"AMELIA JULIYANTI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"ANES LISTANTI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"ANISA PRATAMI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"AZRA KHUMAIROH YASIN", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"DHELLY MARERRA", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"DIVA RAHMAWANI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"ELIS TRI AMELIA", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"GINA FEBRIANA EFENDI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"INAS NOVIYANI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"MARWA KEYSA FAUZIAH", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"MELATI NUR ISYANA", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"MOH. ADITIYA", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"MUSLIMAH", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"NAELA", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"NAZWA AZZAHRAH", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"NIKITA WILI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"NUNIK FIT ANIAH", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"NUR HASANAH", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"PINGKAN", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"PUTRI PRATIWI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"RANGGA JAYA", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"REVALINA DWI ANANDITA", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"RINI WIGAYANTI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"ROSIANA DEWI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"SELFINAH PEBRIYANTI", qr:".png" },
-        { nama:"SITI HABIBAH", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"SITI NURFAUJIAH", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"SUKMA RAHAYU", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"TANIA AYU ASTUTI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"TIA BILLA DANU SAPUTRI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"VIONA ROSSA DIANTI", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" },
-        { nama:"ZASKIA AULIA MAGRIFAH", qr: "qr3/.png", nisn: "1", photo: "foto3/.jpg" }
-      ], 
-      "TJKT 4": [
-        { nama:"ADEN BACTIAR", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"ADIT SAPUTRA", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"AGNES AYU ASSIFA", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"AHMAD AL-IQSAN", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"AHMAD REVALDO", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"AISYAH MAULIDIA", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"ANAYAH", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"ANDIKA JUEDY", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"ARDI INDRA PRATAMA", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"DAENAH PUTRI", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"DAHLIA RAHMA JAYANTI", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"DARUNI", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"DAVIN ARSHAVIN", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"DIANA BELLA", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"FIRZAS ADNAN FAUZAN", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"JESSEN NOVELINO", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"KARUNIA", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"LIDIYAH", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"MASHITA SARAH", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"MELANI RAHMAWATI", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"MELINDA FEBRIYANTI", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"MUSLIMAH", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"MUSTAKIM", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"NABIL FATURROHMAN", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"NAWANG PRIASIH", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"OKTAVIANI ELSYAFITRI", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"PANJI ANOM PAMUNGKAS", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"RIDHO AZRIEL PANGESTU", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"RISMA", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"TARMILA", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" },
-        { nama:"TYAS APRIYANI", qr: "qr4/.png", nisn: "1", photo: "foto4/.jpg" }
-      ]
-    };
-
-    // default sekolah & jurusan
-    const SEKOLAH = "SMKN 1 KANDANGHAUR";
-    const JURUSAN = "TEKNIK JARINGAN KOMPUTER DAN TELEKOMUNIKASI";
-
-    // state + elements
-    let currentKelas = "TJKT 1";
-    const daftar = document.getElementById("daftarSiswa");
-    const biodataBox = document.getElementById("biodataBox");
-    const namaB = document.getElementById("namaB");
-    const nisnEl = document.getElementById("nisn");
-    const kelasB = document.getElementById("kelasB");
-    const photoEl = document.getElementById("photo");
-    const qrEl = document.getElementById("qr");
-
-    // utilities
-    function kelasToFolder(kelas) {
-      return String(kelas).toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
-    }
-    function codeFromIndex(i) { return 'S' + String(i).padStart(2,'0'); }
-
-    // compute photo path:
-    function getPhotoPath(kelas, idx, data) {
-      // if explicit photo path provided in data, use it
-      if (data && data.photo) return data.photo;
-      // if student has nisn and you store photos by nisn, you could use it here
-      // fallback to foto/<kelasfolder>/Sxx.jpg
-      const folder = kelasToFolder(kelas); // tjkt1, tjkt2, ...
-      const code = data && data.code ? data.code : codeFromIndex(idx);
-      return `foto/${folder}/${code}.jpg`;
-    }
-    // compute qr path:
-    function getQrPath(kelas, idx, data) {
-      if (data && data.qr && data.qr.trim()) return data.qr;
-      const folder = kelasToFolder(kelas);
-      const code = data && data.code ? data.code : codeFromIndex(idx);
-      // try common fallbacks
-      return `qr/${folder}/${code}.png`;
-    }
-
-    // render student list for currentKelas
-    function setKelas(k, el) {
-      currentKelas = k;
-      // set active button
-      document.querySelectorAll('#pageSiswa .filter-btns .filter-btn').forEach(btn=>btn.classList.remove('active'));
-      if (el && el.classList) el.classList.add('active');
-      renderList();
-    }
-
-    function renderList() {
-      daftar.innerHTML = "";
-      const filter = (document.getElementById("searchInput").value || "").toLowerCase();
-      const siswa = siswaPerKelas[currentKelas] || [];
-      let found = false;
-
-      siswa.forEach((d, idx) => {
-        // idx is 0-based; use index+1 for Sxx
-        const index = idx + 1;
-        if (d.nama && d.nama.toLowerCase().includes(filter)) {
-          found = true;
-          const li = document.createElement("li");
-
-          // thumbnail path (try data.photo first, fallback to foto folder Sxx)
-          const thumb = getPhotoPath(currentKelas, index, d);
-          // inner content with thumb + name + code
-          const code = d.code ? d.code : codeFromIndex(index);
-          li.innerHTML = `<img class="thumb" src="${thumb}" alt="${escapeHtml(d.nama)}" onerror="this.style.display='none'">
-                          <div style="flex:1;text-align:left;">
-                            <div style="font-size:14px">${d.nama}</div>
-                            <div style="font-size:12px;opacity:0.9">${code} • ${currentKelas}</div>
-                          </div>`;
-          li.onclick = () => tampilBiodata(d, index);
-         daftar.appendChild(li);
-        }
-      });
-
-      if (!found) {
-        const li = document.createElement("li");
-        li.textContent = "❌ Nama yang anda cari tidak ada";
-        li.style.background = "#dc2626"; li.style.fontWeight = "bold"; li.style.cursor = "default";
-        daftar.appendChild(li);
-      }
-    }
-
-    // show biodata — receives the student object and its index (1-based)
-    function tampilBiodata(d, index) {
-      daftar.style.display = "none";
-      document.getElementById("searchInput").style.display = "none";
-      biodataBox.style.display = "block";
-
-      const code = d.code ? d.code : codeFromIndex(index);
-      const photo = getPhotoPath(currentKelas, index, d);
-      const qrpath = getQrPath(currentKelas, index, d);
-
-      namaB.textContent = d.nama || "-";
-      nisnEl.textContent = d.nisn ? d.nisn : "-";
-      kelasB.textContent = currentKelas;
-      photoEl.src = photo;
-      photoEl.onerror = function(){ this.src = 'foto/default-avatar.png'; }; // fallback image (optional)
-      qrEl.src = qrpath;
-      qrEl.onerror = function(){ this.style.display = 'none'; };
-    }
-
-    function kembali() {
-      biodataBox.style.display = "none";
-      daftar.style.display = "grid";
-      document.getElementById("searchInput").style.display = "block";
-    }
-    function cariSiswa(){ renderList(); }
-
-    window.addEventListener("load",()=>{
-      document.getElementById("loading").classList.add('fade-out');
-      setTimeout(()=>{document.getElementById("loading").style.display='none';},1000);
-    });
-
-    // initial render
-    renderList();
-
-    /* ====== REKAP (tetap seperti semula) ====== */
-    let currentRekapKelas = "TJKT 1";
-    const SPREADSHEET_ID = "1YTky6MaA6IT-OOrSwfsRY3MQPNRV_rStZYybcL_Gaf0";
-
-    // robust date parser and helpers reused (kept same as before)
-    function parseDate(raw) {
-      if (raw === null || raw === undefined) return null;
-      if (raw instanceof Date) return isNaN(raw.getTime()) ? null : raw;
-      let s = String(raw).trim();
-      if (!s) return null;
-      if (/^\d{13}$/.test(s)) return new Date(parseInt(s));
-      if (/^\d{10}$/.test(s)) return new Date(parseInt(s) * 1000);
-      if (/^\d{4}[-\/]\d{1,2}[-\/]\d{1,2}/.test(s)) {
-        const tryIso = new Date(s.replace(' ', 'T'));
-        if (!isNaN(tryIso)) return tryIso;
-      }
-      s = s.replace(',', ' ').replace(/\./g, ':').replace(/\s+/g, ' ').trim();
-      let m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
-      if (m) {
-        let d = parseInt(m[1],10), mo = parseInt(m[2],10), y = parseInt(m[3],10);
-        let hh = m[4] ? parseInt(m[4],10) : 0;
-        let mmn = m[5] ? parseInt(m[5],10) : 0;
-        let ss = m[6] ? parseInt(m[6],10) : 0;
-        if (mo > 12 && d <= 12) { const tmp = mo; mo = d; d = tmp; }
-        if (mo >=1 && mo <=12) return new Date(y, mo-1, d, hh, mmn, ss);
-      }
-      m = s.match(/^([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
-      if (m) {
-        const monthNames = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
-        const moKey = m[1].slice(0,3).toLowerCase();
-        const mo = monthNames[moKey];
-        if (mo !== undefined) {
-          const d = parseInt(m[2],10), y = parseInt(m[3],10);
-          const hh = m[4] ? parseInt(m[4],10) : 0;
-          const mmn = m[5] ? parseInt(m[5],10) : 0;
-          const ss = m[6] ? parseInt(m[6],10) : 0;
-          return new Date(y, mo, d, hh, mmn, ss);
-        }
-      }
-      const last = new Date(s);
-      if (!isNaN(last)) return last;
-      return null;
-    }
-
-    function rowToRecord(row) {
-      const keys = Object.keys(row || {});
-      const timeKey = keys.find(k => /timestamp|waktu/i.test(k)) || keys[0];
-      const nameKey = keys.find(k => /nama/i.test(k)) || keys[1] || keys[0];
-      const idKey   = keys.find(k => /^id$/i.test(k)) || keys[2] || keys[1] || keys[0];
-      const statusKey = keys.find(k => /status/i.test(k)) || null;
-      const lateKey   = keys.find(k => /terlambat|late|keterlambatan/i.test(k)) || null;
-      const rawTime = row[timeKey];
-      const parsedTime = parseDate(rawTime);
-      return {
-        raw: row,
-        timeKey, nameKey, idKey, statusKey, lateKey,
-        waktu: parsedTime,
-        waktuRaw: rawTime,
-        nama: row[nameKey] || "",
-        id: row[idKey] || "",
-        status: statusKey ? (row[statusKey] || "") : "",
-        telat: lateKey ? (row[lateKey] || "") : ""
-      };
-    }
-
-    function fillYearOptions(records){
-      const years = [...new Set(records.filter(r=>r.waktu).map(r=>r.waktu.getFullYear()))];
-      years.sort((a,b)=>b-a);
-      const yearInput = document.getElementById("yearInput");
-      if (!yearInput) return;
-      if (years.length===0) {
-        yearInput.innerHTML = '<option value="">—</option>';
-      } else {
-        yearInput.innerHTML = years.map(y=>`<option value="${y}">${y}</option>`).join("");
-      }
-    }
-
-    function showRekap(){
-      document.getElementById("pageSiswa").style.display="none";
-      document.getElementById("pageRekap").style.display="block";
-      loadRekapData();
-    }
-
-    function setRekapKelas(k, el){
-      currentRekapKelas = k;
-      document.querySelectorAll('#pageRekap .filter-btns .filter-btn').forEach(btn=>btn.classList.remove('active'));
-      if(el && el.classList) el.classList.add('active');
-      loadRekapData();
-    }
-
-    async function loadRekapData(){
-      const url = `https://opensheet.elk.sh/${SPREADSHEET_ID}/${encodeURIComponent(currentRekapKelas)}`;
-      const tbody = document.querySelector("#rekapTable tbody");
-      const summary = document.getElementById("summary");
-      tbody.innerHTML = "<tr><td colspan='5'>⏳ Memuat...</td></tr>";
-      summary.textContent = "Memuat data...";
-
-      try{
-        const res = await fetch(url);
-        if(!res.ok) throw new Error(res.status + ' ' + res.statusText);
-        const data = await res.json();
-        let records = (data || []).map(rowToRecord);
-        fillYearOptions(records);
-
-        const ft = document.getElementById("filterType").value;
-        const so = document.getElementById("sortOrder").value;
-        const dv = document.getElementById("dateInput").value;
-        const mv = document.getElementById("monthInput").value;
-        const yv = document.getElementById("yearInput").value;
-
-        let filtered = ft === 'all' ? [...records] : records.filter(r => r.waktu);
-
-        if (ft === "date" && dv) {
-          const d = new Date(dv);
-          filtered = filtered.filter(r => r.waktu &&
-            r.waktu.getFullYear() === d.getFullYear() &&
-            r.waktu.getMonth() === d.getMonth() &&
-            r.waktu.getDate() === d.getDate());
-        } else if (ft === "month" && mv) {
-          const [y,m] = mv.split("-");
-          filtered = filtered.filter(r => r.waktu && r.waktu.getFullYear() == y && (r.waktu.getMonth()+1) == m);
-        } else if (ft === "year" && yv) {
-          filtered = filtered.filter(r => r.waktu && String(r.waktu.getFullYear()) === String(yv));
+            // Opsional: Hentikan scan setelah berhasil membaca (biar tidak scan terus menerus)
+            // html5QrcodeScanner.clear(); 
         }
 
-        filtered.sort((a,b) => {
-          if (!a.waktu || !b.waktu) return 0;
-          return so === "asc" ? a.waktu - b.waktu : b.waktu - a.waktu;
-        });
+        // Fungsi ini dipanggil ketika scan gagal (biasanya karena tidak ada QR code di frame)
+        function onScanFailure(error) {
+            // Biarkan kosong agar console tidak penuh dengan error saat mencari QR code
+            // console.warn(`Code scan error = ${error}`);
+        }
 
-        tbody.innerHTML = filtered.map(r => `
-          <tr>
-            <td>${r.waktu ? r.waktu.toLocaleString("id-ID") : (r.waktuRaw ? escapeHtml(String(r.waktuRaw)) : "-")}</td>
-            <td>${escapeHtml(r.nama)}</td>
-            <td>${escapeHtml(r.id)}</td>
-            <td>${escapeHtml(r.status)}</td>
-            <td>${escapeHtml(r.telat)}</td>
-          </tr>
-        `).join("");
+        // Inisialisasi Scanner
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", 
+            { 
+                fps: 10, // Frame per second (kecepatan scan)
+                qrbox: { width: 250, height: 250 } // Ukuran kotak fokus scanning
+            },
+            /* verbose= */ false
+        );
 
-        summary.textContent = `Menampilkan ${filtered.length} baris dari kelas ${currentRekapKelas}`;
+        // Render scanner
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    </script>
 
-      } catch (err) {
-        console.error("LoadRekap error:", err);
-        tbody.innerHTML = "<tr><td colspan='5'>❌ Gagal memuat data</td></tr>";
-        summary.textContent = "Gagal ambil data: " + (err.message || "network error");
-      }
-    }
-
-    function backToSiswa(){ document.getElementById("pageRekap").style.display="none"; document.getElementById("pageSiswa").style.display="block"; }
-
-    function escapeHtml(s){ return String(s||"").replace(/[&<>]/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;" }[c])); }
-
-    // event listeners for rekap controls
-    document.getElementById("filterType").addEventListener("change", e=>{
-      document.getElementById("dateLabel").style.display = e.target.value==="date" ? "" : "none";
-      document.getElementById("monthLabel").style.display = e.target.value==="month" ? "" : "none";
-      document.getElementById("yearLabel").style.display = e.target.value==="year" ? "" : "none";
-    });
-    document.getElementById("applyBtn").addEventListener("click", loadRekapData);
-    document.getElementById("dateInput").addEventListener("change", loadRekapData);
-    document.getElementById("monthInput").addEventListener("change", loadRekapData);
-    document.getElementById("yearInput").addEventListener("change", loadRekapData);
-    document.getElementById("sortOrder").addEventListener("change", loadRekapData);
-
-  </script>
 </body>
 </html>
