@@ -3,909 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelas XI TJKT 1 - Teknik Jaringan Komputer & Telekomunikasi</title>
-      <meta name="description" content="Profile Company Kelas — Pelajar XI TJKT 1.">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" href="TJKT1.jpg">
+    <title>Cuaca Real-Time Keren</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header & Navigation */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-        }
-
-        nav {
+            min-height: 100vh;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 1rem 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 1s ease-in-out;
+            background-color: #333; /* Warna default sebelum gambar loading */
+            color: white;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .logo img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            border-radius: 10px;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            cursor: pointer;
-        }
-
-        .nav-menu a:hover {
-            color: #667eea;
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: #333;
-            margin: 3px 0;
-            transition: 0.3s;
-        }
-
-        /* Main Content */
-        .content {
-            margin-top: 80px;
-            min-height: calc(100vh - 80px);
-            background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(34,211,238,.10), rgba(244,114,182,.10));
-            border-radius: 20px 20px 0 0;
-        }
-
-        .section {
-            padding: 4rem 0;
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #333;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        /* Overlay gelap supaya tulisan tetap terbaca walau background terang */
+        .overlay {
             position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9)),
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1" opacity="0.1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
-            text-align: center;
-            padding: 8rem 0;
-            color: white;
-            border-radius: 20px 20px 0 0;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            animation: fadeInUp 1s ease;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            animation: fadeInUp 1s ease 0.3s both;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            animation: fadeInUp 1s ease 0.6s both;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
-        }
-
-        /* Stats Section */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 4rem 0;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 20px;
-            color: white;
-            transform: translateY(0);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-10px);
-        }
-
-        .stat-item i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        /* About Section */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .about-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .about-image {
-            position: relative;
-        }
-
-        .about-image img {
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        /* Album Section */
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .photo-item {
-            position: relative;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .photo-item:hover {
-            transform: translateY(-10px);
-        }
-
-        .photo-item img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .photo-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .photo-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            color: white;
-            padding: 2rem;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .photo-item:hover .photo-overlay {
-            transform: translateY(0);
-        }
-
-        /* FAQ Section */
-        .faq-item {
-            background: white;
-            margin-bottom: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        .faq-question {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.3s ease;
-        }
-
-        .faq-question:hover {
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
-        }
-
-        .faq-answer {
-            padding: 0 1.5rem;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-        }
-
-        .faq-item.active .faq-answer {
-            max-height: 200px;
-            padding: 1.5rem;
-        }
-
-        .faq-icon {
-            transition: transform 0.3s ease;
-        }
-
-        .faq-item.active .faq-icon {
-            transform: rotate(180deg);
-        }
-
-        /* Contact Section */
-        .contact-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-        }
-
-        .contact-form {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .contact-item i {
-            font-size: 2rem;
-            color: #667eea;
-            width: 50px;
-            text-align: center;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-menu {
-                position: fixed;
-                left: -100%;
-                top: 80px;
-                flex-direction: column;
-                background: white;
-                width: 100%;
-                text-align: center;
-                transition: 0.3s;
-                box-shadow: 0 10px 27px rgba(0,0,0,0.05);
-                padding: 2rem 0;
-            }
-
-            .nav-menu.active {
-                left: 0;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .about-content,
-            .contact-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .photo-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Modal for image preview */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
         }
 
-        .modal-content {
+        /* Kartu Cuaca dengan Efek Glassmorphism */
+        .weather-card {
             position: relative;
-            margin: 5% auto;
-            width: 90%;
-            max-width: 800px;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px); /* Efek blur kaca */
+            -webkit-backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
             text-align: center;
+            width: 90%;
+            max-width: 400px;
+            transition: transform 0.3s ease;
         }
 
-        .modal img {
-            width: 100%;
-            border-radius: 10px;
+        .weather-card:hover {
+            transform: translateY(-5px);
         }
 
-        .close {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            color: white;
-            font-size: 40px;
-            cursor: pointer;
+        .location {
+            font-size: 2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .date {
+            font-size: 1em;
+            font-weight: 300;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .temp-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .temp {
+            font-size: 4em;
+            font-weight: 600;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .weather-desc {
+            font-size: 1.5em;
+            text-transform: capitalize;
+            margin-bottom: 10px;
+        }
+
+        .icon img {
+            width: 100px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            padding-top: 20px;
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .col span:first-child {
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+
+        .col span:last-child {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Animasi Loading */
+        .loading {
+            font-size: 1.2em;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav class="container">
-            <div class="logo">
-                <img src="images.jpeg" alt="Logo TJKT 1">
-                <span>XI TJKT 1</span>
-            </div>
-            <ul class="nav-menu">
-                <li><a onclick="showSection('beranda')" class="active">Beranda</a></li>
-                <li><a onclick="showSection('about')">About</a></li>
-                <li><a onclick="showSection('album')">Album</a></li>
-                <li><a onclick="showSection('faq')">FAQ</a></li>
-                <li><a onclick="showSection('contact')">Contact</a></li>
-            </ul>
-            <div class="hamburger" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
-    </header>
 
-    <div class="content">
-        <!-- Beranda Section -->
-        <section id="beranda" class="section active">
-            <div class="hero">
-                <div class="container">
-                    <h1>Kelas XI TJKT 1</h1>
-                    <p>Teknik Jaringan Komputer & Telekomunikasi</p>
-                    <p>SMK Negeri 1 Kandanghaur - Angkatan Ke-21</p>
-                    <a href="#" class="btn" onclick="showSection('about')">Pelajari Lebih Lanjut</a>
-                </div>
-            </div>
+    <div class="overlay"></div>
+
+    <div class="weather-card">
+        <div id="loading-text" class="loading">Mencari lokasi kamu...</div>
+        
+        <div id="weather-content" style="display: none;">
+            <div class="location" id="city">Mendeteksi...</div>
+            <div class="date" id="date">...</div>
             
-            <div class="container">
-                <div class="stats">
-                    <div class="stat-item">
-                        <i class="fas fa-users"></i>
-                        <div class="stat-number">34</div>
-                        <div>Siswa Aktif</div>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-trophy"></i>
-                        <div class="stat-number">15+</div>
-                        <div>Prestasi</div>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-project-diagram"></i>
-                        <div class="stat-number">25+</div>
-                        <div>Project Selesai</div>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-certificate"></i>
-                        <div class="stat-number">100%</div>
-                        <div>Tingkat Kelulusan</div>
-                    </div>
+            <div class="icon" id="icon"></div>
+            
+            <div class="temp-box">
+                <div class="temp"><span id="temp-value">0</span>°C</div>
+                <div class="weather-desc" id="desc">...</div>
+            </div>
+
+            <div class="details">
+                <div class="col">
+                    <span id="humidity">0%</span>
+                    <span>Kelembaban</span>
+                </div>
+                <div class="col">
+                    <span id="wind">0 km/j</span>
+                    <span>Angin</span>
                 </div>
             </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="section">
-            <div class="container">
-                <h2 class="section-title">Tentang Kami</h2>
-                <div class="about-content">
-                    <div class="about-text">
-                        <h3>Kelas XI TJKT 1 - Generasi Digital Masa Depan</h3>
-                        <p>Kami adalah kelas XI TJKT 1 yang terdiri dari 34 taruna dan taruni berprestasi di bidang Teknik Jaringan Komputer dan Telekomunikasi. Dengan semangat belajar yang tinggi dan dedikasi penuh, kami mempersiapkan diri untuk menjadi teknisi handal di era digital.</p>
-                        
-                        <p>Fokus pembelajaran kami meliputi jaringan komputer, sistem telekomunikasi, troubleshooting hardware, dan pemrograman. Setiap siswa di kelas ini memiliki passion yang sama untuk teknologi dan inovasi.</p>
-                        
-                        <h4>Visi Kelas:</h4>
-                        <p>"Menjadi kelas terdepan dalam bidang teknologi jaringan dan telekomunikasi dengan menghasilkan lulusan yang kompeten, berintegritas, dan siap bersaing di dunia kerja."</p>
-                        
-                        <h4>Misi Kelas:</h4>
-                        <ul style="list-style-type: none; padding-left: 0;">
-                            <li>🎯 Menguasai teknologi jaringan terkini</li>
-                            <li>🤝 Membangun kerjasama tim yang solid</li>
-                            <li>🏆 Meraih prestasi akademik dan non-akademik</li>
-                            <li>💡 Mengembangkan inovasi teknologi</li>
-                        </ul>
-                    </div>
-                    <div class="about-image">
-                        <img src="album/album19.jpg" alt="Foto Kelas">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Album Section -->
-        <section id="album" class="section">
-            <div class="container">
-                <h2 class="section-title">Album Kegiatan</h2>
-                <div class="photo-grid">
-                    <div class="photo-item" onclick="openModal(this)">
-                        <img src="album/album15.jpg" alt="Tugas Totebag">
-                        <div class="photo-overlay">
-                            <h3>Tugas Bikin Totebag</h3>
-                            <p>Siswa sedang foto bersama dengan totebagnya masing masing.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="photo-item" onclick="openModal(this)">
-                        <img src="album/album16.jpg" alt="Foto Kemah">
-                        <div class="photo-overlay">
-                            <h3>Foto Bersama Saat Kemah</h3>
-                            <p>Foto Bersama Saat Kegiatan Kemah.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="photo-item" onclick="openModal(this)">
-                        <img src="album/album30.jpg" alt="Lomba 17an">
-                        <div class="photo-overlay">
-                            <h3>Lomba Kompetisi</h3>
-                            <p>Tim kelas berhasil meraih juara dalam lomba 17 Agustusan.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="photo-item" onclick="openModal(this)">
-                        <img src="album/album29.jpg" alt="Kunjungan Industri">
-                        <div class="photo-overlay">
-                            <h3>Latihan Dasar Disiplin Taruna</h3>
-                            <p>Momen Saat Sedang Latihan Dasar Disiplin Dasar Taruna.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="photo-item" onclick="openModal(this)">
-                        <img src="album/album3.jpg" alt="Foto Kelas">
-                        <div class="photo-overlay">
-                            <h3>Foto Kelas</h3>
-                            <p>Foto bersama kelas XI TJKT 1 Saat Ada Yang Ulang Tahun.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="photo-item" onclick="openModal(this)">
-                        <img src="album/album1.jpg" alt="Workshop Coding">
-                        <div class="photo-overlay">
-                            <h3>Foto Bersama Walikelas</h3>
-                            <p>Foto bersama Miss Ika saat pembagian rapor semester terakhir.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FAQ Section -->
-        <section id="faq" class="section">
-            <div class="container">
-                <h2 class="section-title">Frequently Asked Questions</h2>
-                <div class="faq-container">
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFAQ(this)">
-                            <span>Apa itu jurusan TJKT?</span>
-                            <i class="fas fa-chevron-down faq-icon"></i>
-                        </div>
-                        <div class="faq-answer">
-                            <p>TJKT (Teknik Jaringan Komputer dan Telekomunikasi) adalah jurusan yang mempelajari tentang instalasi, konfigurasi, dan pemeliharaan jaringan komputer serta sistem telekomunikasi. Siswa akan belajar routing, switching, wireless, fiber optic, dan troubleshooting jaringan.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFAQ(this)">
-                            <span>Apa saja mata pelajaran di TJKT?</span>
-                            <i class="fas fa-chevron-down faq-icon"></i>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Mata pelajaran utama meliputi: Alamatan Sistem Jaringan (ASJ), Pengalamatan Pada Jaringan (PPJ), Kemanan Jaringan (KJ) Mapel Pilihan (MP-TKJ), Teknik Jaringan Komputer Nirkabel (TJKN), Dan PKPJ.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFAQ(this)">
-                            <span>Peluang kerja setelah lulus TJKT?</span>
-                            <i class="fas fa-chevron-down faq-icon"></i>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Lulusan TJKT dapat bekerja sebagai: Network Administrator, IT Support, Teknisi Jaringan, Network Engineer, System Administrator, Technical Support, atau melanjutkan kuliah di bidang Teknik Informatika, Sistem Informasi, atau Teknik Komputer.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFAQ(this)">
-                            <span>Sertifikasi apa yang bisa didapat?</span>
-                            <i class="fas fa-chevron-down faq-icon"></i>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Siswa TJKT dapat memperoleh sertifikasi seperti: MikroTik Certified Network Associate (MTCNA), Cisco Certified Network Associate (CCNA), CompTIA Network+, dan sertifikasi kompetensi dari LSP (Lembaga Sertifikasi Profesi).</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFAQ(this)">
-                            <span>Fasilitas laboratorium apa saja yang tersedia?</span>
-                            <i class="fas fa-chevron-down faq-icon"></i>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Fasilitas meliputi: Lab Jaringan dengan router dan switch Cisco, Lab Komputer dengan software simulasi jaringan, Perangkat wireless access point, Kabel jaringan UTP dan fiber optic, Tools crimping dan testing, serta akses internet berkecepatan tinggi.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-question" onclick="toggleFAQ(this)">
-                            <span>Bagaimana sistem pembelajaran di kelas XI TJKT 1?</span>
-                            <i class="fas fa-chevron-down faq-icon"></i>
-                        </div>
-                        <div class="faq-answer">
-                            <p>Pembelajaran menggunakan metode teori dan praktek dengan rasio 30:70. Siswa akan banyak praktek langsung dengan perangkat jaringan, project-based learning, dan pembelajaran kolaboratif dalam tim. Evaluasi dilakukan melalui ujian teori, praktek, dan presentasi project.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="section">
-            <div class="container">
-                <h2 class="section-title">Hubungi Kami</h2>
-                <div class="contact-content">
-                    <div class="contact-form">
-                        <h3>Kirim Pesan</h3>
-                        <form onsubmit="submitForm(event)">
-                            <div class="form-group">
-                                <label for="name">Nama Lengkap</label>
-                                <input type="text" id="name" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="subject">Subjek</label>
-                                <input type="text" id="subject" name="subject" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="message">Pesan</label>
-                                <textarea id="message" name="message" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="btn">Kirim Pesan</button>
-                        </form>
-                    </div>
-
-                    <div class="contact-info">
-                        <div class="contact-item">
-                            <i class="fas fa-school"></i>
-                            <div>
-                                <h4>Sekolah</h4>
-                                <p>SMK Negeri 1 Kandanghaur<br>Indramayu, Kandanghaur, Parean Ilir, Pinggir jalan raya pantura</p>
-                            </div>
-                        </div>
-
-                        <div class="contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <div>
-                                <h4>Sosmed Sekolah</h4>
-                                <p>Instagram Sekolah<br>@smkn1kandanghaur</p>
-                            </div>
-                        </div>
-
-                        <div class="contact-item">
-                            <i class="fas fa-phone"></i>
-                            <div>
-                                <h4>Kontak</h4>
-                                <p>Wali Kelas: (021) 123-4567<br>Ketua Kelas: 0812-3456-7890</p>
-                            </div>
-                        </div>
-
-                        <div class="contact-item">
-                            <i class="fab fa-instagram"></i>
-                            <div>
-                                <h4>Social Media</h4>
-                                <p>Instagram:<br>@tjktnesaka<br>@eleven_tjktone1</p>
-                            </div>
-                        </div>
-
-                        <div class="contact-item">
-                            <i class="fas fa-clock"></i>
-                            <div>
-                                <h4>Jam Sekolah</h4>
-                                <p>Senin - Jumat: 06:30 - 15:10<br>Sabtu - Minggu: Libur</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- Modal for image preview -->
-    <div id="imageModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <img id="modalImage" src="" alt="">
-            <div id="modalCaption" style="color: white; margin-top: 20px; font-size: 1.2rem;"></div>
         </div>
     </div>
 
     <script>
-        // Navigation functionality
-        function showSection(sectionId) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
+        // --- KONFIGURASI ---
+        // GANTI TEXT DI BAWAH INI DENGAN API KEY KAMU DARI OPENWEATHERMAP
+        const apiKey = "GANTI_DENGAN_API_KEY_KAMU_DISINI"; 
+        // Contoh: const apiKey = "a1b2c3d4e5f6g7h8i9j0";
+        
+        // URL Gambar Background (Menggunakan Unsplash Source supaya HD)
+        const backgrounds = {
+            clear: "https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1974&auto=format&fit=crop", // Cerah
+            clouds: "https://images.unsplash.com/photo-1534088568595-a066f410bcda?q=80&w=1951&auto=format&fit=crop", // Berawan/Mendung
+            rain: "https://images.unsplash.com/photo-1519692933481-e162a57d6721?q=80&w=2070&auto=format&fit=crop", // Hujan
+            thunderstorm: "https://images.unsplash.com/photo-1605727216801-e27ce1ca0728?q=80&w=1974&auto=format&fit=crop", // Badai
+            snow: "https://images.unsplash.com/photo-1477601263568-180e2c6d046e?q=80&w=2070&auto=format&fit=crop", // Salju
+            mist: "https://images.unsplash.com/photo-1485236715568-ddc5ee6ca227?q=80&w=1974&auto=format&fit=crop", // Kabut
+            default: "https://images.unsplash.com/photo-1592210454132-328629a9e535?q=80&w=2070&auto=format&fit=crop" // Default
+        };
 
-            // Show selected section
-            document.getElementById(sectionId).classList.add('active');
+        const weatherContent = document.getElementById('weather-content');
+        const loadingText = document.getElementById('loading-text');
 
-            // Close mobile menu if open
-            const navMenu = document.querySelector('.nav-menu');
-            navMenu.classList.remove('active');
+        // Fungsi untuk mendapatkan tanggal hari ini
+        function getDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            return today.toLocaleDateString('id-ID', options);
         }
 
-        function toggleMenu() {
-            const navMenu = document.querySelector('.nav-menu');
-            navMenu.classList.toggle('active');
-        }
+        // Fungsi utama mendapatkan cuaca berdasarkan koordinat
+        function getWeather(lat, lon) {
+            const apiURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=id&appid=${apiKey}`;
 
-        // FAQ functionality
-        function toggleFAQ(element) {
-            const faqItem = element.parentElement;
-            const isActive = faqItem.classList.contains('active');
-
-            // Close all FAQ items
-            document.querySelectorAll('.faq-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Toggle current item
-            if (!isActive) {
-                faqItem.classList.add('active');
-            }
-        }
-
-        // Modal functionality for images
-        function openModal(element) {
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImage');
-            const modalCaption = document.getElementById('modalCaption');
-            
-            const img = element.querySelector('img');
-            const overlay = element.querySelector('.photo-overlay h3');
-            
-            modal.style.display = 'block';
-            modalImg.src = img.src;
-            modalCaption.textContent = overlay ? overlay.textContent : 'Foto Kegiatan Kelas';
-        }
-
-        function closeModal() {
-            document.getElementById('imageModal').style.display = 'none';
-        }
-
-        // Form submission
-        function submitForm(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-
-            alert(`Terima kasih ${name}! Pesan Anda telah terkirim.\n\nSubjek: ${subject}\nPesan akan dibalas melalui email: ${email}`);
-            
-            // Reset form
-            event.target.reset();
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('imageModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // Smooth scrolling and animations
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add scroll animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
-                    }
+            fetch(apiURL)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data);
+                })
+                .catch(error => {
+                    loadingText.innerText = "Gagal memuat cuaca. Cek API Key.";
+                    console.error("Error:", error);
                 });
-            }, observerOptions);
-
-            // Observe elements for animation
-            document.querySelectorAll('.stat-item, .photo-item, .faq-item, .contact-item').forEach(el => {
-                observer.observe(el);
-            });
-        });
-
-        // Counter animation for stats
-        function animateCounter(element, target) {
-            let current = 0;
-            const increment = target / 50;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    element.textContent = target;
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current);
-                }
-            }, 30);
         }
 
-        // Initialize counter animation when stats section is visible
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const numbers = entry.target.querySelectorAll('.stat-number');
-                    numbers.forEach((num, index) => {
-                        const targets = [34, 15, 25, 100];
-                        setTimeout(() => {
-                            animateCounter(num, targets[index]);
-                        }, index * 200);
-                    });
-                    statsObserver.unobserve(entry.target);
-                }
-            });
-        });
+        // Fungsi menampilkan data ke HTML
+        function displayWeather(data) {
+            const { name } = data;
+            const { icon, description, main } = data.weather[0];
+            const { temp, humidity } = data.main;
+            const { speed } = data.wind;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const statsSection = document.querySelector('.stats');
-            if (statsSection) {
-                statsObserver.observe(statsSection);
+            // Update Text HTML
+            document.getElementById('city').innerText = name; // Ini akan otomatis jadi "Kandanghaur" kalau kamu disana
+            document.getElementById('date').innerText = getDate();
+            document.getElementById('temp-value').innerText = Math.round(temp);
+            document.getElementById('desc').innerText = description;
+            document.getElementById('humidity').innerText = humidity + "%";
+            document.getElementById('wind').innerText = speed + " km/j";
+            
+            // Update Icon
+            document.getElementById('icon').innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="icon cuaca">`;
+
+            // Ganti Background sesuai kondisi cuaca
+            changeBackground(main);
+
+            // Tampilkan konten, sembunyikan loading
+            loadingText.style.display = "none";
+            weatherContent.style.display = "block";
+        }
+
+        // Fungsi logika ganti background
+        function changeBackground(weatherMain) {
+            let bgUrl = backgrounds.default;
+            const condition = weatherMain.toLowerCase();
+
+            if (condition.includes('clear')) bgUrl = backgrounds.clear;
+            else if (condition.includes('cloud')) bgUrl = backgrounds.clouds;
+            else if (condition.includes('rain') || condition.includes('drizzle')) bgUrl = backgrounds.rain;
+            else if (condition.includes('thunder')) bgUrl = backgrounds.thunderstorm;
+            else if (condition.includes('snow')) bgUrl = backgrounds.snow;
+            else if (condition.includes('mist') || condition.includes('haze') || condition.includes('fog')) bgUrl = backgrounds.mist;
+
+            document.body.style.backgroundImage = `url('${bgUrl}')`;
+        }
+
+        // Fungsi mendapatkan lokasi pengguna
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    // Berhasil dapat lokasi
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    getWeather(lat, lon);
+                }, error => {
+                    // User menolak akses lokasi
+                    loadingText.innerText = "Akses lokasi ditolak. Aktifkan GPS browser.";
+                    // Default fallback ke Jakarta (opsional)
+                    // getWeather(-6.2088, 106.8456); 
+                });
+            } else {
+                loadingText.innerText = "Browser tidak support Geolocation.";
+            }
+        }
+
+        // Jalankan saat halaman dibuka
+        window.addEventListener('load', () => {
+            // Cek apakah API Key sudah diisi
+            if(apiKey === "d2518d628cec22c0efea045d560f4fe4"){
+                loadingText.innerText = "Harap masukkan API Key di kodingan dulu!";
+                alert("Kamu belum memasukkan API KEY di dalam kode. Buka file index.html dengan text editor dan cari baris 'const apiKey'.");
+            } else {
+                getLocation();
             }
         });
+
     </script>
 </body>
 </html>
