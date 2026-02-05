@@ -1,18 +1,232 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Jadwal Palajaran | Kelas XI TJKT 1</title>
-  <style>
-    img{
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raihan Calculator</title>
+
+<style>
+*{box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{
+  margin:0;
+  background:linear-gradient(135deg,#1d2671,#c33764);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.app{
+  width:100%;
+  max-width:400px;
+  background:#0f1220;
+  color:#fff;
+  border-radius:20px;
+  padding:20px;
+}
+.display{
+  background:#000;
+  color:#00ff9c;
+  font-size:2rem;
+  padding:15px;
+  border-radius:10px;
+  text-align:right;
+  margin-bottom:10px;
+  overflow-x:auto;
+}
+.buttons{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+button{
+  padding:15px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  background:#2e3261;
+  color:#fff;
+}
+.operator{background:#ff9f43;color:#000}
+.equal{background:#1dd1a1;color:#000}
+.clear{background:#ee5253}
+
+#historyPanel{display:none}
+.item{
+  background:#1b1f3a;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:8px;
+}
+.actions button{margin-top:5px;font-size:.8rem}
+</style>
 </head>
+
 <body>
-  <img src="jadwal.jpg" alt="">
+<div class="app">
+
+<h3>Kalkulator Raihan</h3>
+<button onclick="toggleHistory()">📜 Riwayat</button>
+
+<div id="display" class="display">0</div>
+
+<div class="buttons">
+<button class="clear" onclick="clearDisplay()">C</button>
+<button class="operator" onclick="addOp('÷')">÷</button>
+<button class="operator" onclick="addOp('×')">×</button>
+<button onclick="backspace()">⌫</button>
+
+<button onclick="addNum('7')">7</button>
+<button onclick="addNum('8')">8</button>
+<button onclick="addNum('9')">9</button>
+<button class="operator" onclick="addOp('-')">−</button>
+
+<button onclick="addNum('4')">4</button>
+<button onclick="addNum('5')">5</button>
+<button onclick="addNum('6')">6</button>
+<button class="operator" onclick="addOp('+')">+</button>
+
+<button onclick="addNum('1')">1</button>
+<button onclick="addNum('2')">2</button>
+<button onclick="addNum('3')">3</button>
+<button class="equal" onclick="calculate()">=</button>
+
+<button onclick="addNum('00')">00</button>
+<button onclick="addNum('0')">0</button>
+<button onclick="addComma()">,</button>
+<button onclick="addPercent()">%</button>
+</div>
+
+<button style="margin-top:10px" onclick="toggleSci()">⚙ Scientific</button>
+
+<div id="sci" class="buttons" style="display:none;margin-top:10px">
+<button onclick="addFunc('sin')">sin</button>
+<button onclick="addFunc('cos')">cos</button>
+<button onclick="addFunc('tan')">tan</button>
+<button onclick="addOp('^')">xʸ</button>
+<button onclick="addSqrt()">√</button>
+<button onclick="addConst('π')">π</button>
+<button onclick="addOp('(')">(</button>
+<button onclick="addOp(')')">)</button>
+</div>
+
+<div id="historyPanel">
+<h3>Riwayat</h3>
+<button onclick="toggleHistory()">⬅ Kembali</button>
+<div id="history"></div>
+</div>
+
+</div>
+
+<script>
+const display=document.getElementById('display')
+const historyBox=document.getElementById('history')
+const historyPanel=document.getElementById('historyPanel')
+const sci=document.getElementById('sci')
+
+let historyData=JSON.parse(localStorage.getItem('calc_history'))||[]
+
+function addNum(n){
+  display.innerText=display.innerText==='0'?n:display.innerText+n
+}
+
+function addComma(){
+  const last=display.innerText.split(/[+\-×÷]/).pop()
+  if(!last.includes(',')) display.innerText+=','
+}
+
+function addOp(op){
+  display.innerText+=op
+}
+
+function addPercent(){
+  display.innerText+='%'
+}
+
+function addFunc(f){
+  display.innerText+=f+'('
+}
+
+function addConst(c){
+  display.innerText+=c
+}
+
+function addSqrt(){
+  display.innerText+='√'
+}
+
+function clearDisplay(){display.innerText='0'}
+function backspace(){display.innerText=display.innerText.slice(0,-1)||'0'}
+
+function normalize(exp){
+  return exp
+    .replace(/(\d)\(/g,'$1*(')
+    .replace(/\)(\d)/g,')*$1')
+    .replace(/\)\(/g,')*(')
+    .replace(/,/g,'.')
+    .replace(/×/g,'*')
+    .replace(/÷/g,'/')
+    .replace(/π/g,'Math.PI')
+    .replace(/√(\d+(\.\d+)?)/g,'Math.sqrt($1)')
+    .replace(/sin\(/g,'Math.sin(')
+    .replace(/cos\(/g,'Math.cos(')
+    .replace(/tan\(/g,'Math.tan(')
+    .replace(/(\d+(\.\d+)?)%/g,'($1/100)')
+    .replace(/\^/g,'**')
+}
+
+function format(n){
+  return Number(n).toLocaleString('id-ID')
+}
+
+function calculate(){
+  try{
+    const raw=display.innerText
+    const result=eval(normalize(raw))
+    display.innerText=format(result)
+    historyData.unshift({exp:raw,res:format(result)})
+    localStorage.setItem('calc_history',JSON.stringify(historyData))
+    renderHistory()
+  }catch{
+    alert('Perhitungan tidak valid')
+  }
+}
+
+function renderHistory(){
+  historyBox.innerHTML=''
+  historyData.forEach((h,i)=>{
+    historyBox.innerHTML+=`
+    <div class="item">
+      <div>${h.exp}</div>
+      <b>= ${h.res}</b>
+      <div class="actions">
+        <button onclick="edit(${i})">Edit</button>
+        <button onclick="del(${i})">Hapus</button>
+      </div>
+    </div>`
+  })
+}
+
+function edit(i){
+  display.innerText=historyData[i].exp
+  toggleHistory()
+}
+
+function del(i){
+  historyData.splice(i,1)
+  localStorage.setItem('calc_history',JSON.stringify(historyData))
+  renderHistory()
+}
+
+function toggleHistory(){
+  historyPanel.style.display=historyPanel.style.display==='none'?'block':'none'
+}
+
+function toggleSci(){
+  sci.style.display=sci.style.display==='none'?'grid':'none'
+}
+
+renderHistory()
+</script>
 </body>
 </html>
