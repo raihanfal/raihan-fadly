@@ -230,7 +230,26 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwreSzyGvv8creSoDUN_62weoM3f0zCSSmKIjVgSftwkPxdJYoHzHPd1VRtDmOqLsnm/exec"; 
-    const addSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+    // Aset suara (menggunakan Mixkit - gratis & cepat)
+const sounds = {
+    add: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
+    login: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+    checkout: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
+    logout: new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3'),
+    click: new Audio('https://assets.mixkit.co/active_storage/sfx/2567/2567-preview.mp3')
+};
+
+function playSfx(sfx) {
+    if (sfx) {
+        // Stop semua suara yang mungkin sedang jalan agar tidak kacau
+        Object.values(sounds).forEach(s => {
+            s.pause();
+            s.currentTime = 0;
+        });
+        sfx.volume = 0.8;
+        sfx.play().catch(e => console.log("Audio diblokir browser: ", e));
+    }
+}
     const ADMIN_USERS = ['admin', 'tungtungsahur', 'ifoodadmin', 'raihan'];
     const MY_LOGO_URL = "https://i.ibb.co.com/HT4jYTMQ/1946cb9a72d42edfbbd4489dec5a04d1.jpg"; 
 
@@ -307,6 +326,7 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
     }
 
     async function handleLogin(existingUser) {
+         playSfx(sounds.login);
         const user = existingUser || document.getElementById('username').value.trim();
         if (!user) return Swal.fire('Oops!', 'Siapa namamu?', 'warning');
         sessionStorage.setItem('activeUser', user.toLowerCase());
@@ -329,11 +349,22 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
     }
 
     function handleLogout() { 
-        Swal.fire({ title: 'Logout?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya', confirmButtonColor: '#ef4444' }).then(res => {
-            if(res.isConfirmed) { sessionStorage.removeItem('activeUser'); location.reload(); }
-        });
-    }
-
+    playSfx(sounds.login); // Suara klik tombol awal
+    Swal.fire({ 
+        title: 'Logout?', 
+        icon: 'warning', 
+        showCancelButton: true, 
+        confirmButtonText: 'Ya', 
+        confirmButtonColor: '#ef4444' 
+    }).then(res => {
+        if(res.isConfirmed) { 
+            playSfx(sounds.logout); // <--- Suara logout sedih
+            sessionStorage.removeItem('activeUser'); 
+            // Tunggu sebentar biar suara logout kedengeran sebelum page reload
+            setTimeout(() => { location.reload(); }, 600); 
+        }
+    });
+}
     function handleSearch() { searchQuery = document.getElementById('search-input').value.toLowerCase(); renderProducts(); }
 
     function filterProducts(category) {
@@ -395,9 +426,10 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
     }
 
     function addToCart(id, event) {
-        const p = products.find(x => x.id == id);
-        if (!p || p.stock <= 0) return;
-        addSound.currentTime = 0; addSound.play().catch(()=>{});
+    const p = products.find(x => x.id == id);
+    if (!p || p.stock <= 0) return;
+    
+    playSfx(sounds.login);
         const cartBtn = document.querySelector('nav button:nth-child(3)');
         const flyItem = document.createElement('div'); flyItem.className = 'fly-item';
         flyItem.style.left = `${event.clientX - 15}px`; flyItem.style.top = `${event.clientY - 15}px`;
@@ -444,9 +476,16 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
             showLoaderOnConfirm: true,
             preConfirm: async () => { return await sendData({ action: 'checkout', user: sessionStorage.getItem('activeUser'), detail, total }); },
             allowOutsideClick: () => !Swal.isLoading()
-        }).then((res) => {
-            if (res.isConfirmed) { cart = []; updateCartUI(); toggleCart(); Swal.fire({ icon: 'success', title: 'SENT!', text: 'Order sent to Raihan Fadly', timer: 2000, showConfirmButton: false }); }
-        });
+
+}).then((res) => {
+    if (res.isConfirmed) { 
+        playSfx(sounds.checkout); 
+        cart = []; 
+        updateCartUI(); 
+        toggleCart(); 
+        Swal.fire({ icon: 'success', title: 'SENT!', text: 'Order sent to Raihan Fadly', timer: 2000, showConfirmButton: false }); 
+    }
+});
     }
 
     async function sendData(payload) { return fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) }); }
