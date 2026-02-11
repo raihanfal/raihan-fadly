@@ -301,7 +301,7 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
 // Objek suara dengan link yang sudah dipastikan direct
 // Kita tambahkan preload agar browser mendownload suara lebih awal
 const sounds = {
-    add: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
+    add: new Audio('payout.mp3'),
     login: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
     checkout: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
     logout: new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3'),
@@ -506,7 +506,7 @@ function playSfx(sfx) {
     function addToCart(id, event) {
     // 1. LANGSUNG BUNYIKAN SUARA DI BARIS PALING ATAS
     // Kita pakai sounds.login karena kamu bilang ini yang paling lancar
-    playSfx(sounds.login); 
+    playSfx(sounds.add); 
 
     const p = products.find(x => x.id == id);
     if (!p || p.stock <= 0) return;
