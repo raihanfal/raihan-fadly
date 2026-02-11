@@ -626,27 +626,63 @@ function playSfx(sfx) {
     async function deleteProduct(id) { if((await Swal.fire({ title: 'Remove?', icon: 'warning', showCancelButton: true, customClass: { popup: 'rounded-[40px] font-sans italic font-sans italic' } })).isConfirmed) { await sendData({ action: 'delete', id }); loadProducts(); } }
 
     async function loadOrders() {
-        const monitorList = document.getElementById('order-history-list');
-        monitorList.innerHTML = '<div class="text-center py-20 animate-pulse font-black text-xs text-slate-400 uppercase tracking-widest font-sans italic italic font-sans italic font-sans italic">Connecting...</div>';
-        try {
-            const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
-            const data = await res.json();
-            const orders = Array.isArray(data) ? data.reverse() : [];
-            if (orders.length === 0) { monitorList.innerHTML = '<p class="text-center py-10 italic text-slate-400 text-[10px] font-black uppercase opacity-20 tracking-widest font-sans italic italic font-sans italic font-sans italic font-sans italic">No pending orders</p>'; return; }
-            monitorList.innerHTML = orders.map(o => `
-                <div class="bg-slate-50 p-6 rounded-[35px] border-2 border-slate-100 shadow-sm flex justify-between items-center mb-4 transition-all hover:border-blue-100 font-sans italic font-sans italic font-sans italic">
-                    <div class="flex gap-4 md:gap-8 items-center text-slate-900 max-w-[75%] font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic">
-                        <div class="w-14 h-14 md:w-20 md:h-20 bg-white rounded-[20px] flex-shrink-0 flex items-center justify-center font-black text-blue-600 text-xl md:text-3xl italic shadow-md border border-slate-100 italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic">${(o.nama_pelanggan || o.user || 'U').charAt(0).toUpperCase()}</div>
-                        <div class="truncate leading-none font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic">
-                            <h6 class="font-extrabold uppercase text-[13px] md:text-lg tracking-tighter leading-none mb-1 italic truncate text-slate-800 font-sans italic font-sans font-sans italic font-sans font-sans font-sans italic font-sans">${o.nama_pelanggan || o.user}</h6>
-                            <p class="text-[9px] md:text-[11px] text-slate-400 font-bold uppercase italic leading-tight mb-2 truncate font-sans italic font-sans font-sans italic font-sans font-sans font-sans italic font-sans font-sans italic font-sans">${o.detail_order || o.detail}</p>
-                            <span class="text-[8px] md:text-[10px] text-slate-300 font-black uppercase tracking-widest italic font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans">${o.tanggal ? new Date(o.tanggal).toLocaleTimeString() : '-'} • <span class="text-blue-500 font-bold font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans font-sans italic font-sans">Rp ${Number(o.total_bayar || o.total || 0).toLocaleString('id-ID')}</span></span>
+    const monitorList = document.getElementById('order-history-list');
+    monitorList.innerHTML = '<div class="text-center py-20 animate-pulse font-black text-xs text-slate-400 uppercase">Memuat Antrian...</div>';
+    try {
+        const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
+        const data = await res.json();
+        const orders = Array.isArray(data) ? data.reverse() : [];
+        const activeUser = sessionStorage.getItem('activeUser');
+        const isAdmin = ADMIN_USERS.includes(activeUser);
+        
+        if (orders.length === 0) {
+            monitorList.innerHTML = '<p class="text-center py-10 italic text-slate-400 text-sm font-black opacity-20">Belum ada pesanan</p>';
+            return;
+        }
+        
+        monitorList.innerHTML = orders.map(o => {
+            const orderName = o.user || o.nama_pelanggan || "User";
+            const orderDetail = o.detail || o.detail_order || "-";
+            const orderTotal = Number(o.total || o.total_bayar || 0);
+            const isMyOrder = orderName.toLowerCase() === activeUser.toLowerCase();
+            
+            return `
+                    <div onclick="showFullOrderDetail('${orderName}', '${orderDetail}', ${orderTotal})" 
+                         class="bg-white p-6 rounded-[35px] border-2 ${isMyOrder ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100'} shadow-sm flex justify-between items-center mb-4 cursor-pointer hover:scale-[1.01] transition-all">
+                        <div class="flex gap-4 items-center text-slate-900 flex-1 overflow-hidden">
+                            <div class="w-14 h-14 bg-blue-600 rounded-[20px] flex-shrink-0 flex items-center justify-center font-black text-white text-xl shadow-lg">${orderName.charAt(0).toUpperCase()}</div>
+                            <div class="flex-1 truncate">
+                                <h6 class="font-extrabold uppercase text-base mb-1 text-slate-800">${orderName}</h6>
+                                <p class="text-slate-500 font-bold italic text-sm truncate mb-2">${orderDetail}</p>
+                                <span class="text-[10px] bg-slate-100 px-2 py-1 rounded-lg text-slate-400 font-black uppercase">Rp ${orderTotal.toLocaleString('id-ID')}</span>
+                            </div>
                         </div>
-                    </div>
-                    ${ADMIN_USERS.includes(sessionStorage.getItem('activeUser')) ? `<button onclick="finishOrder(${o.rowId})" class="bg-green-500 text-white w-12 h-12 rounded-[15px] flex-shrink-0 flex items-center justify-center active:scale-90 shadow-lg shadow-green-100 italic font-black font-sans leading-none italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans">✔</button>` : ''}
-                </div>`).join('');
-        } catch (err) { monitorList.innerHTML = '<p class="text-red-400 text-center font-bold tracking-widest py-20 italic font-sans uppercase font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans">Offline</p>'; }
-    }
+                        <div class="flex flex-col gap-2 ml-4">
+                            ${isAdmin ? `<button onclick="event.stopPropagation(); finishOrder(${o.rowId})" class="bg-green-500 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">✔</button>` : ''}
+                            ${isMyOrder ? `<button onclick="event.stopPropagation(); editMyOrder(${o.rowId}, '${orderDetail}')" class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">✎</button>` : ''}
+                        </div>
+                    </div>`;
+        }).join('');
+    } catch (err) { monitorList.innerHTML = '<p class="text-red-400 text-center font-bold py-20">Koneksi Gagal</p>'; }
+}
+
+function showFullOrderDetail(name, detail, total) {
+    playSfx(sounds.click);
+    Swal.fire({
+        title: '<span class="text-sm font-black text-slate-400">RINCIAN PESANAN</span>',
+        html: `<div class="text-left font-sans bg-slate-50 p-6 rounded-[35px] border-2">
+                     <p class="text-[10px] font-black text-blue-600 uppercase mb-1">Nama Pembeli</p>
+                     <p class="text-lg font-black mb-4">${name}</p>
+                     <p class="text-[10px] font-black text-blue-600 uppercase mb-1">Pesanan</p>
+                     <p class="text-base font-bold italic text-slate-700 mb-4">${detail}</p>
+                     <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Bayar</p>
+                     <p class="text-3xl font-black text-blue-600 tracking-tighter">Rp ${total.toLocaleString('id-ID')}</p>
+                   </div>`,
+        confirmButtonText: 'Tutup',
+        confirmButtonColor: '#1e293b',
+        customClass: { popup: 'rounded-[50px] p-4' }
+    });
+}
 
     async function finishOrder(rowId) { if((await Swal.fire({ title: 'Finish?', showCancelButton: true, customClass: { popup: 'rounded-[35px] p-6 font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans' }, confirmButtonColor: '#22c55e' })).isConfirmed) { await sendData({ action: 'delete_order', rowId }); loadOrders(); } }
 </script>
