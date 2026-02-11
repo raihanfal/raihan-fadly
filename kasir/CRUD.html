@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Kasir Sederhana</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Poppins, Arial, sans-serif;
+  background:linear-gradient(135deg,#141e30,#243b55);
+  color:#fff;
+}
+.hidden{display:none}
+
+.container{
+  padding:16px;
+  max-width:420px;
+  margin:auto;
+}
+
+.card{
+  background:rgba(255,255,255,.1);
+  backdrop-filter:blur(10px);
+  padding:16px;
+  border-radius:12px;
+  margin:10px 0;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border:none;
+  border-radius:8px;
+}
+
+button{
+  padding:10px;
+  margin:6px 0;
+  border:none;
+  border-radius:8px;
+  background:#00c6ff;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.btn-small{
+  padding:6px 12px;
+  width:auto;
+  margin-left:6px;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="container">
+  <div class="card">
+    <h2>Login Kasir</h2>
+    <input id="username" placeholder="Masukkan nama">
+    <button onclick="doLogin()">Masuk</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPage" class="container hidden">
+  <div class="top">
+    <h3>Admin Panel</h3>
+    <span id="adminName"></span>
+  </div>
+
+  <div class="card">
+    <h4>Tambah Produk</h4>
+    <input id="pNama" placeholder="Nama Produk">
+    <input id="pHarga" placeholder="Harga" type="number">
+    <button onclick="addProduct()">Tambah</button>
+  </div>
+
+  <div class="card">
+    <h4>Produk</h4>
+    <div id="productList"></div>
+  </div>
+</div>
+
+<!-- CUSTOMER -->
+<div id="customerPage" class="container hidden">
+  <div class="top">
+    <h3>Pelanggan</h3>
+    <span id="custName"></span>
+  </div>
+
+  <div class="card">
+    <h4>Produk</h4>
+    <div id="shop"></div>
+  </div>
+
+  <div class="card">
+    <h4>Keranjang</h4>
+    <div id="cartBox"></div>
+    <button onclick="checkout()">Checkout</button>
+  </div>
+</div>
+
+<script>
+const API_URL = "ISI_URL_GAS_KAMU_DISINI";
+const adminList = ["andi","budi","kasir"];
+
+let cart = [];
+let products = [];
+
+/* LOGIN */
+function doLogin(){
+  const u = document.getElementById("username").value.trim();
+  if(!u) return alert("Isi nama");
+
+  localStorage.username = u;
+  const role = adminList.includes(u.toLowerCase()) ? "admin" : "customer";
+  localStorage.role = role;
+
+  document.getElementById("loginPage").classList.add("hidden");
+
+  role === "admin" ? showAdmin() : showCustomer();
+}
+
+/* ADMIN */
+function showAdmin(){
+  document.getElementById("adminPage").classList.remove("hidden");
+  document.getElementById("adminName").innerText = localStorage.username;
+}
+
+function addProduct(){
+  const nama = document.getElementById("pNama").value;
+  const harga = document.getElementById("pHarga").value;
+  if(!nama || !harga) return alert("Lengkapi data");
+
+  products.push({nama,harga});
+  renderAdminProducts();
+}
+
+function renderAdminProducts(){
+  document.getElementById("productList").innerHTML =
+    products.map(p=>`<div class="card">${p.nama} - ${p.harga}</div>`).join("");
+}
+
+/* CUSTOMER */
+function showCustomer(){
+  document.getElementById("customerPage").classList.remove("hidden");
+  document.getElementById("custName").innerText = localStorage.username;
+  renderShop();
+}
+
+function renderShop(){
+  document.getElementById("shop").innerHTML =
+    products.map((p,i)=>`
+      <div class="card">
+        ${p.nama} - ${p.harga}
+        <button class="btn-small" onclick="addCart(${i})">+</button>
+      </div>
+    `).join("");
+}
+
+function addCart(i){
+  cart.push(products[i]);
+  renderCart();
+}
+
+function renderCart(){
+  document.getElementById("cartBox").innerHTML =
+    cart.map((c,i)=>`
+      <div class="card">
+        ${c.nama} - ${c.harga}
+        <button class="btn-small" onclick="removeCart(${i})">x</button>
+      </div>
+    `).join("");
+}
+
+function removeCart(i){
+  cart.splice(i,1);
+  renderCart();
+}
+
+function checkout(){
+  if(cart.length===0) return alert("Keranjang kosong");
+  alert("Checkout atas nama " + localStorage.username);
+  cart=[];
+  renderCart();
+}
+</script>
+
+</body>
+</html>
