@@ -160,12 +160,13 @@ header.glass {
                     <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Cari menu terbaik hari ini..." class="w-full bg-white p-5 rounded-3xl border-2 border-slate-100 outline-none focus:border-blue-500 font-bold text-sm shadow-md transition-all pl-14 font-sans">
                     <div class="absolute left-6 top-5 opacity-30 text-slate-400 font-sans">🔍</div>
                 </div>
+                
                 <div class="w-full overflow-x-auto no-scrollbar font-sans">
                     <div id="filter-container" class="flex gap-2.5 pb-2">
-                        <button onclick="filterProducts('all')" class="filter-btn active px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap">All Menu</button>
-                        <button onclick="filterProducts('Makanan')" class="filter-btn px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest italic whitespace-nowrap">🍱 Food</button>
-                        <button onclick="filterProducts('Minuman')" class="filter-btn px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest italic whitespace-nowrap">🥤 Drink</button>
-                        <button onclick="filterProducts('Dessert')" class="filter-btn px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest italic whitespace-nowrap">🍰 Dessert</button>
+                        <button onclick="playSfx(sounds.login); filterProducts('all')" class="filter-btn active px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap">📖All Menu</button>
+                        <button  onclick="playSfx(sounds.login); filterProducts('Makanan')" class="filter-btn px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest italic whitespace-nowrap">🍱 Food</button>
+                        <button onclick="playSfx(sounds.login); filterProducts('Minuman')" class="filter-btn px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest italic whitespace-nowrap">🥤 Drink</button>
+                        <button onclick="playSfx(sounds.login); filterProducts('Dessert')" class="filter-btn px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest italic whitespace-nowrap">🍰 Dessert</button>
                     </div>
                 </div>
             </div>
@@ -180,27 +181,27 @@ header.glass {
 
     <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 w-full glass border-t border-slate-200/50 p-3 px-2 z-50 flex justify-around items-end rounded-t-[35px] shadow-[0_-10px_50px_rgba(0,0,0,0.1)] text-slate-400 pb-5">
         
-        <button onclick="window.scrollTo(0,0); filterProducts('all')" class="flex flex-col items-center gap-1 text-blue-600 btn-active w-1/5">
+        <button onclick="playSfx(sounds.login); window.scrollTo(0,0); filterProducts('all')" class="flex flex-col items-center gap-1 text-blue-600 btn-active w-1/5">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
             <span class="text-[8px] font-black uppercase tracking-tighter font-sans">Menu</span>
         </button>
         
-        <button onclick="openHistoryModal()" class="flex flex-col items-center gap-1 btn-active w-1/5 hover:text-blue-500 transition-colors">
+        <button onclick="playSfx(sounds.login); openHistoryModal()" class="flex flex-col items-center gap-1 btn-active w-1/5 hover:text-blue-500 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
             <span class="text-[8px] font-black uppercase tracking-tighter font-sans">Pesanan</span>
         </button>
 
-        <button onclick="toggleCart()" class="relative bg-slate-900 text-white w-14 h-14 rounded-2xl -mt-10 border-4 border-slate-50 shadow-2xl flex items-center justify-center btn-active mx-1 flex-shrink-0 transition-transform hover:-translate-y-1">
+        <button onclick="playSfx(sounds.login); toggleCart()" class="relative bg-slate-900 text-white w-14 h-14 rounded-2xl -mt-10 border-4 border-slate-50 shadow-2xl flex items-center justify-center btn-active mx-1 flex-shrink-0 transition-transform hover:-translate-y-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
             <span id="cart-count" class="absolute -top-1 -right-1 bg-blue-500 text-[9px] px-2 py-0.5 rounded-lg border-2 border-white font-black animate-bounce">0</span>
         </button>
 
-        <button id="nav-action-user" onclick="openReviewModal()" class="flex flex-col items-center gap-1 btn-active w-1/5 hover:text-blue-500">
+        <button id="nav-action-user" onclick="playSfx(sounds.login); openReviewModal()" class="flex flex-col items-center gap-1 btn-active w-1/5 hover:text-blue-500">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
             <span class="text-[8px] font-black uppercase tracking-tighter font-sans">Tulis</span>
         </button>
 <button id="nav-action-admin"
-onclick="openAdminToolsModal()"
+onclick="playSfx(sounds.login); openAdminToolsModal()"
 class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 text-blue-600">
 
     <div class="w-6 h-6 flex items-center justify-center">
@@ -226,7 +227,7 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
 
     <span class="text-[8px] font-black uppercase tracking-tighter">Tools</span>
 
-        <button onclick="openAllReviewsModal()" class="flex flex-col items-center gap-1 btn-active w-1/5 hover:text-blue-500">
+        <button onclick="playSfx(sounds.login); openAllReviewsModal()" class="flex flex-col items-center gap-1 btn-active w-1/5 hover:text-blue-500">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
             <span class="text-[8px] font-black uppercase tracking-tighter font-sans">Kata</span>
         </button>
@@ -245,7 +246,7 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
                 <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-2 font-sans italic">TOTAL BILL</span>
                 <span id="total-price" class="text-blue-400 leading-none tracking-tighter italic font-sans italic">Rp 0</span>
             </div>
-            <button onclick="checkout()" class="w-full bg-blue-600 text-white py-6 rounded-[30px] font-black shadow-2xl active:scale-95 transition-all text-xl uppercase italic font-sans">🚀 Confirm Order</button>
+            <button onclick="playSfx(sounds.login); checkout()" class="w-full bg-blue-600 text-white py-6 rounded-[30px] font-black shadow-2xl active:scale-95 transition-all text-xl uppercase italic font-sans">🚀 Confirm Order</button>
         </div>
     </div>
 
