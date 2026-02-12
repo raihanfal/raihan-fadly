@@ -65,7 +65,10 @@ body {
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
         }
 
-        #cart-sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; max-width: 450px; }
+       #cart-sidebar {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: min(90%, 450px);
+}
         .cart-open { transform: translateX(0) !important; }
 
         .btn-active:active { transform: scale(0.92); transition: 0.1s; }
@@ -235,7 +238,12 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
 
     <div id="cart-sidebar" class="fixed top-0 right-0 h-full z-[60] dark-card shadow-[-20px_0_80px_rgba(0,0,0,0.8)] translate-x-full flex flex-col p-8 border-l border-white/10 font-sans">
         <div class="flex justify-between items-center mb-10">
-            <h4 class="text-3xl font-black uppercase italic tracking-tighter leading-none font-sans italic">Your <span class="text-blue-500 font-sans font-black italic uppercase">Cart</span></h4>
+<h4 class="text-3xl font-black uppercase tracking-tighter leading-none">
+    <span class="text-white">Your</span>
+    <span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+        Cart
+    </span>
+</h4>
             <button onclick="toggleCart()" class="bg-white/10 p-3 rounded-2xl"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
         </div>
         <div id="cart-items" class="flex-1 overflow-y-auto space-y-5 custom-scrollbar pr-2 italic">
@@ -258,7 +266,19 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 t
                     <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mt-1">Live Status</p>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="loadOrders()" class="bg-blue-100 text-blue-600 p-3 rounded-2xl shadow-sm active:scale-90">🔄</button>
+<button 
+onclick="loadOrders()" 
+class="bg-slate-900 hover:bg-blue-600 text-white px-4 py-3 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+class="w-4 h-4" 
+viewBox="0 0 24 24" 
+fill="currentColor">
+<path d="M4 12a8 8 0 0113.66-5.66L20 4v6h-6l2.24-2.24A6 6 0 106 12H4z"/>
+</svg>
+
+Refresh
+</button>
                     <button onclick="document.getElementById('customer-orders-modal').classList.add('hidden')" class="bg-red-50 text-red-500 p-3 rounded-2xl shadow-sm active:scale-90">✕</button>
                 </div>
             </div>
@@ -605,7 +625,9 @@ function playSfx(sfx) {
     async function openAddProductModal() {
         const { value: f } = await Swal.fire({
             title: 'New Product',
-            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-8 rounded-[45px] border-2 border-slate-100 shadow-xl font-sans italic font-sans italic font-sans"><input id="n" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-slate-800 mb-4 outline-none shadow-inner italic font-sans italic font-sans italic" placeholder="Name"><div class="grid grid-cols-2 gap-4 mb-4 font-sans italic font-sans italic font-sans italic"><input id="p" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" placeholder="Price"><input id="d" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="0"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="s" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black outline-none italic font-sans italic font-sans italic"><select id="c" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans italic"><option value="Makanan">Makanan</option><option value="Minuman">Minuman</option><option value="Dessert">Dessert</option></select></div><input id="i" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" placeholder="Img Link"></div></div>`,
+            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-8 rounded-[45px] border-2 border-slate-100 shadow-xl font-sans italic font-sans italic font-sans"><input id="n" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-slate-800 mb-4 outline-none shadow-inner italic font-sans italic font-sans italic" placeholder="Name"><div class="grid grid-cols-2 gap-4 mb-4 font-sans italic font-sans italic font-sans italic"><input id="p" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" placeholder="Price"><input id="d" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="0"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="s" type="number"
+placeholder="Stock Item"
+class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="c" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans italic"><option value="Makanan">Makanan</option><option value="Minuman">Minuman</option><option value="Dessert">Dessert</option></select></div><input id="i" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" placeholder="Img Link"></div></div>`,
             showCancelButton: true, confirmButtonText: 'Publish', customClass: { popup: 'rounded-[60px] p-4 font-sans italic font-sans italic font-sans italic' },
             preConfirm: () => ({ name: document.getElementById('n').value, price: document.getElementById('p').value, discount: document.getElementById('d').value, stock: document.getElementById('s').value, category: document.getElementById('c').value, img: document.getElementById('i').value })
         });
@@ -616,7 +638,10 @@ function playSfx(sfx) {
         const p = products.find(x => x.id == id);
         const { value: f } = await Swal.fire({
             title: 'Control Center',
-            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-black font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-6 md:p-10 rounded-[40px] md:rounded-[55px] border-2 border-white shadow-xl font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="en" class="w-full bg-white p-5 rounded-3xl border-2 border-slate-100 font-black mb-6 shadow-inner text-slate-700 italic font-sans italic font-sans italic" value="${p.name}"><div class="grid grid-cols-2 gap-4 mb-4 italic font-sans italic font-sans italic"><input id="ep" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" value="${p.price}"><input id="ed" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="${p.discount}"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="es" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black outline-none italic font-sans italic font-sans italic font-sans italic"><select id="ec" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans"><option value="Makanan" ${p.category === 'Makanan' ? 'selected' : ''}>Makanan</option><option value="Minuman" ${p.category === 'Minuman' ? 'selected' : ''}>Minuman</option><option value="Dessert" ${p.category === 'Dessert' ? 'selected' : ''}>Dessert</option></select></div><input id="ei" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" value="${p.img}"></div></div>`,
+            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-black font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-6 md:p-10 rounded-[40px] md:rounded-[55px] border-2 border-white shadow-xl font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="en" class="w-full bg-white p-5 rounded-3xl border-2 border-slate-100 font-black mb-6 shadow-inner text-slate-700 italic font-sans italic font-sans italic" value="${p.name}"><div class="grid grid-cols-2 gap-4 mb-4 italic font-sans italic font-sans italic"><input id="ep" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" value="${p.price}"><input id="ed" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="${p.discount}"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="es" type="number"
+value="${p.stock}"
+placeholder="Stock Item"
+class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="ec" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans"><option value="Makanan" ${p.category === 'Makanan' ? 'selected' : ''}>Makanan</option><option value="Minuman" ${p.category === 'Minuman' ? 'selected' : ''}>Minuman</option><option value="Dessert" ${p.category === 'Dessert' ? 'selected' : ''}>Dessert</option></select></div><input id="ei" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" value="${p.img}"></div></div>`,
             showCancelButton: true, confirmButtonText: 'Save', customClass: { popup: 'rounded-[60px] p-4 font-sans italic font-sans font-sans italic' },
             preConfirm: () => ({ name: document.getElementById('en').value, price: document.getElementById('ep').value, discount: document.getElementById('ed').value, stock: document.getElementById('es').value, category: document.getElementById('ec').value, img: document.getElementById('ei').value })
         });
@@ -628,10 +653,12 @@ function playSfx(sfx) {
     async function loadOrders() {
     const monitorList = document.getElementById('order-history-list');
     monitorList.innerHTML = '<div class="text-center py-20 animate-pulse font-black text-xs text-slate-400 uppercase">Memuat Antrian...</div>';
+    
     try {
         const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
         const data = await res.json();
         const orders = Array.isArray(data) ? data.reverse() : [];
+        
         const activeUser = sessionStorage.getItem('activeUser');
         const isAdmin = ADMIN_USERS.includes(activeUser);
         
@@ -641,36 +668,94 @@ function playSfx(sfx) {
         }
         
         monitorList.innerHTML = orders.map(o => {
+            
             const orderName = o.user || o.nama_pelanggan || "User";
             const orderDetail = o.detail || o.detail_order || "-";
             const orderTotal = Number(o.total || o.total_bayar || 0);
+            const orderStatus = o.status || o.Status || "Pending";
+            const rawDate = o.tanggal || o.Tanggal || o.date || o.Date;
+            
             const isMyOrder = orderName.toLowerCase() === activeUser.toLowerCase();
             
+            // 🔥 FIX TANGGAL ISO
+            let formattedDate = "-";
+            if (rawDate) {
+                if (String(rawDate).includes("T")) {
+                    const parts = rawDate.split("T");
+                    const datePart = parts[0];
+                    const timePart = parts[1].split(".")[0];
+                    const dSplit = datePart.split("-");
+                    formattedDate = `${dSplit[2]}/${dSplit[1]}/${dSplit[0]} ${timePart}`;
+                } else {
+                    formattedDate = rawDate;
+                }
+            }
+            
             return `
-                    <div onclick="showFullOrderDetail('${orderName}', '${orderDetail}', ${orderTotal})" 
-                         class="bg-white p-6 rounded-[35px] border-2 ${isMyOrder ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100'} shadow-sm flex justify-between items-center mb-4 cursor-pointer hover:scale-[1.01] transition-all">
-                        <div class="flex gap-4 items-center text-slate-900 flex-1 overflow-hidden">
-                            <div class="w-14 h-14 bg-blue-600 rounded-[20px] flex-shrink-0 flex items-center justify-center font-black text-white text-xl shadow-lg">${orderName.charAt(0).toUpperCase()}</div>
-                            <div class="flex-1 truncate">
-                                <h6 class="font-extrabold uppercase text-base mb-1 text-slate-800">${orderName}</h6>
-                                <p class="text-slate-500 font-bold italic text-sm truncate mb-2">${orderDetail}</p>
-                                <span class="text-[10px] bg-slate-100 px-2 py-1 rounded-lg text-slate-400 font-black uppercase">Rp ${orderTotal.toLocaleString('id-ID')}</span>
-                            </div>
+                <div onclick="showFullOrderDetail('${orderName}', '${orderDetail}', ${orderTotal})" 
+                     class="bg-white p-6 rounded-[35px] border-2 ${isMyOrder ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100'} shadow-sm flex justify-between items-center mb-4 cursor-pointer hover:scale-[1.01] transition-all">
+
+                    <div class="flex gap-4 items-center text-slate-900 flex-1 overflow-hidden">
+                        <div class="w-14 h-14 bg-blue-600 rounded-[20px] flex-shrink-0 flex items-center justify-center font-black text-white text-xl shadow-lg">
+                            ${orderName.charAt(0).toUpperCase()}
                         </div>
-                        <div class="flex flex-col gap-2 ml-4">
-                            ${isAdmin ? `<button onclick="event.stopPropagation(); finishOrder(${o.rowId})" class="bg-green-500 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">✔</button>` : ''}
-                            ${isMyOrder ? `<button onclick="event.stopPropagation(); editMyOrder(${o.rowId}, '${orderDetail}')" class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">✎</button>` : ''}
+
+                        <div class="flex-1 truncate">
+                            <h6 class="font-extrabold uppercase text-base mb-1 text-slate-800">${orderName}</h6>
+                            <p class="text-slate-500 font-bold italic text-sm truncate mb-1">${orderDetail}</p>
+                            <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-2">${formattedDate}</p>
+
+                            <span class="text-[10px] bg-slate-100 px-2 py-1 rounded-lg text-slate-400 font-black uppercase">
+                                Rp ${orderTotal.toLocaleString('id-ID')}
+                            </span>
                         </div>
-                    </div>`;
+                    </div>
+
+                    <div class="flex flex-col gap-2 ml-4">
+
+                        ${isAdmin ? `
+                            <select 
+                                onclick="event.stopPropagation();"
+                                onchange="updateStatus(${o.rowId}, this.value)"
+                                class="text-[10px] font-black uppercase px-2 py-1 rounded-xl border border-slate-200">
+
+                                <option value="Pending" ${orderStatus==='Pending'?'selected':''}>Pending</option>
+                                <option value="Proses" ${orderStatus==='Proses'?'selected':''}>Proses</option>
+                                <option value="Selesai" ${orderStatus==='Selesai'?'selected':''}>Selesai</option>
+                            </select>
+                        ` : `
+                            <span class="text-[10px] px-3 py-1 rounded-xl font-black uppercase
+                                ${orderStatus === 'Selesai' ? 'bg-green-100 text-green-600' :
+                                  orderStatus === 'Proses' ? 'bg-yellow-100 text-yellow-600' :
+                                  'bg-red-100 text-red-600'}">
+                                ${orderStatus}
+                            </span>
+                        `}
+
+                        ${isMyOrder ? `
+                            <button onclick="event.stopPropagation(); editMyOrder(${o.rowId}, '${orderDetail}')"
+                                class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
+                                ✎
+                            </button>
+                        ` : ''}
+
+                    </div>
+                </div>
+            `;
+            
         }).join('');
-    } catch (err) { monitorList.innerHTML = '<p class="text-red-400 text-center font-bold py-20">Koneksi Gagal</p>'; }
+        
+    } catch (err) {
+        monitorList.innerHTML = '<p class="text-red-400 text-center font-bold py-20">Koneksi Gagal</p>';
+    }
 }
 
-function showFullOrderDetail(name, detail, total) {
-    playSfx(sounds.click);
-    Swal.fire({
-        title: '<span class="text-sm font-black text-slate-400">RINCIAN PESANAN</span>',
-        html: `<div class="text-left font-sans bg-slate-50 p-6 rounded-[35px] border-2">
+    // --- FUNGSI RINCIAN & EDIT (POIN 3) ---
+    function showFullOrderDetail(name, detail, total) {
+        playSfx(sounds.click);
+        Swal.fire({
+            title: '<span class="text-sm font-black text-slate-400">RINCIAN PESANAN</span>',
+            html: `<div class="text-left font-sans bg-slate-50 p-6 rounded-[35px] border-2">
                      <p class="text-[10px] font-black text-blue-600 uppercase mb-1">Nama Pembeli</p>
                      <p class="text-lg font-black mb-4">${name}</p>
                      <p class="text-[10px] font-black text-blue-600 uppercase mb-1">Pesanan</p>
@@ -678,13 +763,135 @@ function showFullOrderDetail(name, detail, total) {
                      <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Bayar</p>
                      <p class="text-3xl font-black text-blue-600 tracking-tighter">Rp ${total.toLocaleString('id-ID')}</p>
                    </div>`,
+            confirmButtonText: 'Tutup',
+            confirmButtonColor: '#1e293b',
+            customClass: { popup: 'rounded-[50px] p-4' }
+        });
+    }
+
+    async function editMyOrder(rowId, oldDetail) {
+    playSfx(sounds.click);
+    
+    // 1. Pecah teks jadi array object
+    let itemsArr = oldDetail.split(', ').map(item => {
+        let parts = item.split('x ');
+        return { qty: parseInt(parts[0]), name: parts[1] };
+    });
+
+    // 2. Munculkan UI
+    const { value: isConfirmed } = await Swal.fire({
+        title: 'Edit Jumlah Pesanan',
+        html: `
+            <div id="edit-order-container" class="space-y-4 p-2">
+                ${itemsArr.map((item, index) => `
+                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border-2">
+                        <span class="font-bold text-slate-700 text-sm item-name">${item.name}</span>
+                        <div class="flex items-center gap-3">
+                            <button onclick="updateQty(${index}, -1)" class="w-8 h-8 bg-red-500 text-white rounded-lg font-black">-</button>
+                            <span id="qty-${index}" class="font-black text-blue-600 qty-val">${item.qty}</span>
+                            <button onclick="updateQty(${index}, 1)" class="w-8 h-8 bg-green-500 text-white rounded-lg font-black">+</button>
+                        </div>
+                    </div>
+                `).join('')}
+                <p class="text-[10px] text-red-400 mt-4 italic">*Jika jumlah 0, item akan dihapus.</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Update DB',
+        confirmButtonColor: '#2563eb',
+        customClass: { popup: 'rounded-[40px]' },
+        preConfirm: () => {
+            // Ambil data terbaru langsung dari elemen HTML (DOM)
+            let updatedItems = [];
+            itemsArr.forEach((item, index) => {
+                let currentQty = parseInt(document.getElementById(`qty-${index}`).innerText);
+                if (currentQty > 0) {
+                    updatedItems.push(`${currentQty}x ${item.name}`);
+                }
+            });
+            return updatedItems.join(', ');
+        }
+    });
+
+    // 3. Eksekusi simpan ke DB
+    if (isConfirmed !== undefined && isConfirmed !== null) {
+        const finalDetail = isConfirmed;
+        
+        Swal.fire({ title: 'Mengupdate DB...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+        
+        // PENTING: Gunakan payload JSON yang benar
+        const payload = { 
+            action: 'edit_order', 
+            rowId: rowId, 
+            detail: finalDetail === "" ? "CANCELLED" : finalDetail 
+        };
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Apps Script butuh ini
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            // Kasih delay dikit biar DB selesai proses
+            setTimeout(() => {
+                Swal.fire({ icon: 'success', title: 'Berhasil!', timer: 1500, showConfirmButton: false });
+                loadOrders();
+            }, 500);
+        } catch (err) {
+            Swal.fire('Gagal', 'Gagal menyambung ke database', 'error');
+        }
+    }
+}
+
+// Fungsi +/- tetap di luar
+window.updateQty = (index, delta) => {
+    let qtyEl = document.getElementById(`qty-${index}`);
+    if (qtyEl) {
+        let currentQty = parseInt(qtyEl.innerText);
+        let newQty = currentQty + delta;
+        if (newQty >= 0) {
+            qtyEl.innerText = newQty;
+        }
+    }
+};
+
+async function updateStatus(rowId, newStatus) {
+    try {
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "update_status",
+                rowId: rowId,
+                newStatus: newStatus
+            })
+        });
+
+        loadOrders();
+    } catch (err) {
+        alert("Gagal update status");
+    }
+}
+
+    async function finishOrder(rowId) { if((await Swal.fire({ title: 'Finish?', showCancelButton: true, customClass: { popup: 'rounded-[35px] p-6 font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans' }, confirmButtonColor: '#22c55e' })).isConfirmed) { await sendData({ action: 'delete_order', rowId }); loadOrders(); } }
+    function showFullOrderDetail(name, detail, total) {
+    playSfx(sounds.click);
+    Swal.fire({
+        title: '<span class="text-sm font-black text-slate-400">RINCIAN PESANAN</span>',
+        html: `<div class="text-left font-sans bg-slate-50 p-6 rounded-[35px] border-2">
+                 <p class="text-[10px] font-black text-blue-600 uppercase mb-1">Nama Pembeli</p>
+                 <p class="text-lg font-black mb-4">${name}</p>
+                 <p class="text-[10px] font-black text-blue-600 uppercase mb-1">Pesanan</p>
+                 <p class="text-base font-bold italic text-slate-700 mb-4">${detail}</p>
+                 <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Bayar</p>
+                 <p class="text-3xl font-black text-blue-600 tracking-tighter">Rp ${total.toLocaleString('id-ID')}</p>
+               </div>`,
         confirmButtonText: 'Tutup',
         confirmButtonColor: '#1e293b',
         customClass: { popup: 'rounded-[50px] p-4' }
     });
 }
-
-    async function finishOrder(rowId) { if((await Swal.fire({ title: 'Finish?', showCancelButton: true, customClass: { popup: 'rounded-[35px] p-6 font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans' }, confirmButtonColor: '#22c55e' })).isConfirmed) { await sendData({ action: 'delete_order', rowId }); loadOrders(); } }
 </script>
 </body>
 </html>
