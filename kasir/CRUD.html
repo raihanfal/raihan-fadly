@@ -325,7 +325,7 @@ const sounds = {
     login: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
     checkout: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
     logout: new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3'),
-    click: new Audio('https://assets.mixkit.co/active_storage/sfx/2567/2567-preview.mp3')
+    click: new Audio('click.mp3')
 };
 
 // Paksa preload
@@ -448,7 +448,7 @@ function playSfx(sfx) {
     }
 
     function handleLogout() { 
-    playSfx(sounds.login); // Suara klik tombol awal
+    playSfx(sounds.click); // Suara klik tombol awal
     Swal.fire({ 
         title: 'Logout?', 
         icon: 'warning', 
