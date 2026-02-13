@@ -282,6 +282,14 @@ Refresh
                     <button onclick="document.getElementById('customer-orders-modal').classList.add('hidden')" class="bg-red-50 text-red-500 p-3 rounded-2xl shadow-sm active:scale-90">✕</button>
                 </div>
             </div>
+                        <div class="flex items-center justify-between bg-slate-50 p-3 rounded-[30px] border-2 border-slate-100 mb-6 font-sans">
+    <button onclick="changeDate(-1)" class="w-12 h-12 bg-white rounded-2xl shadow-sm font-black text-slate-900 hover:bg-slate-900 hover:text-white transition-all">◀</button>
+    <div class="text-center">
+        <p class="text-[8px] font-black text-blue-600 uppercase tracking-[0.2em] mb-1">Filter Tanggal</p>
+        <span id="current-date-display" class="font-black text-lg italic tracking-tighter leading-none"></span>
+    </div>
+    <button onclick="changeDate(1)" class="w-12 h-12 bg-white rounded-2xl shadow-sm font-black text-slate-900 hover:bg-slate-900 hover:text-white transition-all">▶</button>
+</div>
             <div id="order-history-list" class="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1"></div>
         </div>
     </div>
@@ -652,6 +660,10 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
 
     async function loadOrders() {
     const monitorList = document.getElementById('order-history-list');
+    
+    // 1. Update teks tanggal di header modal agar sinkron dengan navigasi
+    const targetDate = updateDateDisplay().trim(); 
+
     monitorList.innerHTML = `
         <div class="text-center py-20 animate-pulse font-black text-xs text-slate-400 uppercase">
             Memuat Antrian...
@@ -661,21 +673,38 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
     try {
         const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
         const data = await res.json();
-        const orders = Array.isArray(data) ? data.reverse() : [];
+        // Ambil data asli (jangan di-reverse dulu biar filter rowId-nya aman)
+        const orders = Array.isArray(data) ? data : [];
         
         const activeUser = (sessionStorage.getItem('activeUser') || "").toLowerCase();
         const isAdmin = ADMIN_USERS.map(u => u.toLowerCase()).includes(activeUser);
+
+        // ===== LOGIKA FILTER TANGGAL =====
+        const filteredOrders = orders.filter(o => {
+            let rawDate = String(o.tanggal || o.Tanggal || o.date || "");
+            rawDate = rawDate.trim(); 
+            // Ambil bagian tanggal saja (D/M/YYYY)
+            const orderDateOnly = rawDate.split(" ")[0]; 
+            
+            // Console log ini buat lo ngecek di F12 kalau ada data gak muncul
+            console.log("Membandingkan:", orderDateOnly, " VS ", targetDate);
+            
+            return orderDateOnly === targetDate;
+        });
         
-        if (orders.length === 0) {
+        if (filteredOrders.length === 0) {
             monitorList.innerHTML = `
-                <p class="text-center py-10 italic text-slate-400 text-sm font-black opacity-20">
-                    Belum ada pesanan
-                </p>
+                <div class="text-center py-16 opacity-30 italic">
+                    <p class="text-5xl mb-4">📅</p>
+                    <p class="text-[10px] font-black uppercase tracking-widest">Tidak ada pesanan</p>
+                    <p class="text-[8px] mt-1 font-bold">${targetDate}</p>
+                </div>
             `;
             return;
         }
         
-        monitorList.innerHTML = orders.map(o => {
+        // Render data hasil filter (di-reverse biar jam terbaru paling atas)
+        monitorList.innerHTML = filteredOrders.reverse().map(o => {
             
             const orderName = o.user || o.nama_pelanggan || "User";
             const orderDetail = o.detail || o.detail_order || "-";
@@ -686,7 +715,7 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
             const isMyOrder = activeUser && orderName.toLowerCase() === activeUser;
             const canEdit = isMyOrder || isAdmin;
             
-            // ===== FORMAT TANGGAL ISO =====
+            // ===== FORMAT TANGGAL & JAM =====
             let formattedDate = "-";
             let onlyTime = "--:--";
             
@@ -701,6 +730,8 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
                     onlyTime = timePart.slice(0, 5);
                 } else {
                     formattedDate = rawDate;
+                    // Ambil jam dari format "D/M/YYYY HH:mm"
+                    onlyTime = rawDate.split(" ")[1] ? rawDate.split(" ")[1].slice(0, 5) : "--:--";
                 }
             }
             
@@ -887,6 +918,24 @@ async function updateStatus(rowId, newStatus) {
     } catch (err) {
         alert("Gagal update status");
     }
+}
+let currentSelectedDate = new Date(); // Inisialisasi tanggal hari ini
+
+function changeDate(days) {
+    playSfx(sounds.click);
+    currentSelectedDate.setDate(currentSelectedDate.getDate() + days);
+    updateDateDisplay();
+    loadOrders(); // Refresh list setelah tanggal berubah
+}
+function updateDateDisplay() {
+    const day = currentSelectedDate.getDate();
+    const month = currentSelectedDate.getMonth() + 1;
+    const year = currentSelectedDate.getFullYear();
+    const dateString = `${day}/${month}/${year}`; // Format: 12/3/2026
+    
+    const displayEl = document.getElementById('current-date-display');
+    if (displayEl) displayEl.innerText = dateString;
+    return dateString;
 }
 
     async function finishOrder(rowId) { if((await Swal.fire({ title: 'Finish?', showCancelButton: true, customClass: { popup: 'rounded-[35px] p-6 font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans' }, confirmButtonColor: '#22c55e' })).isConfirmed) { await sendData({ action: 'delete_order', rowId }); loadOrders(); } }
