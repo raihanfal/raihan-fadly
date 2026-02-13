@@ -108,6 +108,10 @@ header.glass {
     </style>
 </head>
 <body class="text-slate-900 min-h-screen font-sans">
+    <div id="global-loader" class="hidden fixed inset-0 bg-black/60 z-[100] backdrop-blur-sm flex items-center justify-center flex-col">
+    <div class="w-20 h-20 border-8 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+    <p class="text-white font-black uppercase tracking-[0.3em] text-xs italic">Memproses Data...</p>
+</div>
     <div class="glow-bg">
         <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-400/20 blur-[120px]"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-indigo-400/20 blur-[120px]"></div>
@@ -628,7 +632,23 @@ function playSfx(sfx) {
 });
     }
 
-    async function sendData(payload) { return fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) }); }
+    async function sendData(payload) {
+    const loader = document.getElementById('global-loader');
+    loader.classList.remove('hidden'); // Munculkan loading
+    
+    try {
+        const response = await fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            body: JSON.stringify(payload) 
+        });
+        return response;
+    } catch (error) {
+        console.error("Error detail:", error);
+        Swal.fire('Gagal!', 'Terjadi kesalahan koneksi.', 'error');
+    } finally {
+        loader.classList.add('hidden'); // Sembunyikan loading apapun hasilnya
+    }
+}
 
     async function openAddProductModal() {
         const { value: f } = await Swal.fire({
@@ -904,20 +924,13 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
 }
 
 async function updateStatus(rowId, newStatus) {
-    try {
-        await fetch(SCRIPT_URL, {
-            method: "POST",
-            body: JSON.stringify({
-                action: "update_status",
-                rowId: rowId,
-                newStatus: newStatus
-            })
-        });
-
-        loadOrders();
-    } catch (err) {
-        alert("Gagal update status");
-    }
+    playSfx(sounds.click);
+    await sendData({
+        action: "update_status",
+        rowId: rowId,
+        newStatus: newStatus
+    });
+    loadOrders(); // Refresh data
 }
 let currentSelectedDate = new Date(); // Inisialisasi tanggal hari ini
 
