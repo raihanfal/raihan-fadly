@@ -652,18 +652,26 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
 
     async function loadOrders() {
     const monitorList = document.getElementById('order-history-list');
-    monitorList.innerHTML = '<div class="text-center py-20 animate-pulse font-black text-xs text-slate-400 uppercase">Memuat Antrian...</div>';
+    monitorList.innerHTML = `
+        <div class="text-center py-20 animate-pulse font-black text-xs text-slate-400 uppercase">
+            Memuat Antrian...
+        </div>
+    `;
     
     try {
         const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
         const data = await res.json();
         const orders = Array.isArray(data) ? data.reverse() : [];
         
-        const activeUser = sessionStorage.getItem('activeUser');
-        const isAdmin = ADMIN_USERS.includes(activeUser);
+        const activeUser = (sessionStorage.getItem('activeUser') || "").toLowerCase();
+        const isAdmin = ADMIN_USERS.map(u => u.toLowerCase()).includes(activeUser);
         
         if (orders.length === 0) {
-            monitorList.innerHTML = '<p class="text-center py-10 italic text-slate-400 text-sm font-black opacity-20">Belum ada pesanan</p>';
+            monitorList.innerHTML = `
+                <p class="text-center py-10 italic text-slate-400 text-sm font-black opacity-20">
+                    Belum ada pesanan
+                </p>
+            `;
             return;
         }
         
@@ -672,40 +680,62 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
             const orderName = o.user || o.nama_pelanggan || "User";
             const orderDetail = o.detail || o.detail_order || "-";
             const orderTotal = Number(o.total || o.total_bayar || 0);
-            const orderStatus = o.status || o.Status || "Pending";
+            const orderStatus = (o.status || o.Status || "Pending").trim();
             const rawDate = o.tanggal || o.Tanggal || o.date || o.Date;
             
-            const isMyOrder = orderName.toLowerCase() === activeUser.toLowerCase();
+            const isMyOrder = activeUser && orderName.toLowerCase() === activeUser;
+            const canEdit = isMyOrder || isAdmin;
             
-            // 🔥 FIX TANGGAL ISO
+            // ===== FORMAT TANGGAL ISO =====
             let formattedDate = "-";
+            let onlyTime = "--:--";
+            
             if (rawDate) {
                 if (String(rawDate).includes("T")) {
                     const parts = rawDate.split("T");
                     const datePart = parts[0];
                     const timePart = parts[1].split(".")[0];
+                    
                     const dSplit = datePart.split("-");
                     formattedDate = `${dSplit[2]}/${dSplit[1]}/${dSplit[0]} ${timePart}`;
+                    onlyTime = timePart.slice(0, 5);
                 } else {
                     formattedDate = rawDate;
                 }
             }
             
             return `
-                <div onclick="showFullOrderDetail('${orderName}', '${orderDetail}', ${orderTotal})" 
-                     class="bg-white p-6 rounded-[35px] border-2 ${isMyOrder ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100'} shadow-sm flex justify-between items-center mb-4 cursor-pointer hover:scale-[1.01] transition-all">
+                <div onclick="showFullOrderDetail('${orderName}', '${orderDetail}', ${orderTotal})"
+                     class="bg-white p-6 rounded-[35px] border-2 
+                     ${isMyOrder ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100'}
+                     shadow-sm flex justify-between items-center mb-4 cursor-pointer hover:scale-[1.01] transition-all">
 
                     <div class="flex gap-4 items-center text-slate-900 flex-1 overflow-hidden">
-                        <div class="w-14 h-14 bg-blue-600 rounded-[20px] flex-shrink-0 flex items-center justify-center font-black text-white text-xl shadow-lg">
-                            ${orderName.charAt(0).toUpperCase()}
+
+                        <div class="relative">
+                            <div class="w-14 h-14 bg-blue-600 rounded-[20px] flex items-center justify-center font-black text-white text-xl shadow-lg">
+                                ${orderName.charAt(0).toUpperCase()}
+                            </div>
+
+                            <span class="absolute -bottom-2 -right-2 bg-slate-900 text-[8px] text-white px-2 py-1 rounded-lg font-bold border-2 border-white">
+                                ${onlyTime}
+                            </span>
                         </div>
 
                         <div class="flex-1 truncate">
-                            <h6 class="font-extrabold uppercase text-base mb-1 text-slate-800">${orderName}</h6>
-                            <p class="text-slate-500 font-bold italic text-sm truncate mb-1">${orderDetail}</p>
-                            <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-2">${formattedDate}</p>
+                            <h6 class="font-extrabold uppercase text-base mb-1 text-slate-800">
+                                ${orderName}
+                            </h6>
 
-                            <span class="text-[10px] bg-slate-100 px-2 py-1 rounded-lg text-slate-400 font-black uppercase">
+                            <p class="text-slate-500 font-bold italic text-sm truncate mb-1">
+                                ${orderDetail}
+                            </p>
+
+                            <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-2">
+                                ${formattedDate}
+                            </p>
+
+                            <span class="text-[10px] bg-blue-100 px-2 py-0.5 rounded-md text-blue-600 font-black uppercase">
                                 Rp ${orderTotal.toLocaleString('id-ID')}
                             </span>
                         </div>
@@ -714,11 +744,10 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
                     <div class="flex flex-col gap-2 ml-4">
 
                         ${isAdmin ? `
-                            <select 
+                            <select
                                 onclick="event.stopPropagation();"
                                 onchange="updateStatus(${o.rowId}, this.value)"
                                 class="text-[10px] font-black uppercase px-2 py-1 rounded-xl border border-slate-200">
-
                                 <option value="Pending" ${orderStatus==='Pending'?'selected':''}>Pending</option>
                                 <option value="Proses" ${orderStatus==='Proses'?'selected':''}>Proses</option>
                                 <option value="Selesai" ${orderStatus==='Selesai'?'selected':''}>Selesai</option>
@@ -732,7 +761,7 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
                             </span>
                         `}
 
-                        ${isMyOrder ? `
+                        ${canEdit ? `
                             <button onclick="event.stopPropagation(); editMyOrder(${o.rowId}, '${orderDetail}')"
                                 class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
                                 ✎
@@ -746,7 +775,12 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
         }).join('');
         
     } catch (err) {
-        monitorList.innerHTML = '<p class="text-red-400 text-center font-bold py-20">Koneksi Gagal</p>';
+        console.error(err);
+        monitorList.innerHTML = `
+            <p class="text-red-400 text-center font-bold py-20">
+                Koneksi Gagal
+            </p>
+        `;
     }
 }
 
@@ -769,93 +803,74 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
         });
     }
 
-    async function editMyOrder(rowId, oldDetail) {
+    async function editMyOrder(rowId, currentDetail) {
     playSfx(sounds.click);
     
-    // 1. Pecah teks jadi array object
-    let itemsArr = oldDetail.split(', ').map(item => {
+    // 1. Pecah string "2x KFC, 1x Burger" menjadi array of objects
+    // Kita asumsikan formatnya selalu "Jumlahx Nama"
+    let items = currentDetail.split(', ').map(item => {
         let parts = item.split('x ');
-        return { qty: parseInt(parts[0]), name: parts[1] };
+        return {
+            qty: parseInt(parts[0]),
+            name: parts[1]
+        };
     });
 
-    // 2. Munculkan UI
-    const { value: isConfirmed } = await Swal.fire({
-        title: 'Edit Jumlah Pesanan',
-        html: `
-            <div id="edit-order-container" class="space-y-4 p-2">
-                ${itemsArr.map((item, index) => `
-                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border-2">
-                        <span class="font-bold text-slate-700 text-sm item-name">${item.name}</span>
-                        <div class="flex items-center gap-3">
-                            <button onclick="updateQty(${index}, -1)" class="w-8 h-8 bg-red-500 text-white rounded-lg font-black">-</button>
-                            <span id="qty-${index}" class="font-black text-blue-600 qty-val">${item.qty}</span>
-                            <button onclick="updateQty(${index}, 1)" class="w-8 h-8 bg-green-500 text-white rounded-lg font-black">+</button>
-                        </div>
-                    </div>
-                `).join('')}
-                <p class="text-[10px] text-red-400 mt-4 italic">*Jika jumlah 0, item akan dihapus.</p>
+    const renderEditList = () => {
+        return items.map((item, index) => `
+            <div class="flex justify-between items-center bg-slate-100 p-4 rounded-2xl mb-2">
+                <span class="font-bold text-sm truncate flex-1">${item.name}</span>
+                <div class="flex items-center gap-3">
+                    <button onclick="updateQty(${index}, -1)" class="w-8 h-8 bg-red-500 text-white rounded-full font-black">-</button>
+                    <span class="font-black w-6 text-center">${item.qty}</span>
+                    <button onclick="updateQty(${index}, 1)" class="w-8 h-8 bg-blue-600 text-white rounded-full font-black">+</button>
+                </div>
             </div>
-        `,
+        `).join('');
+    };
+
+    // Fungsi global sementara agar tombol di dalam Swal bisa jalan
+    window.updateQty = (index, change) => {
+        items[index].qty += change;
+        if (items[index].qty <= 0) {
+            items.splice(index, 1); // Hapus jika 0
+        }
+        
+        if (items.length === 0) {
+            document.getElementById('edit-list-container').innerHTML = '<p class="text-center text-red-500 font-bold py-4">Pesanan Kosong (Akan Dibatalkan)</p>';
+        } else {
+            document.getElementById('edit-list-container').innerHTML = renderEditList();
+        }
+    };
+
+    const { value: confirmEdit } = await Swal.fire({
+        title: 'Edit Pesanan',
+        html: `<div id="edit-list-container" class="font-sans">${renderEditList()}</div>`,
         showCancelButton: true,
-        confirmButtonText: 'Update DB',
-        confirmButtonColor: '#2563eb',
-        customClass: { popup: 'rounded-[40px]' },
+        confirmButtonText: 'Simpan Perubahan',
+        cancelButtonText: 'Batal',
         preConfirm: () => {
-            // Ambil data terbaru langsung dari elemen HTML (DOM)
-            let updatedItems = [];
-            itemsArr.forEach((item, index) => {
-                let currentQty = parseInt(document.getElementById(`qty-${index}`).innerText);
-                if (currentQty > 0) {
-                    updatedItems.push(`${currentQty}x ${item.name}`);
-                }
-            });
-            return updatedItems.join(', ');
+            if (items.length === 0) return "DELETE"; // Sinyal untuk hapus order
+            return items.map(i => `${i.qty}x ${i.name}`).join(', ');
         }
     });
 
-    // 3. Eksekusi simpan ke DB
-    if (isConfirmed !== undefined && isConfirmed !== null) {
-        const finalDetail = isConfirmed;
-        
-        Swal.fire({ title: 'Mengupdate DB...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
-        
-        // PENTING: Gunakan payload JSON yang benar
-        const payload = { 
-            action: 'edit_order', 
-            rowId: rowId, 
-            detail: finalDetail === "" ? "CANCELLED" : finalDetail 
-        };
-
-        try {
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Apps Script butuh ini
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+    if (confirmEdit) {
+        if (confirmEdit === "DELETE") {
+            await finishOrder(rowId); // Gunakan fungsi hapus yang sudah ada
+        } else {
+            // Kita perlu hitung ulang Total Harga (Opsional, tapi disarankan)
+            // Untuk simpelnya, kita kirim detail baru ke GS
+            await sendData({ 
+                action: 'update_order_detail', 
+                rowId: rowId, 
+                newDetail: confirmEdit 
             });
-
-            // Kasih delay dikit biar DB selesai proses
-            setTimeout(() => {
-                Swal.fire({ icon: 'success', title: 'Berhasil!', timer: 1500, showConfirmButton: false });
-                loadOrders();
-            }, 500);
-        } catch (err) {
-            Swal.fire('Gagal', 'Gagal menyambung ke database', 'error');
+            Swal.fire('Berhasil', 'Pesanan diperbarui!', 'success');
+            loadOrders();
         }
     }
 }
-
-// Fungsi +/- tetap di luar
-window.updateQty = (index, delta) => {
-    let qtyEl = document.getElementById(`qty-${index}`);
-    if (qtyEl) {
-        let currentQty = parseInt(qtyEl.innerText);
-        let newQty = currentQty + delta;
-        if (newQty >= 0) {
-            qtyEl.innerText = newQty;
-        }
-    }
-};
 
 async function updateStatus(rowId, newStatus) {
     try {
