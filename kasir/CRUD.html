@@ -17,17 +17,14 @@
     background-color: #f1f5f9; /* Warna dasar abu-abu terang */
     position: relative;
 }
-
 body { 
     font-family: 'Plus Jakarta Sans', sans-serif; 
     overflow-x: hidden; 
     scroll-behavior: smooth; 
     width: 100%; 
     -webkit-tap-highlight-color: transparent;
-    background-color: gray !important; /* Warna dasar lebih gelap dikit biar pola putih muncul */
+    background-color: gray !important;
 }
-
-/* Pola utama yang membungkus seluruh aplikasi */
 .app-bg-overlay {
     position: fixed;
     top: 0;
@@ -35,111 +32,68 @@ body {
     width: 100%;
     height: 100%;
     background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
-    opacity: 0.8; /* Dibikin lebih tebal biar kelihatan */
+    opacity: 0.8; 
     z-index: -10;
     pointer-events: none;
 }
-
-/* Cahaya Glow di belakang */
-.glow-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -20;
-    overflow: hidden;
-    pointer-events: none;
+.glow-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -20; overflow: hidden; pointer-events: none;
 }
-
-
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
-        .hidden { display: none !important; }
+.glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.hidden { display: none !important; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-        
-        .fly-item {
-            position: fixed; width: 30px; height: 30px; background: #3b82f6; border-radius: 50%;
-            z-index: 9999; pointer-events: none; transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-        }
-
-       #cart-sidebar {
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    width: min(90%, 450px);
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+.fly-item { position: fixed; width: 30px; height: 30px; background: #3b82f6; border-radius: 50%; z-index: 9999; pointer-events: none; transition: all 1s cubic-bezier(0.19, 1, 0.22, 1); box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
 }
-        .cart-open { transform: translateX(0) !important; }
-
-        .btn-active:active { transform: scale(0.92); transition: 0.1s; }
-        
-        .filter-btn { transition: all 0.3s ease; border: 2px solid #e2e8f0; white-space: nowrap; flex-shrink: 0; }
-        .filter-btn:hover { border-color: #3b82f6; color: #3b82f6; }
-        .filter-btn.active { background: #1e293b; color: white; border-color: transparent; box-shadow: 0 8px 15px -3px rgba(0,0,0,0.2); }
-      .skeleton { 
-    background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%); 
-    background-size: 200% 100%; 
-    animation: skeleton-loading 1.2s infinite ease-in-out; 
+#cart-sidebar {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: min(90%, 450px);
 }
-        @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        
-    .login-bg { 
-    background: linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.85)), 
-                url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=2070');
+.cart-open { transform: translateX(0) !important;
+}
+.btn-active:active { transform: scale(0.92); transition: 0.1s;
+}
+.filter-btn { transition: all 0.3s ease; border: 2px solid #e2e8f0; white-space: nowrap; flex-shrink: 0;
+}
+.filter-btn:hover { border-color: #3b82f6; color: #3b82f6;
+}
+.filter-btn.active { background: #1e293b; color: white; border-color: transparent; box-shadow: 0 8px 15px -3px rgba(0,0,0,0.2);
+}
+.skeleton { 
+background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%);background-size: 200% 100%; animation: skeleton-loading 1.2s infinite ease-in-out;
+}
+@keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.login-bg { 
+   background: linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.85)), 
+      url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=2070');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
 }
 
-        .rating-star { font-size: 2rem; cursor: pointer; color: #cbd5e1; transition: color 0.2s; }
-        .rating-star.active { color: #fbbf24; }
-        #bottom-nav button {
-    min-height: 52px;
-}
-#cart-sidebar {
-    background: rgba(2, 6, 23, 0.96);
-    backdrop-filter: blur(16px);
-}
-#main-dashboard, main {
-    background: transparent !important;
-}
+.rating-star { font-size: 2rem; cursor: pointer; color: #cbd5e1; transition: color 0.2s; }
+.rating-star.active { color: #fbbf24; }
+
+#bottom-nav button { min-height: 52px; }
+#cart-sidebar { background: rgba(2, 6, 23, 0.96); backdrop-filter: blur(16px); }
+#main-dashboard, main { background: transparent !important; }
 
 header.glass {
-    background: rgba(255, 255, 255, 0.7) !important; /* Kurangi opasitas header */
-}
-/* Spinner di dalam Logo */
-.logo-container {
-    position: relative;
-    display: flex;
-    items-center: center;
-    justify-content: center;
-    background-color: #f8fafc; /* Warna background saat loading */
-}
-
-.logo-spinner {
-    border: 3px solid rgba(59, 130, 246, 0.1);
-    border-left-color: #3b82f6; /* Warna biru iFood */
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    animation: spin 0.8s linear infinite;
-    position: absolute;
-}
+  background: rgba(255, 255, 255, 0.7) !important; }
+  
+.logo-container { position: relative; display: flex; items-center: center; justify-content: center; background-color: #f8fafc; }
+.logo-spinner { border: 3px solid rgba(59, 130, 246, 0.1); border-left-color: #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 0.8s linear infinite; position: absolute; }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
-
-/* Pastikan gambar tersembunyi sebelum load selesai */
 .img-loading {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
+  opacity: 0; transition: opacity 0.3s ease; }
+.img-loaded { opacity: 1; }
+button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s; }
 
-.img-loaded {
-    opacity: 1;
-}
     </style>
 </head>
 <body class="text-slate-900 min-h-screen font-sans">
@@ -165,7 +119,12 @@ header.glass {
         </div>
         <div class="space-y-4">
             <input type="text" id="username" placeholder="Nama Panggilanmu..." class="w-full p-5 rounded-3xl border-2 border-slate-100 bg-white/70 text-center font-bold outline-none focus:border-blue-500 transition-all shadow-sm font-sans text-slate-800">
-            <button onclick="handleLogin()" class="w-full bg-slate-900 text-white p-5 rounded-3xl font-black hover:bg-blue-600 shadow-xl transition-all btn-active uppercase tracking-widest text-sm italic font-sans">Mulai Pesan 🍱</button>
+        <button onclick="handleLogin()" class="w-full bg-slate-900 text-white p-5 rounded-3xl font-black hover:bg-blue-600 shadow-xl transition-all btn-active uppercase tracking-widest text-sm italic font-sans flex items-center justify-center gap-3 group">
+          <span>Mulai Pesan</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 transition-transform group-hover:translate-x-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+    </svg>
+</button>
         </div>
         
         <div class="mt-8 pt-6 border-t border-slate-100/50">
@@ -288,11 +247,11 @@ header.glass {
             <span class="text-[8px] font-black uppercase tracking-tighter font-sans">Pesanan</span>
         </button>
 
-<button id="nav-center-action" onclick="handleCenterAction()" class="relative bg-slate-900 text-white w-14 h-14 rounded-2xl -mt-10 border-4 border-slate-50 shadow-2xl flex items-center justify-center btn-active mx-1 flex-shrink-0 transition-transform hover:-translate-y-1 z-[60]">
-    <div id="icon-cart" class="flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-        <span id="cart-count" class="absolute -top-1 -right-1 bg-blue-500 text-[9px] px-2 py-0.5 rounded-lg border-2 border-white font-black animate-bounce">0</span>
-    </div>
+        <button id="nav-center-action" onclick="handleCenterAction()" class="relative bg-slate-900 text-white w-14 h-14 rounded-2xl -mt-10 border-4 border-slate-50 shadow-2xl flex items-center justify-center btn-active mx-1 flex-shrink-0 transition-transform hover:-translate-y-1 z-[60]">
+          <div id="icon-cart" class="flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+          <span id="cart-count" class="absolute -top-1 -right-1 bg-blue-500 text-[9px] px-2 py-0.5 rounded-lg border-2 border-white font-black animate-bounce">0</span>
+        </div>
     
     <div id="icon-chart" class="hidden flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
@@ -303,30 +262,11 @@ header.glass {
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
             <span class="text-[8px] font-black uppercase tracking-tighter font-sans">Tulis</span>
         </button>
-<button id="nav-action-admin"
-onclick="playSfx(sounds.login); openAdminToolsModal()"
-class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 hover:text-blue-600">
-
-    <div class="w-6 h-6 flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg"
-        class="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c
-            1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c
-            1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c
-            .94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572
-            1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c
-            -1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c
-            -1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c
-            -.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z" />
-            <path stroke-linecap="round" stroke-linejoin="round"
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-    </div>
+        <button id="nav-action-admin"onclick="playSfx(sounds.login); openAdminToolsModal()"class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 hover:text-blue-600">
+          <div class="w-6 h-6 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg"class="w-6 h-6"fill="none"viewBox="0 0 24 24"stroke="currentColor"stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round"d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.5721.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round"d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        </div>
 
     <span class="text-[8px] font-black uppercase tracking-tighter">Tools</span>
 
@@ -364,7 +304,12 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 h
                 <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-2">TOTAL BILL</span>
                 <span id="total-price" class="text-blue-400 tracking-tighter italic">Rp 0</span>
             </div>
-            <button onclick="playSfx(sounds.login); checkout()" class="w-full bg-blue-600 text-white py-6 rounded-[30px] font-black shadow-2xl active:scale-95 transition-all text-xl uppercase italic">🚀 Confirm Order</button>
+<button onclick="playSfx(sounds.login); checkout()" class="w-full bg-blue-600 text-white py-6 rounded-[30px] font-black shadow-2xl active:scale-95 transition-all text-xl uppercase italic flex items-center justify-center gap-3">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-7 h-7">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+    </svg>
+    <span>Confirm Order</span>
+</button>
         </div>
     </div>
 </div>
@@ -377,33 +322,31 @@ class="hidden flex flex-col items-center justify-center gap-1 btn-active w-1/5 h
                     <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mt-1">Live Status</p>
                 </div>
                 <div class="flex gap-2">
-<button 
-onclick="loadOrders()" 
-class="bg-slate-900 hover:bg-blue-600 text-white px-4 py-3 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
-
-<svg xmlns="http://www.w3.org/2000/svg" 
-class="w-4 h-4" 
-viewBox="0 0 24 24" 
-fill="currentColor">
-<path d="M4 12a8 8 0 0113.66-5.66L20 4v6h-6l2.24-2.24A6 6 0 106 12H4z"/>
-</svg>
-
-Refresh
-</button>
+              <button 
+                onclick="loadOrders()" 
+                class="bg-slate-900 hover:bg-blue-600 text-white px-4 py-3 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4" 
+                viewBox="0 0 24 24" 
+                fill="currentColor">
+                <path d="M4 12a8 8 0 0113.66-5.66L20 4v6h-6l2.24-2.24A6 6 0 106 12H4z"/>
+                </svg>
+                Refresh
+              </button>
                     <button onclick="document.getElementById('customer-orders-modal').classList.add('hidden')" class="bg-red-50 text-red-500 p-3 rounded-2xl shadow-sm active:scale-90">✕</button>
                 </div>
             </div>
                         <div class="flex items-center justify-between bg-slate-50 p-3 rounded-[30px] border-2 border-slate-100 mb-6 font-sans">
-    <button onclick="changeDate(-1)" class="w-12 h-12 bg-white rounded-2xl shadow-sm font-black text-slate-900 hover:bg-slate-900 hover:text-white transition-all">◀</button>
-    <div class="text-center">
-        <p class="text-[8px] font-black text-blue-600 uppercase tracking-[0.2em] mb-1">Filter Tanggal</p>
-        <span id="current-date-display" class="font-black text-lg italic tracking-tighter leading-none"></span>
-    </div>
-    <button onclick="changeDate(1)" class="w-12 h-12 bg-white rounded-2xl shadow-sm font-black text-slate-900 hover:bg-slate-900 hover:text-white transition-all">▶</button>
-</div>
-            <div id="order-history-list" class="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1"></div>
+        <button onclick="changeDate(-1)" class="w-12 h-12 bg-white rounded-2xl shadow-sm font-black text-slate-900 hover:bg-slate-900 hover:text-white transition-all">◀</button>
+        <div class="text-center">
+            <p class="text-[8px] font-black text-blue-600 uppercase tracking-[0.2em] mb-1">Filter Tanggal</p>
+            <span id="current-date-display" class="font-black text-lg italic tracking-tighter leading-none"></span>
         </div>
+        <button onclick="changeDate(1)" class="w-12 h-12 bg-white rounded-2xl shadow-sm font-black text-slate-900 hover:bg-slate-900 hover:text-white transition-all">▶</button>
     </div>
+                <div id="order-history-list" class="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1"></div>
+            </div>
+        </div>
 
     <div id="all-reviews-modal" class="hidden fixed inset-0 bg-black/90 z-[70] backdrop-blur-xl flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-[50px] p-8 flex flex-col font-sans text-slate-900 shadow-2xl animate-in fade-in zoom-in duration-300">
@@ -435,62 +378,58 @@ Refresh
     </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwreSzyGvv8creSoDUN_62weoM3f0zCSSmKIjVgSftwkPxdJYoHzHPd1VRtDmOqLsnm/exec"; 
-    // Aset suara (menggunakan Mixkit - gratis & cepat)
-// Objek suara dengan link yang sudah dipastikan direct
-// Kita tambahkan preload agar browser mendownload suara lebih awal
+const ADMIN_USERS = ['admin', 'tungtungsahur', 'ifoodadmin', 'raihan'];
+const MY_LOGO_URL = "https://i.ibb.co.com/HT4jYTMQ/1946cb9a72d42edfbbd4489dec5a04d1.jpg"; 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwreSzyGvv8creSoDUN_62weoM3f0zCSSmKIjVgSftwkPxdJYoHzHPd1VRtDmOqLsnm/exec"; 
 const sounds = {
-    add: new Audio('payout.mp3'),
-    login: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
-    checkout: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
-    logout: new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3'),
-    click: new Audio('click.mp3')
+  add: new Audio('payout.mp3'),
+  login: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+  checkout: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
+  logout: new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3'),
+  click: new Audio('click.mp3')
 };
 
-// Paksa preload
+let products = [];
+let cart = [];
+let currentFilter = 'all';
+let searchQuery = '';
+let currentSort = 'default';
+let currentRating = 0;
+let analyticsData = { 
+    orders: [], 
+    d: new Date(), 
+    m: new Date(), 
+    y: new Date() 
+};
+
 Object.values(sounds).forEach(audio => {
-    audio.preload = "auto";
-    audio.load();
+  audio.preload = "auto";
+  audio.load();
 });
 
 function playSfx(sfx) {
-    if (sfx) {
-        // Kloning audio adalah cara paling ampuh agar suara bisa diputar 
-        // berkali-kali secara bersamaan tanpa nunggu suara sebelumnya selesai
-        const soundClone = sfx.cloneNode();
-        soundClone.volume = 1.0;
-        
-        let playPromise = soundClone.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(e => console.log("Audio unlock failed:", e));
-        }
+  if (sfx) {
+    const soundClone = sfx.cloneNode();
+    soundClone.volume = 1.0;
+    let playPromise = soundClone.play();
+    if (playPromise !== undefined) {
+    playPromise.catch(e => console.log("Audio unlock failed:", e));
     }
+  }
 }
 
+window.onload = () => {
+  document.getElementById('custom-logo-login').src = MY_LOGO_URL;
+  document.getElementById('custom-logo-header').src = MY_LOGO_URL;
+  initBanners(); 
+  const savedUser = sessionStorage.getItem('activeUser');
+  if (savedUser) handleLogin(savedUser);
+  else document.getElementById('login-page').classList.remove('hidden');
+};
 
-    const ADMIN_USERS = ['admin', 'tungtungsahur', 'ifoodadmin', 'raihan'];
-    const MY_LOGO_URL = "https://i.ibb.co.com/HT4jYTMQ/1946cb9a72d42edfbbd4489dec5a04d1.jpg"; 
-
-    let products = [];
-    let cart = [];
-    let currentFilter = 'all';
-    let searchQuery = '';
-    let currentSort = 'default';
-
-    window.onload = () => {
-        document.getElementById('custom-logo-login').src = MY_LOGO_URL;
-        document.getElementById('custom-logo-header').src = MY_LOGO_URL;
-        initBanners(); 
-        const savedUser = sessionStorage.getItem('activeUser');
-        if (savedUser) handleLogin(savedUser);
-        else document.getElementById('login-page').classList.remove('hidden');
-    };
-
-// --- SISTEM BANNER TRUE INFINITY & FLEXIBLE HIGHLIGHT ---
 const bannerData = [
     { 
         title: "Diskon Ramadhan 25%!", 
-        // Pakai {teks} untuk bagian yang mau di-highlight
         desc: "Gunakan kode {RAMADHAN!!} sekarang!", 
         highlightColor: "bg-yellow-400", 
         color: "from-blue-600 to-indigo-700", 
@@ -519,153 +458,143 @@ const bannerData = [
 ];
 
 function initBanners() {
-    const wrapper = document.getElementById('banner-wrapper');
-    
-    // Fungsi untuk mengubah {teks} menjadi span highlight
-    const parseHighlight = (text, colorClass) => {
-        return text.replace(/\{(.*?)\}/g, `<span class="${colorClass} text-slate-900 px-2 rounded font-black">$1</span>`);
-    };
+  const wrapper = document.getElementById('banner-wrapper');
+  const parseHighlight = (text, colorClass) => {
+    return text.replace(/\{(.*?)\}/g, `<span class="${colorClass} text-slate-900 px-2 rounded font-black">$1</span>`);
+  };
 
-    const createCard = (b) => `
-        <div class="min-w-[90%] md:min-w-[48%] h-44 bg-gradient-to-br ${b.color} rounded-[40px] p-8 flex flex-col justify-center text-white shadow-2xl flex-shrink-0 relative overflow-hidden snap-center border border-white/10">
-            <div class="relative z-10">
-                <span class="${b.labelColor} px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">${b.label}</span>
-                <h5 class="text-2xl font-black italic uppercase leading-none mt-3">${b.title}</h5>
-                <p class="text-[11px] font-bold opacity-80 mt-2 uppercase tracking-widest leading-relaxed">
-                    ${parseHighlight(b.desc, b.highlightColor)}
-                </p>
-            </div>
-            <div class="absolute -right-6 -bottom-6 opacity-20 text-9xl rotate-12">${b.icon}</div>
-        </div>
-    `;
+  const createCard = (b) => `
+      <div class="min-w-[90%] md:min-w-[48%] h-44 bg-gradient-to-br ${b.color} rounded-[40px] p-8 flex flex-col justify-center text-white shadow-2xl flex-shrink-0 relative overflow-hidden snap-center border border-white/10">
+      <div class="relative z-10">
+      <span class="${b.labelColor} px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">${b.label}</span>
+      <h5 class="text-2xl font-black italic uppercase leading-none mt-3">${b.title}</h5>
+      <p class="text-[11px] font-bold opacity-80 mt-2 uppercase tracking-widest leading-relaxed">
+      ${parseHighlight(b.desc, b.highlightColor)}
+      </p> </div>
+      <div class="absolute -right-6 -bottom-6 opacity-20 text-9xl rotate-12">${b.icon}</div>
+      </div>
+  `;
 
-    // Sistem Cloning untuk Infinity Scroll
-    const firstClone = createCard(bannerData[0]);
-    const lastClone = createCard(bannerData[bannerData.length - 1]);
-    const originalContent = bannerData.map(b => createCard(b)).join('');
-
-    wrapper.innerHTML = lastClone + originalContent + firstClone;
-
-    const getCardWidth = () => wrapper.querySelector('div').offsetWidth + 16;
-    wrapper.scrollLeft = getCardWidth();
-
-    // Logika Teleport Infinity
-    wrapper.addEventListener('scroll', () => {
-        const scrollPos = wrapper.scrollLeft;
-        const maxScroll = wrapper.scrollWidth - wrapper.offsetWidth;
-        const cardWidth = getCardWidth();
-
-        if (scrollPos <= 0) {
-            wrapper.scrollTo({ left: maxScroll - cardWidth, behavior: 'instant' });
+const firstClone = createCard(bannerData[0]);
+const lastClone = createCard(bannerData[bannerData.length - 1]);
+const originalContent = bannerData.map(b => createCard(b)).join('');
+  wrapper.innerHTML = lastClone + originalContent + firstClone;
+const getCardWidth = () => wrapper.querySelector('div').offsetWidth + 16;
+  wrapper.scrollLeft = getCardWidth();
+  wrapper.addEventListener('scroll', () => {
+    const scrollPos = wrapper.scrollLeft;
+    const maxScroll = wrapper.scrollWidth - wrapper.offsetWidth;
+    const cardWidth = getCardWidth();
+  
+      if (scrollPos <= 0) {
+        wrapper.scrollTo({ left: maxScroll - cardWidth, behavior: 'instant' });
         } else if (scrollPos >= maxScroll) {
-            wrapper.scrollTo({ left: cardWidth, behavior: 'instant' });
-        }
-    });
+          wrapper.scrollTo({ left: cardWidth, behavior: 'instant' });
+          }
+  });
 
-    // Auto Scroll
-    setInterval(() => {
-        wrapper.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
-    }, 5000);
+  setInterval(() => {
+    wrapper.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+  }, 5000);
 }
 
-    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('cart-open'); }
-    function openAdminToolsModal() { document.getElementById('admin-tools-modal').classList.remove('hidden'); }
-    function openHistoryModal() { document.getElementById('customer-orders-modal').classList.remove('hidden'); loadOrders(); }
-    
-    // LOAD REVIEWS
-    async function openAllReviewsModal() {
-        document.getElementById('all-reviews-modal').classList.remove('hidden');
-        const list = document.getElementById('review-list-content');
-        try {
-            const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_reviews");
-            const data = await res.json();
-            if(!data || data.length === 0) { list.innerHTML = '<p class="text-center py-10 italic text-slate-300 text-[10px]">Belum ada ulasan.</p>'; return; }
-            const isAdmin = ADMIN_USERS.includes(sessionStorage.getItem('activeUser'));
-            list.innerHTML = data.reverse().map(r => `
-                <div class="bg-slate-50 p-5 rounded-3xl border-2 border-slate-100 shadow-sm">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="font-black text-slate-800 uppercase text-xs tracking-tighter">${r.nama}</span>
-                        <div class="flex text-yellow-400 text-xs">${'★'.repeat(r.rating)}</div>
-                    </div>
-                    <p class="text-slate-600 text-[11px] italic font-medium">"${r.komentar}"</p>
-                    <div class="flex justify-between items-end mt-3">
-                        <span class="text-[8px] text-slate-300 font-bold uppercase tracking-widest">${new Date(r.tanggal).toLocaleDateString()}</span>
-                        ${isAdmin ? `<button onclick="deleteReview(${r.rowId})" class="text-red-500 text-[9px] font-black uppercase hover:underline">Hapus</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
-        } catch(e) { list.innerHTML = '<p class="text-center text-red-400 font-bold text-xs">Gagal memuat ulasan.</p>'; }
-    }
+function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('cart-open'); }
 
-    async function deleteReview(rowId) {
-        if((await Swal.fire({ title: 'Hapus Review?', showCancelButton: true })).isConfirmed) {
-            await sendData({ action: 'delete_review', rowId }); openAllReviewsModal();
-        }
-    }
+function openAdminToolsModal() { document.getElementById('admin-tools-modal').classList.remove('hidden'); }
 
-    let currentRating = 0;
-    function setRating(n) {
-        currentRating = n;
-        document.querySelectorAll('.rating-star').forEach((s, i) => s.classList.toggle('active', i < n));
-    }
+function openHistoryModal() { document.getElementById('customer-orders-modal').classList.remove('hidden'); loadOrders(); }
 
-    async function openReviewModal() {
-        const user = sessionStorage.getItem('activeUser');
-        const { value: formValues } = await Swal.fire({
-            title: 'Berikan Ulasan',
-            html: `<div class="flex flex-col items-center gap-4 font-sans"><p class="text-sm">Gimana rasa iFood hari ini, <b>${user}</b>?</p><div class="flex gap-2">${[1,2,3,4,5].map(i => `<span onclick="setRating(${i})" class="rating-star">★</span>`).join('')}</div><textarea id="review-text" class="w-full p-4 rounded-2xl border-2 border-slate-100 h-24 text-sm" placeholder="Komentar kamu..."></textarea></div>`,
-            showCancelButton: true, confirmButtonText: 'Kirim 🚀',
-            preConfirm: () => {
-                const comment = document.getElementById('review-text').value;
-                if(currentRating === 0) return Swal.showValidationMessage('Kasih bintang dong!');
-                return { rating: currentRating, comment };
-            }
-        });
-        if(formValues) {
-            await sendData({ action: 'add_review', nama: user, rating: formValues.rating, komentar: formValues.comment });
-            Swal.fire('Thanks!', 'Ulasan terkirim!', 'success'); currentRating = 0;
-        }
+async function openAllReviewsModal() {
+  document.getElementById('all-reviews-modal').classList.remove('hidden');
+  const list = document.getElementById('review-list-content');
+  
+    try {
+      const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_reviews");
+      const data = await res.json();
+      if(!data || data.length === 0) { list.innerHTML = '<p class="text-center py-10 italic text-slate-300 text-[10px]">Belum ada ulasan.</p>'; return; }
+      const isAdmin = ADMIN_USERS.includes(sessionStorage.getItem('activeUser'));
+      list.innerHTML = data.reverse().map(r => `
+          <div class="bg-slate-50 p-5 rounded-3xl border-2 border-slate-100 shadow-sm">
+          <div class="flex justify-between items-center mb-2">
+          <span class="font-black text-slate-800 uppercase text-xs tracking-tighter">${r.nama}</span>
+          <div class="flex text-yellow-400 text-xs">${'★'.repeat(r.rating)}</div> </div>
+          <p class="text-slate-600 text-[11px] italic font-medium">"${r.komentar}"</p>
+          <div class="flex justify-between items-end mt-3">
+          <span class="text-[8px] text-slate-300 font-bold uppercase tracking-widest">${new Date(r.tanggal).toLocaleDateString()}</span>
+          ${isAdmin ? `<button onclick="deleteReview(${r.rowId})" class="text-red-500 text-[9px] font-black uppercase hover:underline">Hapus</button>` : ''}
+          </div> </div>
+        `).join('');
     }
+      catch(e) { list.innerHTML = '<p class="text-center text-red-400 font-bold text-xs">Gagal memuat ulasan.</p>'; }
+}
 
-// Fungsi pengalih tindakan tombol tengah
+async function deleteReview(rowId) {
+  if((await Swal.fire({ title: 'Hapus Review?', showCancelButton: true })).isConfirmed) {
+  await sendData({ action: 'delete_review', rowId }); openAllReviewsModal();
+  }
+}
+
+function setRating(n) {
+  currentRating = n;
+  document.querySelectorAll('.rating-star').forEach((s, i) => s.classList.toggle('active', i < n));
+}
+
+async function openReviewModal() {
+  const user = sessionStorage.getItem('activeUser');
+  const { value: formValues } = await Swal.fire({
+    title: 'Berikan Ulasan',
+    html: `<div class="flex flex-col items-center gap-4 font-sans"><p class="text-sm">Gimana rasa iFood hari ini, <b>${user}</b>?</p><div class="flex gap-2">${[1,2,3,4,5].map(i => `<span onclick="setRating(${i})" class="rating-star">★</span>`).join('')}</div><textarea id="review-text" class="w-full p-4 rounded-2xl border-2 border-slate-100 h-24 text-sm" placeholder="Komentar kamu..."></textarea></div>`,
+    showCancelButton: true, 
+    confirmButtonText: `
+      <div class="flex items-center gap-2 justify-center font-black italic uppercase tracking-widest text-sm">
+        <span>Kirim Ulasan</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21a3.745 3.745 0 01-3.161-1.593 3.745 3.745 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.745 3.745 0 013.296-1.043A3.745 3.745 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.745 3.745 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+        </svg>
+      </div> `,
+    preConfirm: () => {
+      const comment = document.getElementById('review-text').value;
+      if(currentRating === 0) return Swal.showValidationMessage('Kasih bintang dong!');
+      return { rating: currentRating, comment };
+    }
+  });
+  if(formValues) {
+    await sendData({ action: 'add_review', nama: user, rating: formValues.rating, komentar: formValues.comment });
+    Swal.fire('Thanks!', 'Ulasan terkirim!', 'success'); currentRating = 0;
+  }
+}
+
 function handleCenterAction() {
-    playSfx(sounds.login);
-    const user = sessionStorage.getItem('activeUser');
-    const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
-
-    if (isAdmin) {
-        openAnalyticsModal();
-    } else {
-        toggleCart();
-    }
+  playSfx(sounds.login);
+  const user = sessionStorage.getItem('activeUser');
+  const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
+  if (isAdmin) { openAnalyticsModal();
+  }
+  else { toggleCart();
+  }
 }
 
-    async function handleLogin(existingUser) {
+async function handleLogin(existingUser) {
     playSfx(sounds.login);
-    
-    // 1. Definisikan user dulu
-    const user = existingUser || document.getElementById('username').value.trim();
-    if (!user) return Swal.fire('Oops!', 'Siapa namamu?', 'warning');
+  const user = existingUser || document.getElementById('username').value.trim();
+  if (!user) return Swal.fire('Oops!', 'Siapa namamu?', 'warning');
 
-    // 2. Cek apakah dia Admin
-    const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
-    
-    // 3. Ambil elemen tombol tengah
-    const iconCart = document.getElementById('icon-cart');
-    const iconChart = document.getElementById('icon-chart');
+  const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
 
-    // 4. Update UI Navigasi
-    if(isAdmin) {
-        iconCart.classList.add('hidden');
-        iconChart.classList.remove('hidden');
-        document.getElementById('cart-sidebar').classList.add('hidden'); 
-    } else {
-        iconCart.classList.remove('hidden');
-        iconChart.classList.add('hidden');
-        document.getElementById('cart-sidebar').classList.remove('hidden');
-    }
+  const iconCart = document.getElementById('icon-cart');
+  const iconChart = document.getElementById('icon-chart');
 
-    // 5. Simpan sesi dan update sisa UI
+  if(isAdmin) {
+    iconCart.classList.add('hidden');
+    iconChart.classList.remove('hidden');
+    document.getElementById('cart-sidebar').classList.add('hidden'); 
+  }
+  else {
+    iconCart.classList.remove('hidden');
+    iconChart.classList.add('hidden');
+    document.getElementById('cart-sidebar').classList.remove('hidden');
+  }
+
     sessionStorage.setItem('activeUser', user.toLowerCase());
     document.getElementById('display-name').innerText = user;
     document.getElementById('login-page').classList.add('hidden');
@@ -674,14 +603,15 @@ function handleCenterAction() {
     
     document.getElementById('role-title').innerText = isAdmin ? "SYSTEM ADMIN" : "VIP CUSTOMER";
     
-    if(isAdmin) {
-        document.getElementById('nav-action-admin').classList.remove('hidden');
-        document.getElementById('nav-action-user').classList.add('hidden');
-    } else {
-        document.getElementById('nav-action-admin').classList.add('hidden');
-        document.getElementById('nav-action-user').classList.remove('hidden');
-    }
-    loadProducts();
+  if(isAdmin) {
+      document.getElementById('nav-action-admin').classList.remove('hidden');
+      document.getElementById('nav-action-user').classList.add('hidden');
+  }
+  else {
+      document.getElementById('nav-action-admin').classList.add('hidden');
+      document.getElementById('nav-action-user').classList.remove('hidden');
+  }
+loadProducts();
 }
 
     function handleLogout() { 
@@ -853,29 +783,110 @@ function renderProducts() {
         filtered.sort((a, b) => Number(a.id) - Number(b.id));
     }
     
+    
+    
     // 3. RENDER: Mapping data ke HTML
     list.innerHTML = filtered.map(p => {
         const oriPrice = Number(p.price) || 0;
         const disc = Number(p.discount) || 0;
         const finalPrice = oriPrice - disc;
         const isOut = p.stock <= 0;
-        return `
-            <div class="glass p-6 md:p-8 rounded-[45px] relative border border-white shadow-lg transition-all ${isOut ? 'opacity-50 grayscale' : 'hover:-translate-y-2'}">
-                ${isAdmin ? `<div class="absolute top-4 right-4 flex gap-2 z-10 scale-90 font-black italic"><button onclick="editProduct(${p.id})" class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 font-black italic">✎</button><button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 font-black">×</button></div>` : ''}
-                <div class="h-44 md:h-60 bg-slate-200 rounded-[35px] md:rounded-[45px] mb-5 overflow-hidden border border-white relative shadow-inner"><img src="${p.img}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/600x600?text=iFood'">${isOut ? '<div class="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center font-black text-white text-[10px] uppercase font-sans italic font-black">Sold Out</div>' : ''}</div>
-                <div class="flex items-center gap-2 mb-2 italic font-sans"><span class="text-[8px] bg-blue-600 text-white px-3 py-1 rounded-full font-black uppercase tracking-widest italic leading-none font-sans italic">${String(p.category || 'Lainnya').toUpperCase()}</span></div>
-                <h6 class="font-extrabold text-slate-800 uppercase text-[15px] md:text-xl leading-tight mb-3 truncate font-sans italic tracking-tighter">${p.name}</h6>
-                <div class="mb-5 leading-none font-sans italic">
-                    ${disc > 0 ? `<span class="text-[10px] text-red-500 line-through font-black italic font-sans italic font-sans italic">Rp ${oriPrice.toLocaleString('id-ID')}</span>` : ''}
-                    <p class="text-blue-600 font-black text-2xl md:text-3xl tracking-tighter italic leading-none mt-1 font-sans italic font-sans italic">Rp ${finalPrice.toLocaleString('id-ID')}</p>
-                </div>
-                <div class="flex justify-between items-center border-t border-slate-100 pt-5 font-sans leading-none font-sans italic font-sans italic">
-                    <div class="flex flex-col leading-none italic font-sans italic"><span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none italic font-sans italic font-sans italic font-sans italic">STOCK</span><span class="font-black text-slate-700 text-base leading-none italic font-sans italic font-sans italic font-sans italic">${p.stock} pcs</span></div>
-                    ${!isAdmin ? `<button onclick="${isOut ? '' : `addToCart(${p.id}, event)`}" class="${isOut ? 'bg-slate-200 text-slate-400' : 'bg-slate-900 text-white active:scale-90 shadow-2xl'} w-12 h-12 md:w-16 md:h-16 rounded-[15px] flex items-center justify-center transition-all font-black text-2xl leading-none italic font-sans italic font-sans italic">${isOut ? '×' : '+'}</button>` : ''}
-                </div>
-            </div>`;
+        // ... di dalam renderProducts map() ...
+return `
+    <div class="glass p-6 md:p-8 rounded-[45px] relative border border-white shadow-lg transition-all ${isOut ? 'opacity-50 grayscale' : 'hover:-translate-y-2'}">
+        <button onclick="showProductDetail(${p.id})" class="absolute top-4 left-4 z-10 bg-white/80 backdrop-blur text-slate-400 hover:text-blue-600 w-9 h-9 rounded-xl flex items-center justify-center shadow-sm border border-slate-100 transition-all active:scale-90">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </button>
+
+        ${isAdmin ? `<div class="absolute top-4 right-4 flex gap-2 z-10 scale-90 font-black italic"><button onclick="editProduct(${p.id})" class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 font-black italic">✎</button><button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 font-black">×</button></div>` : ''}
+        
+        <div onclick="showProductDetail(${p.id})" class="cursor-pointer h-44 md:h-60 bg-slate-200 rounded-[35px] md:rounded-[45px] mb-5 overflow-hidden border border-white relative shadow-inner">
+            <img src="${p.img}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/600x600?text=iFood'">
+            ${isOut ? '<div class="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center font-black text-white text-[10px] uppercase italic">Sold Out</div>' : ''}
+        </div>
+
+        <div class="flex items-center gap-2 mb-2 italic">
+            <span class="text-[8px] bg-blue-600 text-white px-3 py-1 rounded-full font-black uppercase tracking-widest italic leading-none">${String(p.category || 'Lainnya').toUpperCase()}</span>
+        </div>
+        
+        <h6 onclick="showProductDetail(${p.id})" class="cursor-pointer font-extrabold text-slate-800 uppercase text-[15px] md:text-xl leading-tight mb-3 truncate italic tracking-tighter">${p.name}</h6>
+        
+        <div class="mb-5 leading-none italic">
+            ${disc > 0 ? `<span class="text-[10px] text-red-500 line-through font-black italic">Rp ${oriPrice.toLocaleString('id-ID')}</span>` : ''}
+            <p class="text-blue-600 font-black text-2xl md:text-3xl tracking-tighter italic leading-none mt-1 font-sans">Rp ${finalPrice.toLocaleString('id-ID')}</p>
+        </div>
+
+        <div class="flex justify-between items-center border-t border-slate-100 pt-5 font-sans leading-none italic">
+            <div class="flex flex-col leading-none italic">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none italic">STOCK</span>
+                <span class="font-black text-slate-700 text-base leading-none italic">${p.stock} pcs</span>
+            </div>
+            ${!isAdmin ? `<button onclick="${isOut ? '' : `addToCart(${p.id}, event)`}" class="${isOut ? 'bg-slate-200 text-slate-400' : 'bg-slate-900 text-white active:scale-90 shadow-2xl'} w-12 h-12 md:w-16 md:h-16 rounded-[15px] flex items-center justify-center transition-all font-black text-2xl leading-none italic">${isOut ? '×' : '+'}</button>` : ''}
+        </div>
+    </div>`;
     }).join('');
 }
+
+function showProductDetail(id) {
+    playSfx(sounds.click);
+    const p = products.find(x => x.id == id);
+    if (!p) return;
+
+    const oriPrice = Number(p.price) || 0;
+    const disc = Number(p.discount) || 0;
+    const finalPrice = oriPrice - disc;
+    const isOut = p.stock <= 0;
+
+    Swal.fire({
+        title: `<span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 italic">Menu Information</span>`,
+        html: `
+            <div class="font-sans text-left">
+                <div class="w-full h-64 bg-slate-100 rounded-[40px] overflow-hidden mb-6 shadow-inner border-4 border-white">
+                    <img src="${p.img}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/600x600?text=iFood'">
+                </div>
+                
+                <span class="bg-blue-600 text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase italic tracking-widest">${p.category || 'Lainnya'}</span>
+                
+                <div class="flex justify-between items-start mt-4 mb-2">
+                    <h2 class="text-2xl font-black italic uppercase tracking-tighter text-slate-900 leading-tight flex-1 pr-4">${p.name}</h2>
+                    <div class="text-right">
+                        <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Available Stock</p>
+                        <p class="text-lg font-black text-slate-800 italic">${p.stock} <small class="text-[10px]">pcs</small></p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-[35px] border-2 border-slate-100 mb-6">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Price Details</p>
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl font-black text-blue-600 italic tracking-tighter">Rp ${finalPrice.toLocaleString('id-ID')}</span>
+                        ${disc > 0 ? `<span class="text-sm text-red-500 line-through font-bold">Rp ${oriPrice.toLocaleString('id-ID')}</span>` : ''}
+                    </div>
+                    ${disc > 0 ? `<p class="text-[10px] text-green-600 font-black mt-1 uppercase italic italic tracking-wider">★ You save Rp ${disc.toLocaleString('id-ID')}!</p>` : ''}
+                </div>
+
+                ${!isOut ? `
+                    <button onclick="Swal.close(); addToCart(${p.id}, event)" class="w-full bg-slate-900 text-white py-5 rounded-3xl font-black uppercase italic tracking-widest text-sm shadow-2xl hover:bg-blue-600 transition-all active:scale-95 flex items-center justify-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Tambahkan ke Keranjang
+                    </button>
+                ` : `
+                    <div class="w-full bg-slate-200 text-slate-400 py-5 rounded-3xl font-black uppercase italic text-center text-sm cursor-not-allowed">Sold Out</div>
+                `}
+            </div>
+        `,
+        showConfirmButton: false,
+        showCloseButton: true,
+        customClass: {
+            popup: 'rounded-[55px] p-6 border-none shadow-2xl',
+            closeButton: 'top-4 right-4 bg-slate-100 rounded-full'
+        }
+    });
+}
+
     function addToCart(id, event) {
     // 1. LANGSUNG BUNYIKAN SUARA DI BARIS PALING ATAS
     // Kita pakai sounds.login karena kamu bilang ini yang paling lancar
@@ -936,7 +947,7 @@ function updateCartUI() {
             <div class="flex justify-between items-center bg-white/10 p-5 rounded-[30px] border border-white/5 shadow-inner italic mb-3">
                 <div class="max-w-[70%] truncate text-white leading-none">
                     <span class="font-black uppercase text-sm block mb-1">${item.name}</span>
-                    <span class="text-[10px] text-slate-400 font-bold">Rp ${finalPrice.toLocaleString('id-ID')}</span>
+                    <span class="text-[10px] text-slate-400 font-bold">${item.qty}x | Rp ${finalPrice.toLocaleString('id-ID')}</span>
                 </div>
                 <button onclick="removeFromCart(${item.id})" class="text-red-500 bg-red-500/10 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest italic btn-active">DEL</button>
             </div>`;
@@ -945,12 +956,23 @@ function updateCartUI() {
         list.innerHTML = '<p class="text-slate-500 text-center italic py-20 uppercase tracking-[0.3em] opacity-30 text-[10px]">Empty basket</p>';
     }
     
-    // Hitung Akhir
+    // Logika Perhitungan Diskon Promo
     let nominalDiskon = (totalBelanja * currentPromo.percent) / 100;
     let finalBill = totalBelanja - nominalDiskon;
     
-    // Update Text Total dan Status Promo
-    document.getElementById('total-price').innerText = `Rp ${finalBill.toLocaleString('id-ID')}`;
+    // --- PERBAIKAN TAMPILAN TOTAL BILL ---
+    const totalPriceContainer = document.getElementById('total-price');
+    if (currentPromo.percent > 0) {
+        totalPriceContainer.innerHTML = `
+            <div class="flex flex-col items-end">
+                <span class="text-xs text-red-400 line-through opacity-70 font-bold">Rp ${totalBelanja.toLocaleString('id-ID')}</span>
+                <span class="text-blue-400">Rp ${finalBill.toLocaleString('id-ID')}</span>
+            </div>
+        `;
+    } else {
+        totalPriceContainer.innerText = `Rp ${totalBelanja.toLocaleString('id-ID')}`;
+    }
+    
     document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
     
     const statusDiv = document.getElementById('promo-status');
@@ -988,7 +1010,20 @@ function applyPromo() {
     }
     updateCartUI();
 }
-
+function removeFromCart(id) {
+    playSfx(sounds.click);
+    const index = cart.findIndex(item => item.id == id);
+    if (index !== -1) {
+        // Kembalikan stok ke list produk utama
+        const p = products.find(x => x.id == id);
+        if (p) p.stock += cart[index].qty;
+        
+        // Hapus dari keranjang
+        cart.splice(index, 1);
+        updateCartUI();
+        renderProducts(); // Refresh tampilan produk biar stoknya balik
+    }
+}
     async function checkout() {
     if (cart.length === 0) return;
     const rawTotal = cart.reduce((a, b) => a + ((Number(b.price) - Number(b.discount || 0)) * b.qty), 0);
@@ -1382,33 +1417,18 @@ function updateDateDisplay() {
     return dateString;
 }
 
-// 1. Inisialisasi variabel global di paling atas tag <script>
-let analyticsData = { 
-    orders: [], 
-    d: new Date(), 
-    m: new Date(), 
-    y: new Date() 
-};
-
-// 2. Fungsi Utama Buka Modal
 async function openAnalyticsModal() {
     const loader = document.getElementById('global-loader');
     if (loader) loader.classList.remove('hidden');
 
     try {
-        // Ambil data fresh dari sheet
         const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
         const data = await res.json();
-        
-        // Simpan ke variabel global
         analyticsData.orders = Array.isArray(data) ? data : [];
-        
-        // Reset waktu ke hari ini saat pertama buka
         analyticsData.d = new Date();
         analyticsData.m = new Date();
         analyticsData.y = new Date();
 
-        // Tampilkan UI
         renderAnalyticsUI();
     } catch (e) {
         console.error("Gagal load analytics:", e);
@@ -1418,18 +1438,15 @@ async function openAnalyticsModal() {
     }
 }
 
-// 3. Fungsi Render UI (Ini yang bikin tombol hidup)
 function renderAnalyticsUI() {
     let dailyTotal = 0, dailyOrders = 0;
     let monthlyTotal = 0, monthlyOrders = 0;
     let yearlyTotal = 0, yearlyOrders = 0;
 
-    // Ambil string filter berdasarkan pilihan user
     const dStr = `${analyticsData.d.getDate()}/${analyticsData.d.getMonth()+1}/${analyticsData.d.getFullYear()}`;
     const mMatch = `${analyticsData.m.getMonth()+1}/${analyticsData.m.getFullYear()}`;
     const yMatch = `${analyticsData.y.getFullYear()}`;
 
-    // Looping data orders
     analyticsData.orders.forEach(o => {
         const rawDate = String(o.tanggal || o.Tanggal || "").split(" ")[0].replace(/-/g, "/");
         const total = Number(o.total || o.total_bayar || 0);
@@ -1488,18 +1505,14 @@ function renderAnalyticsUI() {
     });
 }
 
-// 4. Fungsi Navigasi (Wajib di-attach ke window)
 window.changeAnalyticsDate = function(type, val) {
     if (sounds.click) playSfx(sounds.click);
     
     if (type === 'd') analyticsData.d.setDate(analyticsData.d.getDate() + val);
     if (type === 'm') analyticsData.m.setMonth(analyticsData.m.getMonth() + val);
     if (type === 'y') analyticsData.y.setFullYear(analyticsData.y.getFullYear() + val);
-    
-    // Render ulang tanpa tutup modal
-    renderAnalyticsUI();
+renderAnalyticsUI();
 };
-
 
     async function finishOrder(rowId) { if((await Swal.fire({ title: 'Finish?', showCancelButton: true, customClass: { popup: 'rounded-[35px] p-6 font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans' }, confirmButtonColor: '#22c55e' })).isConfirmed) { await sendData({ action: 'delete_order', rowId }); loadOrders(); } }
     function showFullOrderDetail(name, detail, total) {
