@@ -94,6 +94,20 @@ header.glass {
 .img-loaded { opacity: 1; }
 button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s; }
 
+#clock-login, #clock-header {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.1);
+}
+
+@keyframes pulse-blue {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+#clock-login {
+    animation: pulse-blue 2s infinite ease-in-out;
+}
     </style>
 </head>
 <body class="text-slate-900 min-h-screen font-sans">
@@ -114,6 +128,11 @@ button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s
 <div class="w-24 h-24 bg-white rounded-[35px] flex items-center justify-center mb-6 rotate-6 shadow-2xl border-4 border-slate-900 overflow-hidden logo-container">
     <div id="spinner-login" class="logo-spinner"></div> <img id="custom-logo-login" src="" class="w-full h-full object-cover img-loading" onload="handleImageLoad(this, 'spinner-login')">
 </div>
+            <div class="mb-2">
+            <div id="clock-login" class="text-[14px] font-black tracking-[0.2em] text-blue-600 bg-blue-50 px-4 py-1 rounded-full border border-blue-100 shadow-sm inline-block italic">
+             00:00:00
+            </div>
+            </div>
             <h1 class="text-4xl font-black tracking-tighter mb-1 font-sans">iFood</h1>
             <p class="text-[12px] font-bold text-slate-500 uppercase tracking-[0.3em]">By Raihan Fadly</p>
         </div>
@@ -137,30 +156,40 @@ button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s
 </div>
 
     <div id="main-dashboard" class="hidden text-slate-900">
-        <header class="p-5 glass sticky top-0 z-40 border-b border-slate-200/50 px-6 md:px-12 flex justify-between items-center">
-            
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg rotate-3 overflow-hidden border-2 border-slate-900 logo-container">
-    <div id="spinner-header" class="logo-spinner"></div> <img id="custom-logo-header" src="" class="w-full h-full object-cover img-loading" onload="handleImageLoad(this, 'spinner-header')">
-</div>
-                <div>
-                    <h3 class="text-2xl font-black tracking-tighter leading-none italic font-sans uppercase">iFood</h3>
-                    <p class="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1 leading-none">Owner: Raihan Fadly</p>
+<header class="p-5 glass sticky top-0 z-40 border-b border-slate-200/50 px-6 md:px-12 flex justify-between items-center">
+    <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg rotate-3 overflow-hidden border-2 border-slate-900 logo-container">
+            <div id="spinner-header" class="logo-spinner"></div> 
+            <img id="custom-logo-header" src="" class="w-full h-full object-cover img-loading" onload="handleImageLoad(this, 'spinner-header')">
+        </div>
+        <div>
+            <h3 class="text-2xl font-black tracking-tighter leading-none italic font-sans uppercase">iFood</h3>
+            <p class="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1 leading-none">By : Raihan Fadly</p>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 bg-white/90 py-2 pl-2 pr-4 rounded-full shadow-sm border border-slate-100 font-sans group hover:border-blue-200 transition-all">
+            <div id="user-initial" class="w-9 h-9 bg-slate-900 rounded-full border-2 border-white shadow-md flex items-center justify-center text-[11px] text-white font-black italic uppercase">
+                ?
+            </div>
+            <div class="flex flex-col leading-none border-l pl-3 border-slate-200">
+                <span id="role-title" class="text-[7px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Status</span>
+                <span id="display-name" class="font-black text-[11px] uppercase text-slate-800 tracking-tighter truncate max-w-[85px] mb-1">User</span>
+                <div class="flex items-center gap-1.5 border-t border-slate-100 pt-1 mt-0.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    <span id="clock-header" class="text-[9px] font-bold text-blue-600 tracking-wider tabular-nums">00:00:00 WIB</span>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-2 bg-white/90 py-2 px-4 rounded-full shadow-sm border border-slate-100 font-sans">
-                    <div class="w-8 h-8 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-full border-2 border-white shadow-inner"></div>
-                    <div class="flex flex-col leading-none">
-                        <span id="display-name" class="font-black text-[11px] uppercase text-slate-800 tracking-tighter truncate max-w-[80px]">User</span>
-                        <span id="role-title" class="text-[7px] font-bold text-slate-400 uppercase tracking-widest">Customer</span>
-                    </div>
-                </div>
-                <button onclick="handleLogout()" class="bg-red-50 text-red-500 p-2.5 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm active:scale-90 border border-red-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                </button>
-            </div>
-        </header>
+        </div>
+
+        <button onclick="handleLogout()" class="bg-red-50 text-red-500 p-3 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm active:scale-90 border border-red-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+        </button>
+    </div>
+</header>
 
 <main class="p-6 md:p-12 pb-32 max-w-7xl mx-auto overflow-hidden">
     
@@ -419,12 +448,19 @@ function playSfx(sfx) {
 }
 
 window.onload = () => {
-  document.getElementById('custom-logo-login').src = MY_LOGO_URL;
-  document.getElementById('custom-logo-header').src = MY_LOGO_URL;
-  initBanners(); 
-  const savedUser = sessionStorage.getItem('activeUser');
-  if (savedUser) handleLogin(savedUser);
-  else document.getElementById('login-page').classList.remove('hidden');
+    try {
+        startClock();
+    } catch (e) { console.error("Gagal jalankan jam:", e); }
+    document.getElementById('custom-logo-login').src = MY_LOGO_URL;
+    document.getElementById('custom-logo-header').src = MY_LOGO_URL;
+    initBanners(); 
+    const savedUser = sessionStorage.getItem('activeUser');
+    if (savedUser) {
+        handleLogin(savedUser);
+    } else {
+        document.getElementById('login-page').classList.remove('hidden');
+        loadProducts();
+    }
 };
 
 const bannerData = [
@@ -575,7 +611,7 @@ function handleCenterAction() {
 }
 
 async function handleLogin(existingUser) {
-    playSfx(sounds.login);
+  playSfx(sounds.login);
   const user = existingUser || document.getElementById('username').value.trim();
   if (!user) return Swal.fire('Oops!', 'Siapa namamu?', 'warning');
 
@@ -584,38 +620,35 @@ async function handleLogin(existingUser) {
   const iconCart = document.getElementById('icon-cart');
   const iconChart = document.getElementById('icon-chart');
 
-  if(isAdmin) {
-    iconCart.classList.add('hidden');
-    iconChart.classList.remove('hidden');
-    document.getElementById('cart-sidebar').classList.add('hidden'); 
-  }
-  else {
-    iconCart.classList.remove('hidden');
-    iconChart.classList.add('hidden');
-    document.getElementById('cart-sidebar').classList.remove('hidden');
-  }
-
+    if(isAdmin) {
+      iconCart.classList.add('hidden');
+      iconChart.classList.remove('hidden');
+      document.getElementById('cart-sidebar').classList.add('hidden'); 
+    }
+    else {
+      iconCart.classList.remove('hidden');
+      iconChart.classList.add('hidden');
+      document.getElementById('cart-sidebar').classList.remove('hidden');
+    }
     sessionStorage.setItem('activeUser', user.toLowerCase());
     document.getElementById('display-name').innerText = user;
+    document.getElementById('user-initial').innerText = user.charAt(0).toUpperCase();
+    document.getElementById('role-title').innerText = isAdmin ? "SYSTEM ADMIN" : "VIP CUSTOMER";
     document.getElementById('login-page').classList.add('hidden');
     document.getElementById('main-dashboard').classList.remove('hidden');
     document.getElementById('bottom-nav').classList.remove('hidden');
-    
-    document.getElementById('role-title').innerText = isAdmin ? "SYSTEM ADMIN" : "VIP CUSTOMER";
-    
-  if(isAdmin) {
-      document.getElementById('nav-action-admin').classList.remove('hidden');
-      document.getElementById('nav-action-user').classList.add('hidden');
-  }
-  else {
-      document.getElementById('nav-action-admin').classList.add('hidden');
-      document.getElementById('nav-action-user').classList.remove('hidden');
-  }
-loadProducts();
+    if(isAdmin) {
+        document.getElementById('nav-action-admin').classList.remove('hidden');
+        document.getElementById('nav-action-user').classList.add('hidden');
+    } else {
+        document.getElementById('nav-action-admin').classList.add('hidden');
+        document.getElementById('nav-action-user').classList.remove('hidden');
+    }
+    loadProducts();
 }
 
     function handleLogout() { 
-    playSfx(sounds.click); // Suara klik tombol awal
+    playSfx(sounds.click);
     Swal.fire({ 
         title: 'Logout?', 
         icon: 'warning', 
@@ -624,9 +657,8 @@ loadProducts();
         confirmButtonColor: '#ef4444' 
     }).then(res => {
         if(res.isConfirmed) { 
-            playSfx(sounds.logout); // <--- Suara logout sedih
+            playSfx(sounds.logout);
             sessionStorage.removeItem('activeUser'); 
-            // Tunggu sebentar biar suara logout kedengeran sebelum page reload
             setTimeout(() => { location.reload(); }, 600); 
         }
     });
@@ -634,38 +666,22 @@ loadProducts();
     function handleSearch() { searchQuery = document.getElementById('search-input').value.toLowerCase(); renderProducts(); }
 
     function filterProducts(category, element) {
-    // 1. Set filter kategori
     currentFilter = category;
-    
-    // 2. Mainkan suara biar makin mantap
     playSfx(sounds.login);
-    
-    // 3. Update tombol menu yang aktif
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
     if (element) {
         element.classList.add('active');
     }
-
-    // 4. AMBIL ELEMEN
     const list = document.getElementById('product-list');
     const loadingState = document.getElementById('loading-state');
-    
-    // 5. SEMBUNYIKAN MENU ASLI & MUNCULKAN SKELETON
-    list.style.display = 'none'; // Paksa hilang
-    loadingState.classList.remove('hidden'); // Munculkan skeleton
-
-    // Scroll ke atas otomatis biar user fokus ke menu baru
+    list.style.display = 'none'; 
+    loadingState.classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // 6. KASIH DELAY BUATAN (600ms)
-    // Biar mata user sempat melihat animasi skeleton loader-nya
     setTimeout(() => {
-        renderProducts(); // Render data baru di background
+        renderProducts();
         
-        loadingState.classList.add('hidden'); // Sembunyikan skeleton
-        list.style.display = 'grid'; // Munculkan lagi menu aslinya
-        
-        // Kasih sedikit animasi fade in biar nggak kaget
+        loadingState.classList.add('hidden');
+        list.style.display = 'grid';
         list.classList.add('animate-in', 'fade-in', 'duration-500');
     }, 600); 
 }
@@ -747,16 +763,13 @@ function showSortOptions() {
 function renderProducts() {
     const list = document.getElementById('product-list');
     const isAdmin = ADMIN_USERS.includes(sessionStorage.getItem('activeUser'));
-    
-    // 1. FILTER: Nyaring data berdasarkan kategori dan pencarian
     let filtered = products.filter(p => {
         const cat = p.category ? String(p.category).toLowerCase().trim() : 'lainnya';
         const matchFilter = currentFilter === 'all' || cat === currentFilter.toLowerCase().trim();
         const matchSearch = p.name.toLowerCase().includes(searchQuery);
         return matchFilter && matchSearch;
     });
-    
-    // --- TAMBAHAN LOGIKA SEARCH KOSONG ---
+
     if (filtered.length === 0) {
         list.innerHTML = `
             <div class="col-span-full py-20 flex flex-col items-center justify-center text-center animate-in fade-in zoom-in duration-500">
@@ -768,11 +781,9 @@ function renderProducts() {
                 <button onclick="document.getElementById('search-input').value=''; handleSearch();" class="mt-6 px-6 py-3 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all active:scale-95">Reset Pencarian</button>
             </div>
         `;
-        return; // Berhenti di sini, jangan lanjut ke mapping data
+        return;
     }
-    // --------------------------------------
-    
-    // 2. SORTING: Mengurutkan hasil filter sebelum ditampilkan
+
     if (currentSort === 'low-high') {
         filtered.sort((a, b) => (Number(a.price) - Number(a.discount || 0)) - (Number(b.price) - Number(b.discount || 0)));
     } else if (currentSort === 'high-low') {
@@ -782,16 +793,12 @@ function renderProducts() {
     } else if (currentSort === 'default') {
         filtered.sort((a, b) => Number(a.id) - Number(b.id));
     }
-    
-    
-    
-    // 3. RENDER: Mapping data ke HTML
+
     list.innerHTML = filtered.map(p => {
         const oriPrice = Number(p.price) || 0;
         const disc = Number(p.discount) || 0;
         const finalPrice = oriPrice - disc;
         const isOut = p.stock <= 0;
-        // ... di dalam renderProducts map() ...
 return `
     <div class="glass p-6 md:p-8 rounded-[45px] relative border border-white shadow-lg transition-all ${isOut ? 'opacity-50 grayscale' : 'hover:-translate-y-2'}">
         <button onclick="showProductDetail(${p.id})" class="absolute top-4 left-4 z-10 bg-white/80 backdrop-blur text-slate-400 hover:text-blue-600 w-9 h-9 rounded-xl flex items-center justify-center shadow-sm border border-slate-100 transition-all active:scale-90">
@@ -888,18 +895,12 @@ function showProductDetail(id) {
 }
 
     function addToCart(id, event) {
-    // 1. LANGSUNG BUNYIKAN SUARA DI BARIS PALING ATAS
-    // Kita pakai sounds.login karena kamu bilang ini yang paling lancar
     playSfx(sounds.add); 
-
     const p = products.find(x => x.id == id);
     if (!p || p.stock <= 0) return;
-    
-    // 2. LOGIKA ANIMASI & CART (DIBERI SEDIKIT DELAY BIAR SUARA GAK KEPOTONG)
     const cartBtn = document.querySelector('nav button:nth-child(3)');
     const flyItem = document.createElement('div');
     flyItem.className = 'fly-item';
-    
     flyItem.style.background = `url('${p.img}')`;
     flyItem.style.backgroundSize = 'cover';
     flyItem.style.backgroundPosition = 'center';
@@ -920,7 +921,7 @@ function showProductDetail(id) {
         flyItem.style.top = `${target.top}px`;
         flyItem.style.transform = 'scale(0.2) rotate(360deg)';
         flyItem.style.opacity = '0.7';
-    }, 50); // Dipercepat dikit animasinya
+    }, 50);
 
     setTimeout(() => {
         flyItem.remove();
@@ -929,7 +930,7 @@ function showProductDetail(id) {
         else cart.push({ ...p, qty: 1 });
         p.stock--;
         updateCartUI();
-    }, 800); // Dipercepat biar keranjang cepat update
+    }, 800);
 }
 
 let currentPromo = { code: "", percent: 0 };
@@ -938,7 +939,6 @@ function updateCartUI() {
     const list = document.getElementById('cart-items');
     let totalBelanja = 0;
     
-    // Update List Barang
     if (cart.length > 0) {
         list.innerHTML = cart.map(item => {
             const finalPrice = Number(item.price) - Number(item.discount || 0);
@@ -956,11 +956,9 @@ function updateCartUI() {
         list.innerHTML = '<p class="text-slate-500 text-center italic py-20 uppercase tracking-[0.3em] opacity-30 text-[10px]">Empty basket</p>';
     }
     
-    // Logika Perhitungan Diskon Promo
     let nominalDiskon = (totalBelanja * currentPromo.percent) / 100;
     let finalBill = totalBelanja - nominalDiskon;
     
-    // --- PERBAIKAN TAMPILAN TOTAL BILL ---
     const totalPriceContainer = document.getElementById('total-price');
     if (currentPromo.percent > 0) {
         totalPriceContainer.innerHTML = `
@@ -984,7 +982,6 @@ function updateCartUI() {
 }
 
 function applyPromo() {
-    // PROTEKSI: Cek belanjaan dulu
     if (cart.length === 0) {
         playSfx(sounds.click);
         return Swal.fire({
@@ -1014,27 +1011,21 @@ function removeFromCart(id) {
     playSfx(sounds.click);
     const index = cart.findIndex(item => item.id == id);
     if (index !== -1) {
-        // Kembalikan stok ke list produk utama
         const p = products.find(x => x.id == id);
         if (p) p.stock += cart[index].qty;
-        
-        // Hapus dari keranjang
         cart.splice(index, 1);
         updateCartUI();
-        renderProducts(); // Refresh tampilan produk biar stoknya balik
+        renderProducts(); 
     }
 }
     async function checkout() {
     if (cart.length === 0) return;
     const rawTotal = cart.reduce((a, b) => a + ((Number(b.price) - Number(b.discount || 0)) * b.qty), 0);
-    // Potong berdasarkan persen
     const nominalDiskon = (rawTotal * currentPromo.percent) / 100;
     const total = rawTotal - nominalDiskon; 
     
     const detail = cart.map(x => `${x.qty}x ${x.name}`).join(", ") + 
                    (currentPromo.percent > 0 ? ` (Disc ${currentPromo.percent}%)` : "");
-    
-    // Buat data ringkas item yang dibeli untuk dikirim ke GS
     const cartItems = cart.map(item => ({
         id: item.id,
         qty: item.qty
@@ -1059,13 +1050,12 @@ function removeFromCart(id) {
         confirmButtonColor: '#2563eb',
         showLoaderOnConfirm: true,
         preConfirm: async () => {
-            // Kirim cartItems agar GS bisa memotong stok
             return await sendData({
                 action: 'checkout',
                 user: sessionStorage.getItem('activeUser'),
                 detail,
                 total,
-                cartItems: cartItems // <--- Ini data kuncinya
+                cartItems: cartItems
             });
         }
     }).then((res) => {
@@ -1075,7 +1065,7 @@ function removeFromCart(id) {
             updateCartUI();
             if (!document.getElementById('cart-sidebar').classList.contains('translate-x-full')) toggleCart();
             Swal.fire({ icon: 'success', title: 'SENT!', text: 'Order sent & Stock updated!', timer: 2000, showConfirmButton: false });
-            loadProducts(); // Refresh stok di tampilan depan
+            loadProducts();
         }
     });
 }
@@ -1083,14 +1073,14 @@ function removeFromCart(id) {
 function handleImageLoad(imgElement, spinnerId) {
     const spinner = document.getElementById(spinnerId);
     if (spinner) {
-        spinner.style.display = 'none'; // Sembunyikan spinner
+        spinner.style.display = 'none';
     }
-    imgElement.classList.add('img-loaded'); // Munculkan gambar dengan efek fade-in
+    imgElement.classList.add('img-loaded');
 }
 
     async function sendData(payload) {
     const loader = document.getElementById('global-loader');
-    loader.classList.remove('hidden'); // Munculkan loading
+    loader.classList.remove('hidden');
     
     try {
         const response = await fetch(SCRIPT_URL, { 
@@ -1102,16 +1092,14 @@ function handleImageLoad(imgElement, spinnerId) {
         console.error("Error detail:", error);
         Swal.fire('Gagal!', 'Terjadi kesalahan koneksi.', 'error');
     } finally {
-        loader.classList.add('hidden'); // Sembunyikan loading apapun hasilnya
+        loader.classList.add('hidden');
     }
 }
 
     async function openAddProductModal() {
         const { value: f } = await Swal.fire({
             title: 'New Product',
-            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-8 rounded-[45px] border-2 border-slate-100 shadow-xl font-sans italic font-sans italic font-sans"><input id="n" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-slate-800 mb-4 outline-none shadow-inner italic font-sans italic font-sans italic" placeholder="Name"><div class="grid grid-cols-2 gap-4 mb-4 font-sans italic font-sans italic font-sans italic"><input id="p" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" placeholder="Price"><input id="d" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="0"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="s" type="number"
-placeholder="Stock Item"
-class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="c" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans italic"><option value="Makanan">Makanan</option><option value="Minuman">Minuman</option><option value="Dessert">Dessert</option></select></div><input id="i" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" placeholder="Img Link"></div></div>`,
+            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-8 rounded-[45px] border-2 border-slate-100 shadow-xl font-sans italic font-sans italic font-sans"><input id="n" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-slate-800 mb-4 outline-none shadow-inner italic font-sans italic font-sans italic" placeholder="Name"><div class="grid grid-cols-2 gap-4 mb-4 font-sans italic font-sans italic font-sans italic"><input id="p" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" placeholder="Price"><input id="d" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="0"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="s" type="number"placeholder="Stock Item"class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="c" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans italic"><option value="Makanan">Makanan</option><option value="Minuman">Minuman</option><option value="Dessert">Dessert</option></select></div><input id="i" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" placeholder="Img Link"></div></div>`,
             showCancelButton: true, confirmButtonText: 'Publish', customClass: { popup: 'rounded-[60px] p-4 font-sans italic font-sans italic font-sans italic' },
             preConfirm: () => ({ name: document.getElementById('n').value, price: document.getElementById('p').value, discount: document.getElementById('d').value, stock: document.getElementById('s').value, category: document.getElementById('c').value, img: document.getElementById('i').value })
         });
@@ -1122,10 +1110,7 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
         const p = products.find(x => x.id == id);
         const { value: f } = await Swal.fire({
             title: 'Control Center',
-            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-black font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-6 md:p-10 rounded-[40px] md:rounded-[55px] border-2 border-white shadow-xl font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="en" class="w-full bg-white p-5 rounded-3xl border-2 border-slate-100 font-black mb-6 shadow-inner text-slate-700 italic font-sans italic font-sans italic" value="${p.name}"><div class="grid grid-cols-2 gap-4 mb-4 italic font-sans italic font-sans italic"><input id="ep" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" value="${p.price}"><input id="ed" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="${p.discount}"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="es" type="number"
-value="${p.stock}"
-placeholder="Stock Item"
-class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="ec" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans"><option value="Makanan" ${p.category === 'Makanan' ? 'selected' : ''}>Makanan</option><option value="Minuman" ${p.category === 'Minuman' ? 'selected' : ''}>Minuman</option><option value="Dessert" ${p.category === 'Dessert' ? 'selected' : ''}>Dessert</option></select></div><input id="ei" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" value="${p.img}"></div></div>`,
+            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-black font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-6 md:p-10 rounded-[40px] md:rounded-[55px] border-2 border-white shadow-xl font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="en" class="w-full bg-white p-5 rounded-3xl border-2 border-slate-100 font-black mb-6 shadow-inner text-slate-700 italic font-sans italic font-sans italic" value="${p.name}"><div class="grid grid-cols-2 gap-4 mb-4 italic font-sans italic font-sans italic"><input id="ep" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" value="${p.price}"><input id="ed" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="${p.discount}"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="es" type="number"value="${p.stock}"placeholder="Stock Item"class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="ec" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans"><option value="Makanan" ${p.category === 'Makanan' ? 'selected' : ''}>Makanan</option><option value="Minuman" ${p.category === 'Minuman' ? 'selected' : ''}>Minuman</option><option value="Dessert" ${p.category === 'Dessert' ? 'selected' : ''}>Dessert</option></select></div><input id="ei" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" value="${p.img}"></div></div>`,
             showCancelButton: true, confirmButtonText: 'Save', customClass: { popup: 'rounded-[60px] p-4 font-sans italic font-sans font-sans italic' },
             preConfirm: () => ({ name: document.getElementById('en').value, price: document.getElementById('ep').value, discount: document.getElementById('ed').value, stock: document.getElementById('es').value, category: document.getElementById('ec').value, img: document.getElementById('ei').value })
         });
@@ -1136,13 +1121,9 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
 
     async function loadOrders() {
     const monitorList = document.getElementById('order-history-list');
-    const loader = document.getElementById('global-loader'); // Ambil loader global
-    const refreshBtn = document.querySelector('[onclick="loadOrders()"] svg'); // Ambil icon refresh
-    
-    // 1. Update teks tanggal di header modal agar sinkron dengan navigasi
+    const loader = document.getElementById('global-loader');
+    const refreshBtn = document.querySelector('[onclick="loadOrders()"] svg');
     const targetDate = updateDateDisplay().trim();
-    
-    // ===== AKTIFKAN LOADING =====
     if (loader) loader.classList.remove('hidden');
     if (refreshBtn) refreshBtn.classList.add('animate-spin');
     
@@ -1155,20 +1136,14 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
     try {
         const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
         const data = await res.json();
-        // Ambil data asli (jangan di-reverse dulu biar filter rowId-nya aman)
         const orders = Array.isArray(data) ? data : [];
         
         const activeUser = (sessionStorage.getItem('activeUser') || "").toLowerCase();
         const isAdmin = ADMIN_USERS.map(u => u.toLowerCase()).includes(activeUser);
-        
-        // ===== LOGIKA FILTER TANGGAL =====
         const filteredOrders = orders.filter(o => {
             let rawDate = String(o.tanggal || o.Tanggal || o.date || "");
             rawDate = rawDate.trim();
-            // Ambil bagian tanggal saja (D/M/YYYY)
             const orderDateOnly = rawDate.split(" ")[0];
-            
-            // Console log ini buat lo ngecek di F12 kalau ada data gak muncul
             console.log("Membandingkan:", orderDateOnly, " VS ", targetDate);
             
             return orderDateOnly === targetDate;
@@ -1182,10 +1157,8 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
                     <p class="text-[8px] mt-1 font-bold">${targetDate}</p>
                 </div>
             `;
-            return; // Keluar dari fungsi
+            return;
         }
-        
-        // Render data hasil filter (di-reverse biar jam terbaru paling atas)
         monitorList.innerHTML = filteredOrders.reverse().map(o => {
             
             const orderName = o.user || o.nama_pelanggan || "User";
@@ -1196,8 +1169,6 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
             
             const isMyOrder = activeUser && orderName.toLowerCase() === activeUser;
             const canEdit = isMyOrder || isAdmin;
-            
-            // ===== FORMAT TANGGAL & JAM =====
             let formattedDate = "-";
             let onlyTime = "--:--";
             
@@ -1212,81 +1183,12 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
                     onlyTime = timePart.slice(0, 5);
                 } else {
                     formattedDate = rawDate;
-                    // Ambil jam dari format "D/M/YYYY HH:mm"
                     onlyTime = rawDate.split(" ")[1] ? rawDate.split(" ")[1].slice(0, 5) : "--:--";
                 }
             }
             
-            return `
-                <div onclick="showFullOrderDetail('${orderName}', '${orderDetail}', ${orderTotal})"
-                     class="bg-white p-6 rounded-[35px] border-2 
-                     ${isMyOrder ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100'}
-                     shadow-sm flex justify-between items-center mb-4 cursor-pointer hover:scale-[1.01] transition-all">
-
-                    <div class="flex gap-4 items-center text-slate-900 flex-1 overflow-hidden">
-
-                        <div class="relative">
-                            <div class="w-14 h-14 bg-blue-600 rounded-[20px] flex items-center justify-center font-black text-white text-xl shadow-lg">
-                                ${orderName.charAt(0).toUpperCase()}
-                            </div>
-
-                            <span class="absolute -bottom-2 -right-2 bg-slate-900 text-[8px] text-white px-2 py-1 rounded-lg font-bold border-2 border-white">
-                                ${onlyTime}
-                            </span>
-                        </div>
-
-                        <div class="flex-1 truncate">
-                            <h6 class="font-extrabold uppercase text-base mb-1 text-slate-800">
-                                ${orderName}
-                            </h6>
-
-                            <p class="text-slate-500 font-bold italic text-sm truncate mb-1">
-                                ${orderDetail}
-                            </p>
-
-                            <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-2">
-                                ${formattedDate}
-                            </p>
-
-                            <span class="text-[10px] bg-blue-100 px-2 py-0.5 rounded-md text-blue-600 font-black uppercase">
-                                Rp ${orderTotal.toLocaleString('id-ID')}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col gap-2 ml-4">
-
-                        ${isAdmin ? `
-                            <select
-                                onclick="event.stopPropagation();"
-                                onchange="updateStatus(${o.rowId}, this.value)"
-                                class="text-[10px] font-black uppercase px-2 py-1 rounded-xl border border-slate-200">
-                                <option value="Pending" ${orderStatus==='Pending'?'selected':''}>Pending</option>
-                                <option value="Proses" ${orderStatus==='Proses'?'selected':''}>Proses</option>
-                                <option value="Selesai" ${orderStatus==='Selesai'?'selected':''}>Selesai</option>
-                            </select>
-                        ` : `
-                            <span class="text-[10px] px-3 py-1 rounded-xl font-black uppercase
-                                ${orderStatus === 'Selesai' ? 'bg-green-100 text-green-600' :
-                                  orderStatus === 'Proses' ? 'bg-yellow-100 text-yellow-600' :
-                                  'bg-red-100 text-red-600'}">
-                                ${orderStatus}
-                            </span>
-                        `}
-
-                        ${canEdit ? `
-                            <button onclick="event.stopPropagation(); editMyOrder(${o.rowId}, '${orderDetail}')"
-                                class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
-                                ✎
-                            </button>
-                        ` : ''}
-
-                    </div>
-                </div>
-            `;
-            
-        }).join('');
-        
+            return `<div onclick="showFullOrderDetail('${orderName}', '${orderDetail}', ${orderTotal})"class="bg-white p-6 rounded-[35px] border-2 ${isMyOrder ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100'}shadow-sm flex justify-between items-center mb-4 cursor-pointer hover:scale-[1.01] transition-all"><div class="flex gap-4 items-center text-slate-900 flex-1 overflow-hidden"><div class="relative"><div class="w-14 h-14 bg-blue-600 rounded-[20px] flex items-center justify-center font-black text-white text-xl shadow-lg">${orderName.charAt(0).toUpperCase()}</div><span class="absolute -bottom-2 -right-2 bg-slate-900 text-[8px] text-white px-2 py-1 rounded-lg font-bold border-2 border-white">${onlyTime}</span></div><div class="flex-1 truncate"><h6 class="font-extrabold uppercase text-base mb-1 text-slate-800">${orderName}</h6><p class="text-slate-500 font-bold italic text-sm truncate mb-1">${orderDetail}</p><p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-2">${formattedDate}</p><span class="text-[10px] bg-blue-100 px-2 py-0.5 rounded-md text-blue-600 font-black uppercase">Rp ${orderTotal.toLocaleString('id-ID')}</span></div></div><div class="flex flex-col gap-2 ml-4">${isAdmin ? `<selectonclick="event.stopPropagation();"onchange="updateStatus(${o.rowId}, this.value)"class="text-[10px] font-black uppercase px-2 py-1 rounded-xl border border-slate-200"><option value="Pending" ${orderStatus==='Pending'?'selected':''}>Pending</option><option value="Proses" ${orderStatus==='Proses'?'selected':''}>Proses</option><option value="Selesai" ${orderStatus==='Selesai'?'selected':''}>Selesai</option></select>` : `<span class="text-[10px] px-3 py-1 rounded-xl font-black uppercase${orderStatus === 'Selesai' ? 'bg-green-100 text-green-600' :orderStatus === 'Proses' ? 'bg-yellow-100 text-yellow-600' :'bg-red-100 text-red-600'}">${orderStatus}</span>`}${canEdit ? `<button onclick="event.stopPropagation(); editMyOrder(${o.rowId}, '${orderDetail}')"class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">✎</button>` : ''}</div></div>`;
+}).join('');
     } catch (err) {
         console.error(err);
         monitorList.innerHTML = `
@@ -1295,13 +1197,11 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
             </p>
         `;
     } finally {
-        // ===== MATIKAN LOADING APAPUN HASILNYA =====
         if (loader) loader.classList.add('hidden');
         if (refreshBtn) refreshBtn.classList.remove('animate-spin');
     }
 }
 
-    // --- FUNGSI RINCIAN & EDIT (POIN 3) ---
     function showFullOrderDetail(name, detail, total) {
         playSfx(sounds.click);
         Swal.fire({
@@ -1323,8 +1223,6 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
     async function editMyOrder(rowId, currentDetail) {
     playSfx(sounds.click);
     
-    // 1. Pecah string "2x KFC, 1x Burger" menjadi array of objects
-    // Kita asumsikan formatnya selalu "Jumlahx Nama"
     let items = currentDetail.split(', ').map(item => {
         let parts = item.split('x ');
         return {
@@ -1346,11 +1244,10 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
         `).join('');
     };
 
-    // Fungsi global sementara agar tombol di dalam Swal bisa jalan
     window.updateQty = (index, change) => {
         items[index].qty += change;
         if (items[index].qty <= 0) {
-            items.splice(index, 1); // Hapus jika 0
+            items.splice(index, 1); 
         }
         
         if (items.length === 0) {
@@ -1374,10 +1271,8 @@ class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-bl
 
     if (confirmEdit) {
         if (confirmEdit === "DELETE") {
-            await finishOrder(rowId); // Gunakan fungsi hapus yang sudah ada
+            await finishOrder(rowId);
         } else {
-            // Kita perlu hitung ulang Total Harga (Opsional, tapi disarankan)
-            // Untuk simpelnya, kita kirim detail baru ke GS
             await sendData({ 
                 action: 'update_order_detail', 
                 rowId: rowId, 
@@ -1396,21 +1291,21 @@ async function updateStatus(rowId, newStatus) {
         rowId: rowId,
         newStatus: newStatus
     });
-    loadOrders(); // Refresh data
+    loadOrders(); 
 }
-let currentSelectedDate = new Date(); // Inisialisasi tanggal hari ini
+let currentSelectedDate = new Date();
 
 function changeDate(days) {
     playSfx(sounds.click);
     currentSelectedDate.setDate(currentSelectedDate.getDate() + days);
     updateDateDisplay();
-    loadOrders(); // Refresh list setelah tanggal berubah
+    loadOrders();
 }
 function updateDateDisplay() {
     const day = currentSelectedDate.getDate();
     const month = currentSelectedDate.getMonth() + 1;
     const year = currentSelectedDate.getFullYear();
-    const dateString = `${day}/${month}/${year}`; // Format: 12/3/2026
+    const dateString = `${day}/${month}/${year}`;
     
     const displayEl = document.getElementById('current-date-display');
     if (displayEl) displayEl.innerText = dateString;
@@ -1513,6 +1408,24 @@ window.changeAnalyticsDate = function(type, val) {
     if (type === 'y') analyticsData.y.setFullYear(analyticsData.y.getFullYear() + val);
 renderAnalyticsUI();
 };
+
+function startClock() {
+    setInterval(() => {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-GB', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit', 
+            hour12: false 
+        });
+
+        const clockLogin = document.getElementById('clock-login');
+        const clockHeader = document.getElementById('clock-header');
+        
+        if (clockLogin) clockLogin.innerText = timeString + " WIB";
+        if (clockHeader) clockHeader.innerText = timeString + " WIB";
+    }, 1000);
+}
 
     async function finishOrder(rowId) { if((await Swal.fire({ title: 'Finish?', showCancelButton: true, customClass: { popup: 'rounded-[35px] p-6 font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans' }, confirmButtonColor: '#22c55e' })).isConfirmed) { await sendData({ action: 'delete_order', rowId }); loadOrders(); } }
     function showFullOrderDetail(name, detail, total) {
