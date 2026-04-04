@@ -2184,6 +2184,7 @@ window.updateChart = function() {
         customClass: { popup: 'rounded-[50px] p-4' }
     });
 }
+
 // === FUNGSI TOGGLE MODE DESKTOP & MOBILE ===
 let isManualDesktop = false;
 
@@ -2192,40 +2193,55 @@ window.toggleDesktopMode = function() {
     isManualDesktop = !isManualDesktop;
     
     const user = sessionStorage.getItem('activeUser') || 'Admin';
-    const viewportMeta = document.querySelector("meta[name=viewport]");
+    const deskDash = document.getElementById('desktop-admin-dashboard');
+    const mainDash = document.getElementById('main-dashboard');
+    const botNav = document.getElementById('bottom-nav');
 
     if (isManualDesktop) {
-        // Paksa Viewport WebView jadi 1200px (Kaya mode Desktop di Chrome)
-        viewportMeta.setAttribute("content", "width=1200");
+        // 1. Trik Anti-Gagal WebView: Paksa CSS Body jadi ukuran Monitor PC (1200px)
+        document.body.style.width = '1200px';
+        document.body.style.minWidth = '1200px';
+        document.body.style.overflowX = 'auto'; // Izinkan scroll horizontal
         
-        // Matikan UI Mobile
-        document.getElementById('main-dashboard').style.display = 'none';
-        document.getElementById('bottom-nav').style.display = 'none';
+        // 2. Matikan Tampilan HP
+        mainDash.classList.add('hidden');
+        mainDash.style.display = 'none';
+        botNav.classList.add('hidden');
+        botNav.style.display = 'none';
         
-        // Nyalakan UI Desktop
-        const deskDash = document.getElementById('desktop-admin-dashboard');
+        // 3. Nyalakan Tampilan PC
         deskDash.classList.remove('hidden');
         deskDash.style.display = 'flex'; 
+        
+        // 4. Lepas kuncian layar HP agar dashboard bisa lebar 1200px
+        deskDash.style.position = 'absolute';
+        deskDash.style.top = '0';
+        deskDash.style.left = '0';
+        deskDash.style.width = '1200px';
+        deskDash.style.minHeight = '100vh';
         
         document.getElementById('desktop-admin-name').innerText = user;
         switchAdminTab('admin-dash');
         loadAdminData();
     } else {
-        // Kembalikan Viewport WebView ke ukuran HP asli
-        viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+        // 1. Kembalikan ke mode HP normal
+        document.body.style.width = '100%';
+        document.body.style.minWidth = '100%';
+        document.body.style.overflowX = 'hidden';
         
-        // Matikan UI Desktop
-        const deskDash = document.getElementById('desktop-admin-dashboard');
-        if(deskDash) {
-            deskDash.classList.add('hidden');
-            deskDash.style.display = 'none';
-        }
+        // 2. Matikan Tampilan PC
+        deskDash.classList.add('hidden');
+        deskDash.style.display = 'none';
         
-        // Nyalakan UI Mobile
-        document.getElementById('main-dashboard').classList.remove('hidden');
-        document.getElementById('main-dashboard').style.display = 'block';
-        document.getElementById('bottom-nav').classList.remove('hidden');
-        document.getElementById('bottom-nav').style.display = 'flex';
+        // Kunci lagi posisinya buat jaga-jaga
+        deskDash.style.position = 'fixed';
+        deskDash.style.width = '100%';
+        
+        // 3. Nyalakan Tampilan HP
+        mainDash.classList.remove('hidden');
+        mainDash.style.display = 'block';
+        botNav.classList.remove('hidden');
+        botNav.style.display = 'flex';
         
         loadProducts();
     }
