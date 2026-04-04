@@ -10,59 +10,49 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
 /* Container utama Desktop */
+html {
+    min-height: 100%;
+    background-color: #f1f5f9;
+}
+
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    min-height: 100%; 
+    width: 100%; 
+    margin: 0;
+    padding: 0;
+    background-color: #f1f5f9; 
+    -webkit-tap-highlight-color: transparent;
+    position: relative; /* Penting agar background absolute ngikutin panjang body */
+}
+
 #desktop-admin-dashboard {
     display: none;
     flex-direction: row; 
-    min-height: 100%; /* Jangan pakai 100vh */
+    min-height: 100%; 
     width: 1200px;
     background: transparent !important;
+    align-items: stretch; /* PENTING: Paksa sidebar biar otomatis narik sampai bawah nutupin layar */
 }
 
-/* Sidebar biar nempel full ke bawah */
 #desktop-admin-dashboard aside {
     width: 280px;
-    position: sticky;
-    top: 0;
-    height: 100vh; /* Tetap 100vh agar ngikutin tinggi layar HP pas scroll */
     flex-shrink: 0;
+    /* GAK BOLEH ADA position: sticky ATAU height: 100vh DI SINI */
 }
 
-/* Area Konten Kanan */
 #desktop-admin-dashboard main {
     flex: 1;
-    min-height: 100%; /* Biarkan stretch ngikutin isi */
-    height: auto; 
+    min-height: 100%; 
     background: transparent !important;
 }
 
 /* Perbaikan Background WebView */
 .app-bg-overlay {
-    position: fixed;
+    position: absolute; /* PENTING: Ganti ke absolute, biar nutupin full scroll dari atas ke bawah */
     top: 0; left: 0; right: 0; bottom: 0;
-    width: 100%; /* Ganti dari 100vw */
-    height: 100%; /* Ganti dari 100vh */
-    background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
-    opacity: 0.8; 
-    z-index: -10;
-    pointer-events: none;
-}
-
-/* Perbaikan background body agar konsisten */
-body { 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-    min-height: 100%; /* Pastikan body bisa melar */
     width: 100%; 
-    margin: 0;
-    padding: 0;
-    background-color: #f1f5f9; /* Background dasar abu-abu terang */
-    -webkit-tap-highlight-color: transparent;
-}
-.app-bg-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh; /* Mengunci background ke viewport */
+    height: 100%; 
     background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
     opacity: 0.8; 
     z-index: -10;
@@ -188,7 +178,7 @@ header.glass {
 .btn-plus:active { transform: scale(0.85); }
     </style>
 </head>
-<body class="text-slate-900 min-h-screen font-sans">
+<body class="text-slate-900 min-h-full font-sans">
     <div id="global-loader" class="hidden fixed inset-0 bg-black/60 z-[100] backdrop-blur-sm flex items-center justify-center flex-col">
     <div class="w-20 h-20 border-8 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
     <p class="text-white font-black uppercase tracking-[0.3em] text-xs italic">Memproses Data...</p>
@@ -371,9 +361,9 @@ header.glass {
     </section>
 </main>
         </div>
-<div id="desktop-admin-dashboard" style="display: none;" class="relative z-[100] font-sans text-slate-900 min-h-screen">
+<div id="desktop-admin-dashboard" style="display: none;" class="relative z-[100] font-sans text-slate-900 min-h-full">
     
-    <aside class="w-64 bg-slate-900 text-white flex flex-col shadow-2xl z-10 h-full">
+    <aside class="w-64 bg-slate-900 text-white flex flex-col shadow-2xl z-10">
         <div class="p-6 text-2xl font-black italic tracking-tighter border-b border-slate-800 text-center text-blue-400">
             iFood <span class="text-white">Admin</span>
         </div>
