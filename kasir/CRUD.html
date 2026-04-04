@@ -11,27 +11,19 @@
     <style>
         body { 
     font-family: 'Plus Jakarta Sans', sans-serif; 
-    overflow-x: hidden; 
-    scroll-behavior: smooth; 
+    min-height: 100vh; /* Gunakan min-height, bukan height tetap */
     width: 100%; 
+    margin: 0;
+    padding: 0;
+    background-color: #f1f5f9; /* Gunakan warna terang agar tidak kontras saat zoom */
     -webkit-tap-highlight-color: transparent;
-    background-color: #f1f5f9; /* Warna dasar abu-abu terang */
-    position: relative;
-}
-body { 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-    overflow-x: hidden; 
-    scroll-behavior: smooth; 
-    width: 100%; 
-    -webkit-tap-highlight-color: transparent;
-    background-color: gray !important;
 }
 .app-bg-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh; /* Mengunci background ke viewport */
     background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
     opacity: 0.8; 
     z-index: -10;
@@ -2198,12 +2190,13 @@ window.toggleDesktopMode = function() {
     const botNav = document.getElementById('bottom-nav');
 
     if (isManualDesktop) {
-        // 1. Trik Anti-Gagal WebView: Paksa CSS Body jadi ukuran Monitor PC (1200px)
-        document.body.style.width = '1200px';
-        document.body.style.minWidth = '1200px';
-        document.body.style.overflowX = 'auto'; // Izinkan scroll horizontal
-        
-        // 2. Matikan Tampilan HP
+    document.body.style.width = '1200px';
+    document.body.style.minWidth = '1200px';
+    document.body.style.overflowX = 'auto';
+    document.body.style.overflowY = 'auto'; // Pastikan bisa scroll vertikal
+    document.documentElement.style.overflow = 'auto'; // Tambahan untuk beberapa browser
+    
+    // 2. Matikan Tampilan HP
         mainDash.classList.add('hidden');
         mainDash.style.display = 'none';
         botNav.classList.add('hidden');
@@ -2212,13 +2205,15 @@ window.toggleDesktopMode = function() {
         // 3. Nyalakan Tampilan PC
         deskDash.classList.remove('hidden');
         deskDash.style.display = 'flex'; 
-        
-        // 4. Lepas kuncian layar HP agar dashboard bisa lebar 1200px
-        deskDash.style.position = 'absolute';
-        deskDash.style.top = '0';
-        deskDash.style.left = '0';
-        deskDash.style.width = '1200px';
-        deskDash.style.minHeight = '100vh';
+    
+    deskDash.style.position = 'relative'; // Ubah dari absolute ke relative agar body bisa memanjang sesuai konten
+    deskDash.style.minHeight = '100vh';
+} else {
+    // Kembalikan ke normal
+    document.body.style.width = '100%';
+    document.body.style.minWidth = '100%';
+    document.documentElement.style.overflow = 'hidden'; // Kunci scroll di mode HP jika pakai bottom nav
+}
         
         document.getElementById('desktop-admin-name').innerText = user;
         switchAdminTab('admin-dash');
