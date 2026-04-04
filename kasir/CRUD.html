@@ -212,9 +212,6 @@ header.glass {
 
     <div class="flex items-center gap-3">
         <div class="flex items-center gap-3 bg-white/90 py-2 pl-2 pr-4 rounded-full shadow-sm border border-slate-100 font-sans group hover:border-blue-200 transition-all">
-            <button onclick="toggleDesktopMode()" class="bg-indigo-50 text-indigo-600 p-3 rounded-2xl hover:bg-indigo-500 hover:text-white transition-all shadow-sm active:scale-90 border border-indigo-100" title="Mode Desktop">
-            💻
-        </button>
             <div id="user-initial" class="w-9 h-9 bg-slate-900 rounded-full border-2 border-white shadow-md flex items-center justify-center text-[11px] text-white font-black italic uppercase">
                 ?
             </div>
@@ -375,9 +372,6 @@ header.glass {
             <h2 id="admin-page-title" class="text-2xl font-black italic uppercase tracking-tighter">Dashboard Ringkasan</h2>
             <div class="flex items-center gap-3">
                 <span class="text-sm font-bold text-slate-500">Admin Login: <span id="desktop-admin-name" class="text-blue-600 uppercase"></span></span>
-            <button onclick="toggleDesktopMode()" class="bg-indigo-100 text-indigo-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-indigo-200 transition-all flex items-center gap-2">
-                    📱 Mode HP
-                </button>
             </div>
         </header>
 
@@ -2184,74 +2178,6 @@ window.updateChart = function() {
         customClass: { popup: 'rounded-[50px] p-4' }
     });
 }
-
-// === FUNGSI TOGGLE MODE DESKTOP & MOBILE ===
-let isManualDesktop = false;
-
-window.toggleDesktopMode = function() {
-    if(sounds.click) playSfx(sounds.click);
-    isManualDesktop = !isManualDesktop;
-    
-    const user = sessionStorage.getItem('activeUser') || 'Admin';
-    const deskDash = document.getElementById('desktop-admin-dashboard');
-    const mainDash = document.getElementById('main-dashboard');
-    const botNav = document.getElementById('bottom-nav');
-    
-    // Ini dia tag meta-nya kita panggil lagi
-    const viewportMeta = document.querySelector("meta[name=viewport]");
-
-    if (isManualDesktop) {
-        // 1. Paksa HTML izinkan fitur Zoom In/Zoom Out
-        if(viewportMeta) viewportMeta.setAttribute("content", "width=1200, user-scalable=yes, maximum-scale=5.0, minimum-scale=0.1");
-
-        // 2. Trik Anti-Gagal WebView: Paksa CSS Body
-        document.body.style.width = '1200px';
-        document.body.style.minWidth = '1200px';
-        document.body.style.overflowX = 'auto'; 
-        
-        // 3. Matikan Tampilan HP
-        mainDash.classList.add('hidden');
-        mainDash.style.display = 'none';
-        botNav.classList.add('hidden');
-        botNav.style.display = 'none';
-        
-        // 4. Nyalakan Tampilan PC
-        deskDash.classList.remove('hidden');
-        deskDash.style.display = 'flex'; 
-        
-        deskDash.style.position = 'absolute';
-        deskDash.style.top = '0';
-        deskDash.style.left = '0';
-        deskDash.style.width = '1200px';
-        deskDash.style.minHeight = '100vh';
-        
-        document.getElementById('desktop-admin-name').innerText = user;
-        switchAdminTab('admin-dash');
-        loadAdminData();
-    } else {
-        // 1. Kunci lagi fitur Zoom biar aplikasi HP nggak goyang-goyang
-        if(viewportMeta) viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
-
-        // 2. Kembalikan ke mode HP normal
-        document.body.style.width = '100%';
-        document.body.style.minWidth = '100%';
-        document.body.style.overflowX = 'hidden';
-        
-        // 3. Matikan Tampilan PC
-        deskDash.classList.add('hidden');
-        deskDash.style.display = 'none';
-        deskDash.style.position = 'fixed';
-        deskDash.style.width = '100%';
-        
-        // 4. Nyalakan Tampilan HP
-        mainDash.classList.remove('hidden');
-        mainDash.style.display = 'block';
-        botNav.classList.remove('hidden');
-        botNav.style.display = 'flex';
-        
-        loadProducts();
-    }
-};
 </script>
 </body>
 </html>
