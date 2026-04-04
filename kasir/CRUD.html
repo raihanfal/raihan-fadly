@@ -2196,24 +2196,29 @@ window.toggleDesktopMode = function() {
     const deskDash = document.getElementById('desktop-admin-dashboard');
     const mainDash = document.getElementById('main-dashboard');
     const botNav = document.getElementById('bottom-nav');
+    
+    // Ini dia tag meta-nya kita panggil lagi
+    const viewportMeta = document.querySelector("meta[name=viewport]");
 
     if (isManualDesktop) {
-        // 1. Trik Anti-Gagal WebView: Paksa CSS Body jadi ukuran Monitor PC (1200px)
+        // 1. Paksa HTML izinkan fitur Zoom In/Zoom Out
+        if(viewportMeta) viewportMeta.setAttribute("content", "width=1200, user-scalable=yes, maximum-scale=5.0, minimum-scale=0.1");
+
+        // 2. Trik Anti-Gagal WebView: Paksa CSS Body
         document.body.style.width = '1200px';
         document.body.style.minWidth = '1200px';
-        document.body.style.overflowX = 'auto'; // Izinkan scroll horizontal
+        document.body.style.overflowX = 'auto'; 
         
-        // 2. Matikan Tampilan HP
+        // 3. Matikan Tampilan HP
         mainDash.classList.add('hidden');
         mainDash.style.display = 'none';
         botNav.classList.add('hidden');
         botNav.style.display = 'none';
         
-        // 3. Nyalakan Tampilan PC
+        // 4. Nyalakan Tampilan PC
         deskDash.classList.remove('hidden');
         deskDash.style.display = 'flex'; 
         
-        // 4. Lepas kuncian layar HP agar dashboard bisa lebar 1200px
         deskDash.style.position = 'absolute';
         deskDash.style.top = '0';
         deskDash.style.left = '0';
@@ -2224,20 +2229,21 @@ window.toggleDesktopMode = function() {
         switchAdminTab('admin-dash');
         loadAdminData();
     } else {
-        // 1. Kembalikan ke mode HP normal
+        // 1. Kunci lagi fitur Zoom biar aplikasi HP nggak goyang-goyang
+        if(viewportMeta) viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+
+        // 2. Kembalikan ke mode HP normal
         document.body.style.width = '100%';
         document.body.style.minWidth = '100%';
         document.body.style.overflowX = 'hidden';
         
-        // 2. Matikan Tampilan PC
+        // 3. Matikan Tampilan PC
         deskDash.classList.add('hidden');
         deskDash.style.display = 'none';
-        
-        // Kunci lagi posisinya buat jaga-jaga
         deskDash.style.position = 'fixed';
         deskDash.style.width = '100%';
         
-        // 3. Nyalakan Tampilan HP
+        // 4. Nyalakan Tampilan HP
         mainDash.classList.remove('hidden');
         mainDash.style.display = 'block';
         botNav.classList.remove('hidden');
