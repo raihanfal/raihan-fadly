@@ -231,9 +231,9 @@ header.glass {
 
     <div class="flex items-center gap-3">
         <div class="flex items-center gap-3 bg-white/90 py-2 pl-2 pr-4 rounded-full shadow-sm border border-slate-100 font-sans group hover:border-blue-200 transition-all">
-            <button onclick="toggleDesktopMode()" class="bg-indigo-50 text-indigo-600 p-3 rounded-2xl hover:bg-indigo-500 hover:text-white transition-all shadow-sm active:scale-90 border border-indigo-100" title="Mode Desktop">
-            💻
-        </button>
+<button id="btn-desktop-toggle" onclick="toggleDesktopMode()" class="hidden bg-indigo-50 text-indigo-600 p-3 rounded-2xl hover:bg-indigo-500 hover:text-white transition-all shadow-sm active:scale-90 border border-indigo-100" title="Mode Desktop">
+    💻
+</button>
             <div id="user-initial" class="w-9 h-9 bg-slate-900 rounded-full border-2 border-white shadow-md flex items-center justify-center text-[11px] text-white font-black italic uppercase">
                 ?
             </div>
@@ -359,7 +359,7 @@ header.glass {
     </section>
 </main>
         </div>
-      <div id="desktop-admin-dashboard" style="display: none;" class="fixed inset-0 z-[100] bg-gray-100 font-sans text-slate-900">
+<div id="desktop-admin-dashboard" style="display: none;" class="relative z-[100] font-sans text-slate-900 min-h-screen">
     
     <aside class="w-64 bg-slate-900 text-white flex flex-col shadow-2xl z-10 h-full">
         <div class="p-6 text-2xl font-black italic tracking-tighter border-b border-slate-800 text-center text-blue-400">
@@ -389,7 +389,7 @@ header.glass {
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50 relative">
+<main class="flex-1 flex flex-col min-h-screen overflow-hidden bg-transparent relative">
         <header class="bg-white shadow-sm p-6 flex justify-between items-center z-10">
             <h2 id="admin-page-title" class="text-2xl font-black italic uppercase tracking-tighter">Dashboard Ringkasan</h2>
             <div class="flex items-center gap-3">
@@ -2205,14 +2205,28 @@ window.updateChart = function() {
     });
 }
 
-// === FUNGSI TOGGLE MODE DESKTOP & MOBILE (OPTIMIZED) ===
+// === 1. FUNGSI TOGGLE DESKTOP MODE (DENGAN KEAMANAN) ===
 let isManualDesktop = false;
 
-window.toggleDesktopMode = function() {
-    if(sounds.click) playSfx(sounds.click);
-    isManualDesktop = !isManualDesktop;
+window.toggleDesktopMode = function(forceMode = null) {
+    // KEAMANAN: Tolak pelanggan jika mencoba masuk ke Dashboard
+    const user = sessionStorage.getItem('activeUser');
+    const isAdmin = user && ADMIN_USERS.includes(user.toLowerCase());
     
-    const user = sessionStorage.getItem('activeUser') || 'Admin';
+    if (!isAdmin) {
+        if(forceMode === true) return; // Silent block jika dipaksa oleh sistem
+        return Swal.fire('Akses Ditolak', 'Hanya Admin yang bisa masuk ke Dashboard ini!', 'error');
+    }
+
+    if(sounds.click && forceMode === null) playSfx(sounds.click);
+    
+    // Logika Auto / Manual
+    if (forceMode !== null) {
+        isManualDesktop = forceMode;
+    } else {
+        isManualDesktop = !isManualDesktop;
+    }
+    
     const deskDash = document.getElementById('desktop-admin-dashboard');
     const mainDash = document.getElementById('main-dashboard');
     const botNav = document.getElementById('bottom-nav');
@@ -2220,25 +2234,26 @@ window.toggleDesktopMode = function() {
     window.scrollTo(0,0);
 
     if (isManualDesktop) {
-        // Mode Desktop
+        // Mode Desktop Aktif
         document.body.style.width = '1200px';
         document.body.style.minWidth = '1200px';
-        document.body.style.overflow = 'auto'; // Aktifkan scroll horizontal body
+        document.body.style.overflow = 'auto';
 
         mainDash.style.display = 'none';
         botNav.style.display = 'none';
         
         deskDash.classList.remove('hidden');
         deskDash.style.display = 'flex'; 
-        deskDash.style.position = 'absolute'; // Gunakan absolute agar bisa discroll secara horizontal
+        deskDash.style.position = 'absolute'; 
         deskDash.style.top = '0';
         deskDash.style.left = '0';
+        deskDash.style.minHeight = '100vh'; // Mengunci panjang kebawah agar tidak terpotong
         
         document.getElementById('desktop-admin-name').innerText = user;
         switchAdminTab('admin-dash');
         loadAdminData();
     } else {
-        // Mode Mobile
+        // Mode HP Aktif
         document.body.style.width = '100%';
         document.body.style.minWidth = '100%';
         document.body.style.overflowX = 'hidden';
@@ -2250,6 +2265,46 @@ window.toggleDesktopMode = function() {
         botNav.style.display = 'flex';
         
         loadProducts();
+    }
+};
+
+// === 2. AUTO DETEKSI CHROME "DESKTOP SITE" ===
+window.addEventListener('resize', () => {
+    const user = sessionStorage.getItem('activeUser');
+    if (!user) return;
+    const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
+    
+    if (isAdmin) {
+        // Chrome Desktop Site memanipulasi lebar layar biasanya di atas 980px
+        const isDesktop = window.innerWidth >= 980; 
+        
+        if (isDesktop && !isManualDesktop) {
+            toggleDesktopMode(true); // Otomatis ke Desktop
+        } else if (!isDesktop && isManualDesktop) {
+            toggleDesktopMode(false); // Otomatis ke Mobile
+        }
+    }
+});
+
+// === 3. SINKRONISASI SAAT PERTAMA KALI LOGIN ===
+const _originalHandleLoginSystem = handleLogin;
+window.handleLogin = async function(existingUser) {
+    await _originalHandleLoginSystem(existingUser); 
+    
+    const user = existingUser || document.getElementById('username').value.trim();
+    if (!user) return; 
+
+    const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
+    const isDesktop = window.innerWidth >= 980; 
+
+    // Munculkan/Sembunyikan tombol laptop
+    const btnDesktop = document.getElementById('btn-desktop-toggle');
+    if (isAdmin) {
+        if (btnDesktop) btnDesktop.classList.remove('hidden');
+        if (isDesktop) toggleDesktopMode(true); // Auto Trigger saat awal login
+    } else {
+        if (btnDesktop) btnDesktop.classList.add('hidden');
+        toggleDesktopMode(false); // Pastikan pelanggan selalu di HP
     }
 };
 </script>
