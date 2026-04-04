@@ -9,45 +9,48 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-/* === FIX TOTAL BACKGROUND & TINGGI LAYAR === */
+/* === FIX KUNCI LAYOUT ADMIN DESKTOP === */
 html {
-    min-height: 100vh; /* Kunci setinggi layar device */
     background-color: #f1f5f9;
-    background-image: url("https://www.transparenttextures.com/patterns/cubes.png"); /* Background nempel di akar web, gak akan pernah bolong */
+    background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
 }
 
 body { 
     font-family: 'Plus Jakarta Sans', sans-serif; 
-    min-height: 100vh; 
     width: 100%; 
     margin: 0;
     padding: 0;
-    background: transparent; /* Nembus ke html */
+    background: transparent; 
     -webkit-tap-highlight-color: transparent;
 }
 
 #desktop-admin-dashboard {
     display: none;
     flex-direction: row; 
-    min-height: 100vh; /* Kunci biar minimal setinggi layar */
     width: 1200px;
     background: transparent !important;
-    align-items: stretch; /* Paksa sidebar melar ke bawah nyamain layar */
+    overflow: hidden; /* KUNCI 1: Cegah luber ke bawah layar */
 }
 
 #desktop-admin-dashboard aside {
     width: 280px;
     flex-shrink: 0;
-    background-color: #0f172a; /* Tailwind bg-slate-900 biar warnanya solid sampe bawah */
+    background-color: #0f172a; 
+    height: 100%; /* Sidebar otomatis mentok ke dasar layar doang */
+    overflow-y: auto; /* Bisa scroll sendiri kalo menunya nambah banyak */
 }
 
 #desktop-admin-dashboard main {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     background: transparent !important;
+    height: 100%;
+    overflow: hidden; /* KUNCI 2: Cegah konten tabrakan */
 }
 
 .app-bg-overlay {
-    display: none !important; /* KITA MATIKAN! Udah ga perlu karena nempel di html */
+    display: none !important; 
 }
 .glow-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -20; overflow: hidden; pointer-events: none;
 }
@@ -2198,22 +2201,20 @@ window.updateChart = function() {
     });
 }
 
-// === 1. FUNGSI TOGGLE DESKTOP MODE (DENGAN KEAMANAN) ===
+// === 1. FUNGSI TOGGLE DESKTOP MODE (DENGAN RUMUS KUNCI LAYAR) ===
 let isManualDesktop = false;
 
 window.toggleDesktopMode = function(forceMode = null) {
-    // KEAMANAN: Tolak pelanggan jika mencoba masuk ke Dashboard
     const user = sessionStorage.getItem('activeUser');
     const isAdmin = user && ADMIN_USERS.includes(user.toLowerCase());
     
     if (!isAdmin) {
-        if(forceMode === true) return; // Silent block jika dipaksa oleh sistem
+        if(forceMode === true) return; 
         return Swal.fire('Akses Ditolak', 'Hanya Admin yang bisa masuk ke Dashboard ini!', 'error');
     }
 
     if(sounds.click && forceMode === null) playSfx(sounds.click);
     
-    // Logika Auto / Manual
     if (forceMode !== null) {
         isManualDesktop = forceMode;
     } else {
@@ -2227,20 +2228,37 @@ window.toggleDesktopMode = function(forceMode = null) {
     window.scrollTo(0,0);
 
     if (isManualDesktop) {
-        // Mode Desktop Aktif
+        // RUMUS RAHASIA: Hitung proporsi layar HP lu untuk zoom 1200px
+        const screenRatio = window.innerHeight / window.innerWidth;
+        const exactHeight = Math.floor(1200 * screenRatio);
+
+        // Kunci Body Layar Utama Total
         document.body.style.width = '1200px';
         document.body.style.minWidth = '1200px';
-        document.body.style.overflow = 'auto';
+        document.body.style.overflow = 'hidden'; 
 
         mainDash.style.display = 'none';
         botNav.style.display = 'none';
         
+        // Konfigurasi Dashboard Desktop (DIKUNCI)
         deskDash.classList.remove('hidden');
         deskDash.style.display = 'flex'; 
-deskDash.style.position = 'relative'; 
+        deskDash.style.position = 'absolute'; 
         deskDash.style.top = '0';
         deskDash.style.left = '0';
-        deskDash.style.minHeight = '100vh'; /* KEMBALIKAN KE 100vh */
+        deskDash.style.height = exactHeight + 'px'; // KUNCI TINGGI SESUAI RUMUS
+        
+        // Konfigurasi Area Scroll (Hanya list barang/laporan yang discroll, Header & Sidebar diam)
+        const mainArea = deskDash.querySelector('main');
+        const contentArea = mainArea.querySelector('.flex-1.p-8');
+        
+        if (mainArea) {
+            mainArea.style.height = exactHeight + 'px';
+        }
+        if (contentArea) {
+            contentArea.style.overflowY = 'auto'; // Aktifkan scroll cuma untuk konten kanan!
+            contentArea.style.height = '100%';
+        }
         
         document.getElementById('desktop-admin-name').innerText = user;
         switchAdminTab('admin-dash');
@@ -2249,7 +2267,7 @@ deskDash.style.position = 'relative';
         // Mode HP Aktif
         document.body.style.width = '100%';
         document.body.style.minWidth = '100%';
-        document.body.style.overflowX = 'hidden';
+        document.body.style.overflow = 'auto'; // Kembalikan scroll natural
         
         deskDash.classList.add('hidden');
         deskDash.style.display = 'none';
