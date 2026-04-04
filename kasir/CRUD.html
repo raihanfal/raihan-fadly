@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { 
     font-family: 'Plus Jakarta Sans', sans-serif; 
@@ -95,7 +96,10 @@ background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%);backgr
 @media (min-width: 1024px) {
     #product-list { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
 }
-#cart-sidebar { background: rgba(2, 6, 23, 0.96); backdrop-filter: blur(16px); }
+#cart-sidebar { 
+    background: rgba(2, 6, 23, 0.98); 
+    will-change: transform; 
+}
 #main-dashboard, main { background: transparent !important; }
 
 header.glass {
@@ -110,22 +114,7 @@ header.glass {
 .img-loading {
   opacity: 0; transition: opacity 0.3s ease; }
 .img-loaded { opacity: 1; }
-button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s; }
 
-#clock-login, #clock-header {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-variant-numeric: tabular-nums;
-    text-shadow: 0 0 10px rgba(59, 130, 246, 0.1);
-}
-
-@keyframes pulse-blue {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
-}
-#clock-login {
-    animation: pulse-blue 2s infinite ease-in-out;
-}
 /* --- PREMIUM CARD V2 --- */
 .product-card {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -174,8 +163,8 @@ button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s
     <p class="text-white font-black uppercase tracking-[0.3em] text-xs italic">Memproses Data...</p>
 </div>
     <div class="glow-bg">
-        <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-400/20 blur-[120px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-indigo-400/20 blur-[120px]"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-400/20 blur-3xl"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-indigo-400/20 blur-3xl"></div>
     </div>
 
     <div class="app-bg-overlay"></div>
@@ -186,11 +175,6 @@ button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s
 <div class="w-24 h-24 bg-white rounded-[35px] flex items-center justify-center mb-6 rotate-6 shadow-2xl border-4 border-slate-900 overflow-hidden logo-container">
     <div id="spinner-login" class="logo-spinner"></div> <img id="custom-logo-login" src="" class="w-full h-full object-cover img-loading" onload="handleImageLoad(this, 'spinner-login')">
 </div>
-            <div class="mb-2">
-            <div id="clock-login" class="text-[14px] font-black tracking-[0.2em] text-blue-600 bg-blue-50 px-4 py-1 rounded-full border border-blue-100 shadow-sm inline-block italic">
-             00:00:00
-            </div>
-            </div>
             <h1 class="text-4xl font-black tracking-tighter mb-1 font-sans">iFood</h1>
             <p class="text-[12px] font-bold text-slate-500 uppercase tracking-[0.3em]">By Raihan Fadly</p>
         </div>
@@ -228,16 +212,16 @@ button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s
 
     <div class="flex items-center gap-3">
         <div class="flex items-center gap-3 bg-white/90 py-2 pl-2 pr-4 rounded-full shadow-sm border border-slate-100 font-sans group hover:border-blue-200 transition-all">
+            <button onclick="toggleDesktopMode()" class="bg-indigo-50 text-indigo-600 p-3 rounded-2xl hover:bg-indigo-500 hover:text-white transition-all shadow-sm active:scale-90 border border-indigo-100" title="Mode Desktop">
+            💻
+        </button>
             <div id="user-initial" class="w-9 h-9 bg-slate-900 rounded-full border-2 border-white shadow-md flex items-center justify-center text-[11px] text-white font-black italic uppercase">
                 ?
             </div>
             <div class="flex flex-col leading-none border-l pl-3 border-slate-200">
                 <span id="role-title" class="text-[7px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Status</span>
                 <span id="display-name" class="font-black text-[11px] uppercase text-slate-800 tracking-tighter truncate max-w-[85px] mb-1">User</span>
-                <div class="flex items-center gap-1.5 border-t border-slate-100 pt-1 mt-0.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                    <span id="clock-header" class="text-[9px] font-bold text-blue-600 tracking-wider tabular-nums">00:00:00 WIB</span>
-                </div>
+
             </div>
         </div>
 
@@ -355,7 +339,148 @@ button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s
         </div>
     </section>
 </main>
+        </div>
+      <div id="desktop-admin-dashboard" style="display: none;" class="fixed inset-0 z-[100] bg-gray-100 font-sans text-slate-900">
+    
+    <aside class="w-64 bg-slate-900 text-white flex flex-col shadow-2xl z-10 h-full">
+        <div class="p-6 text-2xl font-black italic tracking-tighter border-b border-slate-800 text-center text-blue-400">
+            iFood <span class="text-white">Admin</span>
+        </div>
+        <nav class="flex-1 p-4 space-y-2 mt-4">
+            <button onclick="switchAdminTab('admin-dash')" class="admin-tab-btn w-full text-left p-3 bg-blue-600 text-white rounded-xl font-bold flex items-center gap-3 transition-all" data-target="admin-dash">
+                <span>📊</span> Dashboard
+            </button>
+            <button onclick="switchAdminTab('admin-orders')" class="admin-tab-btn w-full text-left p-3 hover:bg-slate-800 rounded-xl font-bold flex items-center gap-3 transition-all text-slate-300" data-target="admin-orders">
+                <span>🛒</span> Pesanan
+            </button>
+            <button onclick="switchAdminTab('admin-barang')" class="admin-tab-btn w-full text-left p-3 hover:bg-slate-800 rounded-xl font-bold flex items-center gap-3 transition-all text-slate-300" data-target="admin-barang">
+                <span>📦</span> Detail Barang
+            </button>
+            <button onclick="switchAdminTab('admin-laporan')" class="admin-tab-btn w-full text-left p-3 hover:bg-slate-800 rounded-xl font-bold flex items-center gap-3 transition-all text-slate-300" data-target="admin-laporan">
+                <span>📋</span> Laporan (Selesai)
+            </button>
+            <button onclick="switchAdminTab('admin-ulasan')" class="admin-tab-btn w-full text-left p-3 hover:bg-slate-800 rounded-xl font-bold flex items-center gap-3 transition-all text-slate-300" data-target="admin-ulasan">
+                <span>⭐</span> Ulasan
+            </button>
+        </nav>
+        <div class="p-4 border-t border-slate-800">
+            <button onclick="handleLogout()" class="w-full text-left p-3 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-bold transition-all flex items-center gap-3">
+                <span>🚪</span> Keluar
+            </button>
+        </div>
+    </aside>
 
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50 relative">
+        <header class="bg-white shadow-sm p-6 flex justify-between items-center z-10">
+            <h2 id="admin-page-title" class="text-2xl font-black italic uppercase tracking-tighter">Dashboard Ringkasan</h2>
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-500">Admin Login: <span id="desktop-admin-name" class="text-blue-600 uppercase"></span></span>
+            <button onclick="toggleDesktopMode()" class="bg-indigo-100 text-indigo-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-indigo-200 transition-all flex items-center gap-2">
+                    📱 Mode HP
+                </button>
+            </div>
+        </header>
+
+<div class="flex-1 overflow-y-auto p-8">
+            
+            <div id="admin-dash" class="admin-tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white p-6 rounded-[30px] shadow-sm border-b-4 border-green-500">
+                        <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">Barang Terjual (Bulan Ini)</p>
+                        <h3 id="stat-barang-terjual" class="text-4xl font-black text-slate-800 italic">0</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-[30px] shadow-sm border-b-4 border-blue-500">
+                        <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">Pendapatan (Bulan Ini)</p>
+                        <h3 id="stat-pendapatan" class="text-4xl font-black text-blue-600 italic tracking-tighter">Rp 0</h3>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-[30px] shadow-sm border-2 border-slate-100 mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-black uppercase italic">Grafik Penjualan</h3>
+                        <div class="flex gap-2">
+                            <select id="chart-month" class="bg-slate-50 border border-slate-200 text-xs font-bold p-2 rounded-xl outline-none cursor-pointer" onchange="window.updateChart()">
+                                <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Apr</option><option value="4">Mei</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Agu</option><option value="8">Sep</option><option value="9">Okt</option><option value="10">Nov</option><option value="11">Des</option>
+                            </select>
+                            <input type="number" id="chart-year" class="bg-slate-50 border border-slate-200 text-xs font-bold p-2 rounded-xl outline-none w-20 text-center" onchange="window.updateChart()">
+                        </div>
+                    </div>
+                    <div class="relative h-64 w-full">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-orders" class="admin-tab-content" style="display: none;">
+                <div class="bg-white p-6 rounded-[30px] shadow-sm border-2 border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-black uppercase italic">Monitor Pesanan</h3>
+                        <button onclick="loadAdminData()" class="bg-blue-100 text-blue-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-200">Refresh</button>
+                    </div>
+                    <div id="desktop-order-list" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <div id="admin-barang" class="admin-tab-content" style="display: none;">
+                <div class="bg-white p-6 rounded-[30px] shadow-sm border-2 border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-black uppercase italic">Daftar Menu & Stok</h3>
+                        <div class="flex gap-2">
+                            <button onclick="loadAdminData()" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl font-bold text-xs shadow-sm hover:bg-slate-200 transition-all flex items-center gap-2">🔄 Refresh</button>
+                            <button onclick="openAddProductModal()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-md hover:bg-blue-700 transition-all">+ Tambah</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-y border-slate-200">
+                                    <th class="p-4 font-black">Menu</th>
+                                    <th class="p-4 font-black">Kategori</th>
+                                    <th class="p-4 font-black">Harga</th>
+                                    <th class="p-4 font-black">Stok</th>
+                                    <th class="p-4 font-black text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="desktop-barang-list" class="text-sm divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-laporan" class="admin-tab-content" style="display: none;">
+                 <div class="bg-white p-6 rounded-[30px] shadow-sm border-2 border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-black uppercase italic">Laporan Transaksi Selesai</h3>
+                        <button onclick="window.print()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-100 border border-red-200">Cetak PDF</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-y border-slate-200">
+                                    <th class="p-4 font-black">ID / Nama</th>
+                                    <th class="p-4 font-black">Tanggal</th>
+                                    <th class="p-4 font-black">Item</th>
+                                    <th class="p-4 font-black text-right">Total Pendapatan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="desktop-laporan-list" class="text-sm divide-y divide-slate-100"></tbody>
+                            <tfoot class="bg-slate-50 font-black text-blue-600 text-lg border-t border-slate-200">
+                                <tr>
+                                    <td colspan="3" class="p-4 text-right uppercase tracking-tighter italic">Grand Total Laporan:</td>
+                                    <td id="desktop-laporan-total" class="p-4 text-right tracking-tighter italic">Rp 0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                 </div>
+            </div>
+
+            <div id="admin-ulasan" class="admin-tab-content" style="display: none;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="desktop-ulasan-list"></div>
+            </div>
+        </div>
+    </main>
+</div>
 <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 w-full glass border-t border-slate-200/50 p-2 z-50 flex justify-around items-end rounded-t-[35px] shadow-[0_-10px_50px_rgba(0,0,0,0.1)] text-slate-400 pb-5">
     <button onclick="switchSection('section-menu', this)" class="flex flex-col items-center gap-1 text-blue-600 btn-active w-1/5">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
@@ -385,7 +510,7 @@ button:hover svg { transform: translateX(5px) translateY(-5px); transition: 0.3s
     </button>
 </nav>
 
-<div id="cart-sidebar" class="fixed top-0 right-0 h-full z-[60] shadow-[-20px_0_80px_rgba(0,0,0,0.8)] translate-x-full flex flex-col p-8 border-l border-white/10 font-sans">
+<div id="cart-sidebar" class="fixed top-0 right-0 h-full z-[60] shadow-2xl translate-x-full flex flex-col p-8 border-l border-white/10 font-sans">
     <div class="flex justify-between items-center mb-10">
         <h4 class="text-3xl font-black uppercase tracking-tighter leading-none">
             <span class="text-white">Your</span>
@@ -518,19 +643,16 @@ Object.values(sounds).forEach(audio => {
 
 function playSfx(sfx) {
   if (sfx) {
-    const soundClone = sfx.cloneNode();
-    soundClone.volume = 1.0;
-    let playPromise = soundClone.play();
+    sfx.currentTime = 0;
+    sfx.volume = 1.0;
+    let playPromise = sfx.play();
     if (playPromise !== undefined) {
-    playPromise.catch(e => console.log("Audio unlock failed:", e));
+      playPromise.catch(e => console.log("Audio unlock failed:", e));
     }
   }
 }
 
 window.onload = () => {
-    try {
-        startClock();
-    } catch (e) { console.error("Gagal jalankan jam:", e); }
     document.getElementById('custom-logo-login').src = MY_LOGO_URL;
     document.getElementById('custom-logo-header').src = MY_LOGO_URL;
     initBanners(); 
@@ -703,34 +825,72 @@ async function handleLogin(existingUser) {
     if (!user) return Swal.fire('Oops!', 'Siapa namamu?', 'warning');
 
     const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
-
-    const iconCart = document.getElementById('icon-cart');
-    const iconChart = document.getElementById('icon-chart');
-    const navActionAdmin = document.getElementById('nav-action-admin');
-    const navActionHelp = document.getElementById('nav-action-help'); // Ambil ID Bantuan
-
-    if(isAdmin) {
-        if(iconCart) iconCart.classList.add('hidden');
-        if(iconChart) iconChart.classList.remove('hidden');
-        if(navActionAdmin) navActionAdmin.classList.remove('hidden');
-        if(navActionHelp) navActionHelp.classList.add('hidden'); // Sembunyikan Bantuan buat Admin
-    } else {
-        if(iconCart) iconCart.classList.remove('hidden');
-        if(iconChart) iconChart.classList.add('hidden');
-        if(navActionAdmin) navActionAdmin.classList.add('hidden');
-        if(navActionHelp) navActionHelp.classList.remove('hidden'); // Tampilkan Bantuan buat User
-    }
+    const isDesktop = window.innerWidth >= 1024; // Cek apakah layarnya lebar (Laptop/PC)
 
     sessionStorage.setItem('activeUser', user.toLowerCase());
-    document.getElementById('display-name').innerText = user;
-    document.getElementById('user-initial').innerText = user.charAt(0).toUpperCase();
-    document.getElementById('role-title').innerText = isAdmin ? "SYSTEM ADMIN" : "VIP CUSTOMER";
     
+    // 1. Sembunyikan Halaman Login
     document.getElementById('login-page').classList.add('hidden');
-    document.getElementById('main-dashboard').classList.remove('hidden');
-    document.getElementById('bottom-nav').classList.remove('hidden');
-    
-    loadProducts();
+
+    // 2. LOGIKA PERCABANGAN TAMPILAN
+    if (isAdmin && isDesktop) {
+        // --- TAMPILAN KHUSUS DASHBOARD ADMIN DESKTOP ---
+        
+        // Sembunyikan UI Mobile
+        document.getElementById('main-dashboard').classList.add('hidden');
+        document.getElementById('bottom-nav').classList.add('hidden');
+        
+        // Munculkan UI Desktop
+        const deskDash = document.getElementById('desktop-admin-dashboard');
+        deskDash.classList.remove('hidden');
+        deskDash.style.display = 'flex'; // Paksa agar layout sejajar (flexbox)
+        
+        document.getElementById('desktop-admin-name').innerText = user;
+        
+        // Mulai muat data
+        switchAdminTab('admin-dash');
+        loadAdminData();
+
+    } else {
+        // --- TAMPILAN APLIKASI KASIR/USER MOBILE ---
+        
+        // Pastikan UI Desktop mati
+        const deskDash = document.getElementById('desktop-admin-dashboard');
+        if(deskDash) {
+            deskDash.classList.add('hidden');
+            deskDash.style.display = 'none';
+        }
+        
+        // Munculkan UI Mobile
+        document.getElementById('main-dashboard').classList.remove('hidden');
+        document.getElementById('bottom-nav').classList.remove('hidden');
+
+        // Atur Tombol Navigasi Bawah
+        const iconCart = document.getElementById('icon-cart');
+        const iconChart = document.getElementById('icon-chart');
+        const navActionAdmin = document.getElementById('nav-action-admin');
+        const navActionHelp = document.getElementById('nav-action-help'); 
+
+        if(isAdmin) {
+            if(iconCart) iconCart.classList.add('hidden');
+            if(iconChart) iconChart.classList.remove('hidden');
+            if(navActionAdmin) navActionAdmin.classList.remove('hidden');
+            if(navActionHelp) navActionHelp.classList.add('hidden'); 
+        } else {
+            if(iconCart) iconCart.classList.remove('hidden');
+            if(iconChart) iconChart.classList.add('hidden');
+            if(navActionAdmin) navActionAdmin.classList.add('hidden');
+            if(navActionHelp) navActionHelp.classList.remove('hidden'); 
+        }
+
+        // Atur Profil Header Mobile
+        document.getElementById('display-name').innerText = user;
+        document.getElementById('user-initial').innerText = user.charAt(0).toUpperCase();
+        document.getElementById('role-title').innerText = isAdmin ? "SYSTEM ADMIN" : "VIP CUSTOMER";
+        
+        // Mulai muat data
+        loadProducts();
+    }
 }
 async function openAllReviewsModal(isSection = false) {
     if(!isSection) document.getElementById('all-reviews-modal').classList.remove('hidden');
@@ -937,9 +1097,10 @@ list.innerHTML = filtered.map(p => {
             ${statusBadge}
         </div>
 
-        ${isAdmin ? `
-        <div class="absolute top-4 right-4 z-20 scale-90">
+      ${isAdmin ? `
+        <div class="absolute top-4 right-4 z-20 scale-90 flex gap-2">
             <button onclick="editProduct(${p.id})" class="bg-slate-900 text-white w-8 h-8 rounded-xl shadow-lg flex items-center justify-center border border-white/20">✎</button>
+            <button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white w-8 h-8 rounded-xl shadow-lg flex items-center justify-center border border-white/20 font-black">×</button>
         </div>` : ''}
         
         <!-- Image Area -->
@@ -981,12 +1142,15 @@ function showProductDetail(id) {
     playSfx(sounds.click);
     const p = products.find(x => x.id == id);
     if (!p) return;
-
+    
     const oriPrice = Number(p.price) || 0;
     const disc = Number(p.discount) || 0;
     const finalPrice = oriPrice - disc;
     const isOut = p.stock <= 0;
-
+    
+    // Pengecekan: Apakah user yang lagi login ini Admin?
+    const isAdmin = ADMIN_USERS.includes(sessionStorage.getItem('activeUser'));
+    
     Swal.fire({
         title: `<span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 italic">Menu Information</span>`,
         html: `
@@ -1014,16 +1178,23 @@ function showProductDetail(id) {
                     ${disc > 0 ? `<p class="text-[10px] text-green-600 font-black mt-1 uppercase italic italic tracking-wider">★ You save Rp ${disc.toLocaleString('id-ID')}!</p>` : ''}
                 </div>
 
-                ${!isOut ? `
-                    <button onclick="Swal.close(); addToCart(${p.id}, event)" class="w-full bg-slate-900 text-white py-5 rounded-3xl font-black uppercase italic tracking-widest text-sm shadow-2xl hover:bg-blue-600 transition-all active:scale-95 flex items-center justify-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                        </svg>
-                        Tambahkan ke Keranjang
-                    </button>
-                ` : `
-                    <div class="w-full bg-slate-200 text-slate-400 py-5 rounded-3xl font-black uppercase italic text-center text-sm cursor-not-allowed">Sold Out</div>
-                `}
+                ${isAdmin ? `
+                    <div class="flex gap-3">
+                        <button onclick="Swal.close(); editProduct(${p.id})" class="w-1/2 bg-slate-900 text-white py-5 rounded-3xl font-black uppercase italic tracking-widest text-xs shadow-xl hover:bg-blue-600 transition-all active:scale-95">✎ Edit Menu</button>
+                        <button onclick="Swal.close(); deleteProduct(${p.id})" class="w-1/2 bg-red-500 text-white py-5 rounded-3xl font-black uppercase italic tracking-widest text-xs shadow-xl hover:bg-red-600 transition-all active:scale-95">× Hapus Menu</button>
+                    </div>
+                ` : (
+                    !isOut ? `
+                        <button onclick="Swal.close(); addToCart(${p.id}, event)" class="w-full bg-slate-900 text-white py-5 rounded-3xl font-black uppercase italic tracking-widest text-sm shadow-2xl hover:bg-blue-600 transition-all active:scale-95 flex items-center justify-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Tambahkan ke Keranjang
+                        </button>
+                    ` : `
+                        <div class="w-full bg-slate-200 text-slate-400 py-5 rounded-3xl font-black uppercase italic text-center text-sm cursor-not-allowed">Sold Out</div>
+                    `
+                )}
             </div>
         `,
         showConfirmButton: false,
@@ -1159,7 +1330,44 @@ function removeFromCart(id) {
         renderProducts(); 
     }
 }
-    async function checkout() {
+    // Tambahin fungsi ini di luar biar bisa dipanggil sama SweetAlert
+window.changePaymentMethod = function() {
+    const method = document.getElementById('payment-method').value;
+    const container = document.getElementById('payment-info-container');
+    const qrisUrl = "https://i.ibb.co.com/vCVvQ8Wn/IMG-20260209-210056.png";
+
+    if (method === 'qris') {
+        container.innerHTML = `<img src="${qrisUrl}" class="w-64 h-64 rounded-3xl object-cover mx-auto shadow-sm">`;
+    } else if (method === 'transfer-bca') {
+        container.innerHTML = `
+            <div class="py-6 font-sans text-center">
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Bank BCA</p>
+                <p class="text-2xl font-black text-blue-600 tracking-wider">1234 5678 90</p>
+                <p class="text-[11px] font-bold text-slate-500 mt-2 uppercase tracking-widest">A.N Raihan Fadly</p>
+            </div>
+        `;
+    } else if (method === 'transfer-mandiri') {
+         container.innerHTML = `
+            <div class="py-6 font-sans text-center">
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Bank Mandiri</p>
+                <p class="text-2xl font-black text-blue-600 tracking-wider">0987 6543 21</p>
+                <p class="text-[11px] font-bold text-slate-500 mt-2 uppercase tracking-widest">A.N Raihan Fadly</p>
+            </div>
+        `;
+    } else if (method === 'cash') {
+        container.innerHTML = `
+            <div class="py-6 font-sans text-center flex flex-col items-center">
+                <div class="w-16 h-16 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center text-3xl mb-3 shadow-inner">
+                    💵
+                </div>
+                <p class="text-sm font-black uppercase text-slate-700 italic tracking-tighter">Bayar di Kasir</p>
+                <p class="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">Siapkan uang pas ya!</p>
+            </div>
+        `;
+    }
+};
+
+async function checkout() {
     if (cart.length === 0) return;
     const rawTotal = cart.reduce((a, b) => a + ((Number(b.price) - Number(b.discount || 0)) * b.qty), 0);
     const nominalDiskon = (rawTotal * currentPromo.percent) / 100;
@@ -1176,11 +1384,23 @@ function removeFromCart(id) {
     
     Swal.fire({
         title: '<span class="uppercase font-black text-[11px] tracking-[0.4em] text-slate-400 font-sans italic">Payment Details</span>',
-        html: `<div class="py-4 text-slate-900 text-center">
-                    <b class="text-5xl text-blue-600 font-black block mb-6 tracking-tighter italic">Rp ${total.toLocaleString('id-ID')}</b>
-                    <div class="bg-white p-5 rounded-[45px] border-4 border-slate-100 inline-block mb-8 shadow-xl">
-                        <img src="${QRIS_PHOTO_URL}" class="w-64 h-64 rounded-3xl object-cover">
+        html: `<div class="py-2 text-slate-900 text-center">
+                    <b class="text-4xl text-blue-600 font-black block mb-6 tracking-tighter italic">Rp ${total.toLocaleString('id-ID')}</b>
+                    
+                    <div class="mb-4 text-left">
+                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Pilih Metode Pembayaran</label>
+                        <select id="payment-method" onchange="changePaymentMethod()" class="w-full bg-slate-50 p-4 rounded-2xl border-2 border-slate-100 font-black text-slate-700 text-sm outline-none focus:border-blue-500 transition-all italic tracking-tight cursor-pointer">
+                            <option value="qris">QRIS (Dana, GoPay, OVO, dll)</option>
+                            <option value="transfer-bca">Transfer Bank - BCA</option>
+                            <option value="transfer-mandiri">Transfer Bank - Mandiri</option>
+                            <option value="cash">Tunai / Cash</option>
+                        </select>
                     </div>
+
+                    <div id="payment-info-container" class="bg-white p-5 rounded-[35px] border-4 border-slate-50 inline-block mb-6 shadow-lg w-full min-h-[200px] flex items-center justify-center transition-all">
+                        <img src="${QRIS_PHOTO_URL}" class="w-64 h-64 rounded-3xl object-cover mx-auto shadow-sm">
+                    </div>
+
                     <div class="text-left bg-slate-50 p-5 rounded-3xl text-[11px] border border-slate-200 italic">
                         <p class="font-black border-b border-dashed border-slate-300 pb-2 mb-3 uppercase">BILL TO: ${sessionStorage.getItem('activeUser')}</p>
                         <p class="font-bold truncate">${detail}</p>
@@ -1190,11 +1410,16 @@ function removeFromCart(id) {
         confirmButtonText: 'I Have Paid',
         confirmButtonColor: '#2563eb',
         showLoaderOnConfirm: true,
+        customClass: { popup: 'rounded-[45px] p-4' },
         preConfirm: async () => {
+            // Opsional: Kamu bisa nangkep metode pembayaran di sini buat dikirim ke Google Sheet
+            const selectedMethod = document.getElementById('payment-method').options[document.getElementById('payment-method').selectedIndex].text;
+            const detailWithMethod = `${detail} | Via: ${selectedMethod}`;
+
             return await sendData({
                 action: 'checkout',
                 user: sessionStorage.getItem('activeUser'),
-                detail,
+                detail: detailWithMethod, // Update detail supaya mencakup metode pembayarannya
                 total,
                 cartItems: cartItems
             });
@@ -1205,7 +1430,7 @@ function removeFromCart(id) {
             cart = [];
             updateCartUI();
             if (!document.getElementById('cart-sidebar').classList.contains('translate-x-full')) toggleCart();
-            Swal.fire({ icon: 'success', title: 'SENT!', text: 'Order sent & Stock updated!', timer: 2000, showConfirmButton: false });
+            Swal.fire({ icon: 'success', title: 'SENT!', text: 'Order sent & Stock updated!', timer: 2000, showConfirmButton: false, customClass: { popup: 'rounded-[40px]' } });
             loadProducts();
         }
     });
@@ -1237,23 +1462,78 @@ function handleImageLoad(imgElement, spinnerId) {
     }
 }
 
+    // 1. Ini sistem kompresi gambarnya biar Google Sheet lu ga jebol
+    function compressImage(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = event => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 400; // Resolusi kita mentokin di 400px biar enteng banget
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.7)); // Kompres jadi JPG kualitas 70%
+                }
+            };
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    // 2. Fungsi Add Product yang udah diganti pake Upload File
     async function openAddProductModal() {
         const { value: f } = await Swal.fire({
             title: 'New Product',
-            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-8 rounded-[45px] border-2 border-slate-100 shadow-xl font-sans italic font-sans italic font-sans"><input id="n" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-slate-800 mb-4 outline-none shadow-inner italic font-sans italic font-sans italic" placeholder="Name"><div class="grid grid-cols-2 gap-4 mb-4 font-sans italic font-sans italic font-sans italic"><input id="p" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" placeholder="Price"><input id="d" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="0"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="s" type="number"placeholder="Stock Item"class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="c" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans italic"><option value="Makanan">Makanan</option><option value="Minuman">Minuman</option><option value="Dessert">Dessert</option></select></div><input id="i" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" placeholder="Img Link"></div></div>`,
-            showCancelButton: true, confirmButtonText: 'Publish', customClass: { popup: 'rounded-[60px] p-4 font-sans italic font-sans italic font-sans italic' },
-            preConfirm: () => ({ name: document.getElementById('n').value, price: document.getElementById('p').value, discount: document.getElementById('d').value, stock: document.getElementById('s').value, category: document.getElementById('c').value, img: document.getElementById('i').value })
+            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic"><div class="bg-slate-50 p-8 rounded-[45px] border-2 border-slate-100 shadow-xl"><input id="n" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-slate-800 mb-4 outline-none shadow-inner italic" placeholder="Name"><div class="grid grid-cols-2 gap-4 mb-4"><input id="p" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic" placeholder="Price"><input id="d" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic" value="0"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase"><input id="s" type="number" placeholder="Stock Item" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="c" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic"><option value="Makanan">Makanan</option><option value="Minuman">Minuman</option><option value="Dessert">Dessert</option></select></div><p class="text-[10px] font-black text-slate-400 mb-1 ml-2 tracking-widest">Upload Gambar Menu:</p><input type="file" id="i" accept="image/*" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"></div></div>`,
+            showCancelButton: true, confirmButtonText: 'Publish', customClass: { popup: 'rounded-[60px] p-4 font-sans italic' },
+            preConfirm: async () => {
+                const fileInput = document.getElementById('i');
+                let imgData = "";
+                if (fileInput.files.length > 0) {
+                    Swal.showLoading(); // Tunjukin efek loading selagi gambar dikompres
+                    imgData = await compressImage(fileInput.files[0]);
+                }
+                return { 
+                    name: document.getElementById('n').value, 
+                    price: document.getElementById('p').value, 
+                    discount: document.getElementById('d').value, 
+                    stock: document.getElementById('s').value, 
+                    category: document.getElementById('c').value, 
+                    img: imgData 
+                }
+            }
         });
         if (f) { await sendData({ action: 'add', ...f }); loadProducts(); }
     }
 
+    // 3. Fungsi Edit Product yang udah diganti pake Upload File
     async function editProduct(id) {
         const p = products.find(x => x.id == id);
         const { value: f } = await Swal.fire({
             title: 'Control Center',
-            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-black font-sans italic font-sans italic font-sans italic"><div class="bg-slate-50 p-6 md:p-10 rounded-[40px] md:rounded-[55px] border-2 border-white shadow-xl font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="en" class="w-full bg-white p-5 rounded-3xl border-2 border-slate-100 font-black mb-6 shadow-inner text-slate-700 italic font-sans italic font-sans italic" value="${p.name}"><div class="grid grid-cols-2 gap-4 mb-4 italic font-sans italic font-sans italic"><input id="ep" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic font-sans italic font-sans italic" value="${p.price}"><input id="ed" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic font-sans italic font-sans italic" value="${p.discount}"></div><div class="grid grid-cols-2 gap-4 mb-4 uppercase italic font-sans italic font-sans italic font-sans italic font-sans italic font-sans italic"><input id="es" type="number"value="${p.stock}"placeholder="Stock Item"class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="ec" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic font-sans italic font-sans italic font-sans"><option value="Makanan" ${p.category === 'Makanan' ? 'selected' : ''}>Makanan</option><option value="Minuman" ${p.category === 'Minuman' ? 'selected' : ''}>Minuman</option><option value="Dessert" ${p.category === 'Dessert' ? 'selected' : ''}>Dessert</option></select></div><input id="ei" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic font-sans italic font-sans italic font-sans italic" value="${p.img}"></div></div>`,
-            showCancelButton: true, confirmButtonText: 'Save', customClass: { popup: 'rounded-[60px] p-4 font-sans italic font-sans font-sans italic' },
-            preConfirm: () => ({ name: document.getElementById('en').value, price: document.getElementById('ep').value, discount: document.getElementById('ed').value, stock: document.getElementById('es').value, category: document.getElementById('ec').value, img: document.getElementById('ei').value })
+            html: `<div class="text-left space-y-4 p-2 md:p-4 font-sans text-slate-900 uppercase italic font-black"><div class="bg-slate-50 p-6 md:p-10 rounded-[40px] md:rounded-[55px] border-2 border-white shadow-xl"><input id="en" class="w-full bg-white p-5 rounded-3xl border-2 border-slate-100 font-black mb-6 shadow-inner text-slate-700 italic" value="${p.name}"><div class="grid grid-cols-2 gap-4 mb-4"><input id="ep" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-blue-600 outline-none italic" value="${p.price}"><input id="ed" type="number" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-red-500 outline-none italic" value="${p.discount}"></div><div class="grid grid-cols-2 gap-4 mb-4"><input id="es" type="number" value="${p.stock}" placeholder="Stock Item" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 font-black outline-none placeholder:text-slate-400"><select id="ec" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 font-black text-[11px] outline-none italic"><option value="Makanan" ${p.category === 'Makanan' ? 'selected' : ''}>Makanan</option><option value="Minuman" ${p.category === 'Minuman' ? 'selected' : ''}>Minuman</option><option value="Dessert" ${p.category === 'Dessert' ? 'selected' : ''}>Dessert</option></select></div><p class="text-[10px] font-black text-slate-400 mb-1 ml-2 tracking-widest mt-4">Ganti Gambar (Kosongkan jika tidak diubah):</p><img src="${p.img}" onerror="this.style.display='none'" class="w-16 h-16 object-cover rounded-xl border-2 border-white shadow-md mb-2"><input type="file" id="ei" accept="image/*" class="w-full bg-white p-4 rounded-2xl border-2 border-slate-100 text-[10px] italic cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"></div></div>`,
+            showCancelButton: true, confirmButtonText: 'Save', customClass: { popup: 'rounded-[60px] p-4 font-sans italic' },
+            preConfirm: async () => {
+                const fileInput = document.getElementById('ei');
+                let imgData = p.img; // Default: Pake gambar yang lama kalau ga milih file baru
+                if (fileInput.files.length > 0) {
+                    Swal.showLoading();
+                    imgData = await compressImage(fileInput.files[0]);
+                }
+                return { 
+                    name: document.getElementById('en').value, 
+                    price: document.getElementById('ep').value, 
+                    discount: document.getElementById('ed').value, 
+                    stock: document.getElementById('es').value, 
+                    category: document.getElementById('ec').value, 
+                    img: imgData 
+                }
+            }
         });
         if (f) { await sendData({ action: 'edit', id, ...f }); loadProducts(); }
     }
@@ -1611,22 +1891,278 @@ window.changeAnalyticsDate = function(type, val) {
 renderAnalyticsUI();
 };
 
-function startClock() {
-    setInterval(() => {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('en-GB', { 
-            hour: '2-digit', 
-            minute: '2-digit', 
-            second: '2-digit', 
-            hour12: false 
+// ==========================================
+// LOGIKA DESKTOP ADMIN DASHBOARD (REVISI)
+// ==========================================
+
+// Fungsi Modifikasi untuk handleLogin (Sistem timpa yang aman)
+const _originalHandleLogin = handleLogin;
+window.handleLogin = async function(existingUser) {
+    await _originalHandleLogin(existingUser); // Jalankan fungsi asli dulu
+    
+    const user = existingUser || document.getElementById('username').value.trim();
+    if (!user) return; // Jika username kosong, batalkan eksekusi
+
+    const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
+    const isDesktop = window.innerWidth >= 1024; // Cek layar laptop/PC
+
+    if (isAdmin && isDesktop) {
+        // 1. Sembunyikan versi Mobile menggunakan style display (pasti ampuh)
+        document.getElementById('main-dashboard').style.display = 'none';
+        document.getElementById('bottom-nav').style.display = 'none';
+        
+        // 2. Tampilkan versi Desktop Dashboard
+        const deskDash = document.getElementById('desktop-admin-dashboard');
+        deskDash.style.display = 'flex'; // Paksa jadi flex container
+        document.getElementById('desktop-admin-name').innerText = user;
+        
+        // 3. Pastikan tab pertama (Dashboard) aktif agar tidak blank putih
+        switchAdminTab('admin-dash');
+
+        // 4. Muat Data Desktop
+        loadAdminData();
+    }
+};
+
+// Sistem Navigasi Tab Desktop
+function switchAdminTab(tabId) {
+    // Sembunyikan semua konten tab menggunakan style display
+    document.querySelectorAll('.admin-tab-content').forEach(el => {
+        el.style.display = 'none';
+    });
+    
+    // Tampilkan tab yang dipilih
+    const target = document.getElementById(tabId);
+    if(target) target.style.display = 'block';
+
+    // Reset warna semua tombol
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white');
+        btn.classList.add('text-slate-300', 'hover:bg-slate-800');
+    });
+
+    // Beri warna biru pada tombol yang aktif
+    const activeBtn = document.querySelector(`[data-target="${tabId}"]`);
+    if(activeBtn) {
+        activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
+        activeBtn.classList.add('bg-blue-600', 'text-white');
+    }
+
+    // Update Judul Header
+    const titles = {
+        'admin-dash': 'Dashboard Ringkasan',
+        'admin-orders': 'Manajemen Antrian',
+        'admin-barang': 'Kelola Detail Barang',
+        'admin-laporan': 'Laporan (Selesai)',
+        'admin-ulasan': 'Rating & Ulasan'
+    };
+    document.getElementById('admin-page-title').innerText = titles[tabId];
+}
+
+// Fungsi Utama Muat Data Desktop
+// Fungsi Utama Muat Data Desktop
+async function loadAdminData() {
+    document.getElementById('desktop-barang-list').innerHTML = `<tr><td colspan="5" class="text-center py-10 font-black text-slate-400 uppercase animate-pulse">Mengambil data menu...</td></tr>`;
+    document.getElementById('desktop-order-list').innerHTML = `<p class="text-center py-10 font-black text-slate-400 uppercase animate-pulse">Mengambil data pesanan...</p>`;
+    document.getElementById('desktop-laporan-list').innerHTML = `<tr><td colspan="4" class="text-center py-10 font-black text-slate-400 uppercase animate-pulse">Menghitung laporan...</td></tr>`;
+    document.getElementById('desktop-ulasan-list').innerHTML = `<div class="col-span-full text-center py-10 font-black text-slate-400 uppercase animate-pulse">Mengambil ulasan...</div>`;
+
+    try {
+        // 1. Ambil Data Menu
+        const resMenu = await fetch(SCRIPT_URL + "?v=" + Date.now());
+        const dataMenu = await resMenu.json();
+        
+        let htmlBarang = '';
+        dataMenu.forEach(p => {
+            htmlBarang += `
+            <tr>
+                <td class="p-4 font-bold flex items-center gap-3">
+                    <img src="${p.img}" class="w-10 h-10 rounded-lg object-cover bg-slate-200">
+                    ${p.name}
+                </td>
+                <td class="p-4"><span class="bg-slate-100 text-slate-600 text-[10px] px-2 py-1 rounded-md font-black uppercase">${p.category || 'Lainnya'}</span></td>
+                <td class="p-4 font-bold text-blue-600">Rp ${Number(p.price).toLocaleString('id-ID')}</td>
+                <td class="p-4 font-black">${p.stock}</td>
+                <td class="p-4 text-center">
+                    <button onclick="editProduct(${p.id})" class="text-blue-500 hover:text-blue-700 mx-2 font-bold">Edit</button>
+                    <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 mx-2 font-bold">Hapus</button>
+                </td>
+            </tr>`;
+        });
+        document.getElementById('desktop-barang-list').innerHTML = htmlBarang;
+
+        // 2. Ambil Data Transaksi
+        const resOrders = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
+        let dataOrders = await resOrders.json();
+        if(!Array.isArray(dataOrders)) dataOrders = [];
+
+        window.globalAdminOrders = dataOrders; // Simpan untuk filter grafik
+
+        let htmlOrders = '';
+        let htmlLaporan = '';
+
+        dataOrders.reverse().forEach(o => {
+            const nama = o.user || o.nama_pelanggan || "User";
+            const status = (o.status || o.Status || "Pending").trim();
+            const rawDate = String(o.tanggal || o.date || "").split(" ")[0]; 
+            
+            // FIX UNDEFINED (Ambil semua kemungkinan nama kolom)
+            const orderDetail = o.detail || o.Detail || o.detail_order || o.pesanan || o.item || "-";
+            
+            // FIX NOMINAL 0 (Bersihkan titik/koma format ribuan)
+            const totalBersih = String(o.total || o.total_bayar || 0).replace(/[^0-9]/g, '');
+            const total = parseInt(totalBersih) || 0;
+            
+            htmlOrders += `
+            <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <div>
+                    <h6 class="font-black uppercase text-slate-800">${nama} <span class="text-[10px] font-bold text-slate-400 ml-2">${rawDate}</span></h6>
+                    <p class="text-xs font-bold text-slate-500 italic truncate max-w-md">${orderDetail}</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="font-black text-blue-600">Rp ${total.toLocaleString('id-ID')}</span>
+                    <select onchange="updateStatus(${o.rowId}, this.value); setTimeout(loadAdminData, 1000);" class="text-xs font-black uppercase px-3 py-2 rounded-xl ${status.toLowerCase()==='selesai'?'bg-green-100 text-green-700':status.toLowerCase()==='proses'?'bg-yellow-100 text-yellow-700':'bg-red-100 text-red-700'} border-none outline-none cursor-pointer">
+                        <option value="Pending" ${status.toLowerCase()==='pending'?'selected':''}>Pending</option>
+                        <option value="Proses" ${status.toLowerCase()==='proses'?'selected':''}>Proses</option>
+                        <option value="Selesai" ${status.toLowerCase()==='selesai'?'selected':''}>Selesai</option>
+                    </select>
+                </div>
+            </div>`;
+
+            if (status.toLowerCase() === "selesai") {
+                htmlLaporan += `
+                <tr>
+                    <td class="p-4 font-bold text-slate-800 uppercase">${nama}</td>
+                    <td class="p-4 text-slate-500 font-bold">${rawDate}</td>
+                    <td class="p-4 text-slate-600 text-xs italic">${orderDetail}</td>
+                    <td class="p-4 text-right font-black text-blue-600">Rp ${total.toLocaleString('id-ID')}</td>
+                </tr>`;
+            }
         });
 
-        const clockLogin = document.getElementById('clock-login');
-        const clockHeader = document.getElementById('clock-header');
+        document.getElementById('desktop-order-list').innerHTML = htmlOrders || '<p class="text-center text-slate-400 font-bold py-10">Tidak ada antrian saat ini.</p>';
+        document.getElementById('desktop-laporan-list').innerHTML = htmlLaporan || '<tr><td colspan="4" class="text-center text-slate-400 font-bold py-10">Belum ada transaksi berstatus selesai.</td></tr>';
         
-        if (clockLogin) clockLogin.innerText = timeString + " WIB";
-        if (clockHeader) clockHeader.innerText = timeString + " WIB";
-    }, 1000);
+        // Pemicu Setup Filter & Grafik
+        const mSel = document.getElementById('chart-month');
+        const yInput = document.getElementById('chart-year');
+        if(mSel && !mSel.dataset.init) {
+            mSel.value = new Date().getMonth();
+            yInput.value = new Date().getFullYear();
+            mSel.dataset.init = "true";
+        }
+        setTimeout(window.updateChart, 100);
+
+        // 3. Ambil Data Ulasan
+        const resReviews = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_reviews");
+        const dataReviews = await resReviews.json();
+        
+        let htmlUlasan = '';
+        if(dataReviews && dataReviews.length > 0) {
+            dataReviews.reverse().forEach(r => {
+                htmlUlasan += `
+                <div class="bg-white p-6 rounded-[30px] border-2 border-slate-100 shadow-sm relative">
+                    <button onclick="deleteReview(${r.rowId}); setTimeout(loadAdminData, 1000);" class="absolute top-4 right-4 text-red-400 hover:text-red-600 font-black">X</button>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-indigo-100 text-indigo-600 font-black flex items-center justify-center rounded-xl">${r.nama.charAt(0).toUpperCase()}</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 uppercase text-xs">${r.nama}</h4>
+                            <div class="text-yellow-400 text-[10px]">${'★'.repeat(r.rating)}</div>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 text-sm italic mt-3">"${r.komentar}"</p>
+                </div>`;
+            });
+        } else {
+            htmlUlasan = '<div class="col-span-full text-center text-slate-400 py-10 font-bold">Belum ada ulasan yang masuk.</div>';
+        }
+        document.getElementById('desktop-ulasan-list').innerHTML = htmlUlasan;
+
+    } catch (err) {
+        console.error("Gagal memuat data desktop:", err);
+    }
+}
+
+// === FUNGSI RENDER GRAFIK BERSYARAT ===
+let adminChart = null;
+window.updateChart = function() {
+    if(!window.globalAdminOrders) return;
+    
+    const month = parseInt(document.getElementById('chart-month').value);
+    const year = parseInt(document.getElementById('chart-year').value);
+    
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const labels = Array.from({length: daysInMonth}, (_, i) => i + 1);
+    const dataSales = new Array(daysInMonth).fill(0);
+    
+    let totalPendapatanBulanIni = 0;
+    let totalBarangBulanIni = 0;
+
+    window.globalAdminOrders.forEach(o => {
+        const status = (o.status || o.Status || "").trim().toLowerCase();
+        if (status !== "selesai") return; 
+        
+        const rawDateStr = String(o.tanggal || o.date || "");
+        if(!rawDateStr) return;
+
+        let dateObj;
+        if(rawDateStr.includes("T") || rawDateStr.includes("-")) {
+             dateObj = new Date(rawDateStr.split(" ")[0]);
+        } else {
+             const parts = rawDateStr.split(" ")[0].split("/");
+             if(parts.length === 3) dateObj = new Date(parts[2], parts[1]-1, parts[0]);
+             else dateObj = new Date();
+        }
+
+        if(dateObj.getMonth() === month && dateObj.getFullYear() === year) {
+            const dayIndex = dateObj.getDate() - 1;
+            
+            const totalBersih = String(o.total || o.total_bayar || 0).replace(/[^0-9]/g, '');
+            const total = parseInt(totalBersih) || 0;
+            
+            dataSales[dayIndex] += total;
+            totalPendapatanBulanIni += total;
+
+            const orderDetail = o.detail || o.Detail || o.detail_order || o.pesanan || o.item || "";
+            const items = orderDetail.split(", ");
+            items.forEach(item => {
+                const qtyMatch = item.match(/^(\d+)x/);
+                if(qtyMatch) totalBarangBulanIni += parseInt(qtyMatch[1]);
+            });
+        }
+    });
+
+    document.getElementById('stat-barang-terjual').innerText = totalBarangBulanIni;
+    document.getElementById('stat-pendapatan').innerText = `Rp ${totalPendapatanBulanIni.toLocaleString('id-ID')}`;
+    
+    const laporanTotal = document.getElementById('desktop-laporan-total');
+    if(laporanTotal) laporanTotal.innerText = `Rp ${totalPendapatanBulanIni.toLocaleString('id-ID')}`;
+
+    const ctx = document.getElementById('salesChart');
+    if(!ctx) return;
+
+    if(adminChart) adminChart.destroy();
+    adminChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{ 
+                label: 'Pendapatan (Rp)', 
+                data: dataSales, 
+                borderColor: '#2563eb', 
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
 }
 
     async function finishOrder(rowId) { if((await Swal.fire({ title: 'Finish?', showCancelButton: true, customClass: { popup: 'rounded-[35px] p-6 font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans' }, confirmButtonColor: '#22c55e' })).isConfirmed) { await sendData({ action: 'delete_order', rowId }); loadOrders(); } }
@@ -1648,6 +2184,52 @@ function startClock() {
         customClass: { popup: 'rounded-[50px] p-4' }
     });
 }
+// === FUNGSI TOGGLE MODE DESKTOP & MOBILE ===
+let isManualDesktop = false;
+
+window.toggleDesktopMode = function() {
+    if(sounds.click) playSfx(sounds.click);
+    isManualDesktop = !isManualDesktop;
+    
+    const user = sessionStorage.getItem('activeUser') || 'Admin';
+    const viewportMeta = document.querySelector("meta[name=viewport]");
+
+    if (isManualDesktop) {
+        // Paksa Viewport WebView jadi 1200px (Kaya mode Desktop di Chrome)
+        viewportMeta.setAttribute("content", "width=1200");
+        
+        // Matikan UI Mobile
+        document.getElementById('main-dashboard').style.display = 'none';
+        document.getElementById('bottom-nav').style.display = 'none';
+        
+        // Nyalakan UI Desktop
+        const deskDash = document.getElementById('desktop-admin-dashboard');
+        deskDash.classList.remove('hidden');
+        deskDash.style.display = 'flex'; 
+        
+        document.getElementById('desktop-admin-name').innerText = user;
+        switchAdminTab('admin-dash');
+        loadAdminData();
+    } else {
+        // Kembalikan Viewport WebView ke ukuran HP asli
+        viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+        
+        // Matikan UI Desktop
+        const deskDash = document.getElementById('desktop-admin-dashboard');
+        if(deskDash) {
+            deskDash.classList.add('hidden');
+            deskDash.style.display = 'none';
+        }
+        
+        // Nyalakan UI Mobile
+        document.getElementById('main-dashboard').classList.remove('hidden');
+        document.getElementById('main-dashboard').style.display = 'block';
+        document.getElementById('bottom-nav').classList.remove('hidden');
+        document.getElementById('bottom-nav').style.display = 'flex';
+        
+        loadProducts();
+    }
+};
 </script>
 </body>
 </html>
