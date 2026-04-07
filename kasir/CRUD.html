@@ -431,9 +431,12 @@ header.glass {
 
 <div id="admin-orders" class="admin-tab-content" style="display: none;">
                 <div class="bg-white p-6 rounded-[30px] shadow-sm border-2 border-slate-100">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-black uppercase italic">Monitor Pesanan</h3>
-                        <button onclick="loadAdminData()" class="bg-blue-100 text-blue-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-200">Refresh</button>
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <h3 class="font-black uppercase italic w-full md:w-auto">Monitor Pesanan</h3>
+                        <div class="flex w-full md:w-auto gap-2">
+                            <input type="text" id="search-admin-orders" onkeyup="window.renderAdminOrders(this.value)" placeholder="Cari Pelanggan..." class="flex-1 bg-slate-50 border border-slate-200 text-xs font-bold px-4 py-2 rounded-xl outline-none focus:border-blue-500 transition-all">
+                            <button onclick="loadAdminData()" class="bg-blue-100 text-blue-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-200 whitespace-nowrap">Refresh</button>
+                        </div>
                     </div>
                     <div id="desktop-order-list" class="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2"></div>
                 </div>
@@ -441,11 +444,12 @@ header.glass {
 
             <div id="admin-barang" class="admin-tab-content" style="display: none;">
                 <div class="bg-white p-6 rounded-[30px] shadow-sm border-2 border-slate-100">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-black uppercase italic">Daftar Menu & Stok</h3>
-                        <div class="flex gap-2">
-                            <button onclick="loadAdminData()" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl font-bold text-xs shadow-sm hover:bg-slate-200 transition-all flex items-center gap-2">🔄 Refresh</button>
-                            <button onclick="openAddProductModal()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-md hover:bg-blue-700 transition-all">+ Tambah</button>
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <h3 class="font-black uppercase italic w-full md:w-auto">Daftar Menu & Stok</h3>
+                        <div class="flex w-full md:w-auto gap-2">
+                            <input type="text" id="search-admin-barang" onkeyup="window.renderAdminBarang(this.value)" placeholder="Cari Nama Menu..." class="flex-1 bg-slate-50 border border-slate-200 text-xs font-bold px-4 py-2 rounded-xl outline-none focus:border-blue-500 transition-all">
+                            <button onclick="loadAdminData()" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl font-bold text-xs shadow-sm hover:bg-slate-200 transition-all flex items-center gap-2 whitespace-nowrap">🔄</button>
+                            <button onclick="openAddProductModal()" class="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-md hover:bg-blue-700 transition-all whitespace-nowrap">+ Tambah</button>
                         </div>
                     </div>
                     <div class="overflow-auto max-h-[400px] custom-scrollbar rounded-xl border border-slate-100">
@@ -467,9 +471,12 @@ header.glass {
 
             <div id="admin-laporan" class="admin-tab-content" style="display: none;">
                  <div class="bg-white p-6 rounded-[30px] shadow-sm border-2 border-slate-100">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-black uppercase italic">Laporan Transaksi Selesai</h3>
-                        <button onclick="window.print()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-100 border border-red-200">Cetak PDF</button>
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <h3 class="font-black uppercase italic w-full md:w-auto">Laporan Transaksi</h3>
+                        <div class="flex w-full md:w-auto gap-2">
+                            <input type="text" id="search-admin-laporan" onkeyup="window.renderAdminLaporan(this.value)" placeholder="Cari Nama Pelanggan..." class="flex-1 bg-slate-50 border border-slate-200 text-xs font-bold px-4 py-2 rounded-xl outline-none focus:border-blue-500 transition-all">
+                            <button onclick="window.print()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-100 border border-red-200 whitespace-nowrap">Cetak PDF</button>
+                        </div>
                     </div>
                     <div class="overflow-auto max-h-[400px] custom-scrollbar rounded-xl border border-slate-100">
                         <table class="w-full text-left border-collapse min-w-[600px] relative">
@@ -495,7 +502,10 @@ header.glass {
 
             <div id="admin-ulasan" class="admin-tab-content" style="display: none;">
                 <div class="bg-white p-6 rounded-[30px] shadow-sm border-2 border-slate-100">
-                    <h3 class="font-black uppercase italic mb-6">Ulasan Pelanggan</h3>
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <h3 class="font-black uppercase italic w-full md:w-auto">Ulasan Pelanggan</h3>
+                        <input type="text" id="search-admin-ulasan" onkeyup="window.renderAdminUlasan(this.value)" placeholder="Cari Nama Reviewer..." class="w-full md:w-1/3 bg-slate-50 border border-slate-200 text-xs font-bold px-4 py-2 rounded-xl outline-none focus:border-blue-500 transition-all">
+                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto custom-scrollbar pr-2 p-1" id="desktop-ulasan-list"></div>
                 </div>
             </div>
@@ -1980,8 +1990,7 @@ function switchAdminTab(tabId) {
     document.getElementById('admin-page-title').innerText = titles[tabId];
 }
 
-// Fungsi Utama Muat Data Desktop
-// Fungsi Utama Muat Data Desktop
+// === FUNGSI UTAMA LOAD DATA DESKTOP ===
 async function loadAdminData() {
     document.getElementById('desktop-barang-list').innerHTML = `<tr><td colspan="5" class="text-center py-10 font-black text-slate-400 uppercase animate-pulse">Mengambil data menu...</td></tr>`;
     document.getElementById('desktop-order-list').innerHTML = `<p class="text-center py-10 font-black text-slate-400 uppercase animate-pulse">Mengambil data pesanan...</p>`;
@@ -1989,82 +1998,30 @@ async function loadAdminData() {
     document.getElementById('desktop-ulasan-list').innerHTML = `<div class="col-span-full text-center py-10 font-black text-slate-400 uppercase animate-pulse">Mengambil ulasan...</div>`;
 
     try {
-        // 1. Ambil Data Menu
+        // 1. Fetch & Simpan ke Global Variables (Biar filter cepet gak perlu loading lagi)
         const resMenu = await fetch(SCRIPT_URL + "?v=" + Date.now());
-        const dataMenu = await resMenu.json();
-        
-        let htmlBarang = '';
-        dataMenu.forEach(p => {
-            htmlBarang += `
-            <tr>
-                <td class="p-4 font-bold flex items-center gap-3">
-                    <img src="${p.img}" class="w-10 h-10 rounded-lg object-cover bg-slate-200">
-                    ${p.name}
-                </td>
-                <td class="p-4"><span class="bg-slate-100 text-slate-600 text-[10px] px-2 py-1 rounded-md font-black uppercase">${p.category || 'Lainnya'}</span></td>
-                <td class="p-4 font-bold text-blue-600">Rp ${Number(p.price).toLocaleString('id-ID')}</td>
-                <td class="p-4 font-black">${p.stock}</td>
-                <td class="p-4 text-center">
-                    <button onclick="editProduct(${p.id})" class="text-blue-500 hover:text-blue-700 mx-2 font-bold">Edit</button>
-                    <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 mx-2 font-bold">Hapus</button>
-                </td>
-            </tr>`;
-        });
-        document.getElementById('desktop-barang-list').innerHTML = htmlBarang;
+        window.globalAdminBarang = await resMenu.json();
 
-        // 2. Ambil Data Transaksi
         const resOrders = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
         let dataOrders = await resOrders.json();
-        if(!Array.isArray(dataOrders)) dataOrders = [];
+        window.globalAdminOrders = Array.isArray(dataOrders) ? dataOrders : [];
 
-        window.globalAdminOrders = dataOrders; // Simpan untuk filter grafik
+        const resReviews = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_reviews");
+        window.globalAdminReviews = await resReviews.json();
 
-        let htmlOrders = '';
-        let htmlLaporan = '';
+        // 2. Kosongkan nilai search bar setiap kali refresh manual
+        if(document.getElementById('search-admin-barang')) document.getElementById('search-admin-barang').value = "";
+        if(document.getElementById('search-admin-orders')) document.getElementById('search-admin-orders').value = "";
+        if(document.getElementById('search-admin-laporan')) document.getElementById('search-admin-laporan').value = "";
+        if(document.getElementById('search-admin-ulasan')) document.getElementById('search-admin-ulasan').value = "";
 
-        dataOrders.reverse().forEach(o => {
-            const nama = o.user || o.nama_pelanggan || "User";
-            const status = (o.status || o.Status || "Pending").trim();
-            const rawDate = String(o.tanggal || o.date || "").split(" ")[0]; 
-            
-            // FIX UNDEFINED (Ambil semua kemungkinan nama kolom)
-            const orderDetail = o.detail || o.Detail || o.detail_order || o.pesanan || o.item || "-";
-            
-            // FIX NOMINAL 0 (Bersihkan titik/koma format ribuan)
-            const totalBersih = String(o.total || o.total_bayar || 0).replace(/[^0-9]/g, '');
-            const total = parseInt(totalBersih) || 0;
-            
-            htmlOrders += `
-            <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                <div>
-                    <h6 class="font-black uppercase text-slate-800">${nama} <span class="text-[10px] font-bold text-slate-400 ml-2">${rawDate}</span></h6>
-                    <p class="text-xs font-bold text-slate-500 italic truncate max-w-md">${orderDetail}</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span class="font-black text-blue-600">Rp ${total.toLocaleString('id-ID')}</span>
-                    <select onchange="updateStatus(${o.rowId}, this.value); setTimeout(loadAdminData, 1000);" class="text-xs font-black uppercase px-3 py-2 rounded-xl ${status.toLowerCase()==='selesai'?'bg-green-100 text-green-700':status.toLowerCase()==='proses'?'bg-yellow-100 text-yellow-700':'bg-red-100 text-red-700'} border-none outline-none cursor-pointer">
-                        <option value="Pending" ${status.toLowerCase()==='pending'?'selected':''}>Pending</option>
-                        <option value="Proses" ${status.toLowerCase()==='proses'?'selected':''}>Proses</option>
-                        <option value="Selesai" ${status.toLowerCase()==='selesai'?'selected':''}>Selesai</option>
-                    </select>
-                </div>
-            </div>`;
+        // 3. Panggil Fungsi Render
+        window.renderAdminBarang("");
+        window.renderAdminOrders("");
+        window.renderAdminLaporan("");
+        window.renderAdminUlasan("");
 
-            if (status.toLowerCase() === "selesai") {
-                htmlLaporan += `
-                <tr>
-                    <td class="p-4 font-bold text-slate-800 uppercase">${nama}</td>
-                    <td class="p-4 text-slate-500 font-bold">${rawDate}</td>
-                    <td class="p-4 text-slate-600 text-xs italic">${orderDetail}</td>
-                    <td class="p-4 text-right font-black text-blue-600">Rp ${total.toLocaleString('id-ID')}</td>
-                </tr>`;
-            }
-        });
-
-        document.getElementById('desktop-order-list').innerHTML = htmlOrders || '<p class="text-center text-slate-400 font-bold py-10">Tidak ada antrian saat ini.</p>';
-        document.getElementById('desktop-laporan-list').innerHTML = htmlLaporan || '<tr><td colspan="4" class="text-center text-slate-400 font-bold py-10">Belum ada transaksi berstatus selesai.</td></tr>';
-        
-        // Pemicu Setup Filter & Grafik
+        // 4. Setup Grafik
         const mSel = document.getElementById('chart-month');
         const yInput = document.getElementById('chart-year');
         if(mSel && !mSel.dataset.init) {
@@ -2074,117 +2031,143 @@ async function loadAdminData() {
         }
         setTimeout(window.updateChart, 100);
 
-        // 3. Ambil Data Ulasan
-        const resReviews = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_reviews");
-        const dataReviews = await resReviews.json();
-        
-        let htmlUlasan = '';
-        if(dataReviews && dataReviews.length > 0) {
-            dataReviews.reverse().forEach(r => {
-                htmlUlasan += `
-                <div class="bg-white p-6 rounded-[30px] border-2 border-slate-100 shadow-sm relative">
-                    <button onclick="deleteReview(${r.rowId}); setTimeout(loadAdminData, 1000);" class="absolute top-4 right-4 text-red-400 hover:text-red-600 font-black">X</button>
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="w-10 h-10 bg-indigo-100 text-indigo-600 font-black flex items-center justify-center rounded-xl">${r.nama.charAt(0).toUpperCase()}</div>
-                        <div>
-                            <h4 class="font-bold text-slate-800 uppercase text-xs">${r.nama}</h4>
-                            <div class="text-yellow-400 text-[10px]">${'★'.repeat(r.rating)}</div>
-                        </div>
-                    </div>
-                    <p class="text-slate-600 text-sm italic mt-3">"${r.komentar}"</p>
-                </div>`;
-            });
-        } else {
-            htmlUlasan = '<div class="col-span-full text-center text-slate-400 py-10 font-bold">Belum ada ulasan yang masuk.</div>';
-        }
-        document.getElementById('desktop-ulasan-list').innerHTML = htmlUlasan;
-
     } catch (err) {
         console.error("Gagal memuat data desktop:", err);
     }
 }
 
-// === FUNGSI RENDER GRAFIK BERSYARAT ===
-let adminChart = null;
-window.updateChart = function() {
+// === FUNGSI RENDER & FILTER LOCAL ===
+
+// Render Barang
+window.renderAdminBarang = function(filterText = "") {
+    if(!window.globalAdminBarang) return;
+    let htmlBarang = '';
+    const filtered = window.globalAdminBarang.filter(p => String(p.name).toLowerCase().includes(filterText.toLowerCase()));
+    
+    filtered.forEach(p => {
+        htmlBarang += `
+        <tr>
+            <td class="p-4 font-bold flex items-center gap-3">
+                <img src="${p.img}" class="w-10 h-10 rounded-lg object-cover bg-slate-200">
+                ${p.name}
+            </td>
+            <td class="p-4"><span class="bg-slate-100 text-slate-600 text-[10px] px-2 py-1 rounded-md font-black uppercase">${p.category || 'Lainnya'}</span></td>
+            <td class="p-4 font-bold text-blue-600">Rp ${Number(p.price).toLocaleString('id-ID')}</td>
+            <td class="p-4 font-black">${p.stock}</td>
+            <td class="p-4 text-center flex justify-center gap-2 mt-2">
+                <button onclick="editProduct(${p.id})" class="bg-blue-100 text-blue-600 px-3 py-1 rounded-lg text-xs font-bold hover:bg-blue-600 hover:text-white transition-all">Edit</button>
+                <button onclick="deleteProduct(${p.id})" class="bg-red-100 text-red-600 px-3 py-1 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white transition-all">Hapus</button>
+            </td>
+        </tr>`;
+    });
+    document.getElementById('desktop-barang-list').innerHTML = htmlBarang || `<tr><td colspan="5" class="text-center py-10 font-bold text-slate-400">Tidak ada menu yang sesuai pencarian '${filterText}'.</td></tr>`;
+};
+
+// Render Pesanan
+window.renderAdminOrders = function(filterText = "") {
     if(!window.globalAdminOrders) return;
-    
-    const month = parseInt(document.getElementById('chart-month').value);
-    const year = parseInt(document.getElementById('chart-year').value);
-    
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const labels = Array.from({length: daysInMonth}, (_, i) => i + 1);
-    const dataSales = new Array(daysInMonth).fill(0);
-    
-    let totalPendapatanBulanIni = 0;
-    let totalBarangBulanIni = 0;
+    let htmlOrders = '';
+    const filtered = window.globalAdminOrders.slice().reverse().filter(o => {
+        const nama = String(o.user || o.nama_pelanggan || "User").toLowerCase();
+        return nama.includes(filterText.toLowerCase());
+    });
 
-    window.globalAdminOrders.forEach(o => {
-        const status = (o.status || o.Status || "").trim().toLowerCase();
-        if (status !== "selesai") return; 
+    filtered.forEach(o => {
+        const nama = o.user || o.nama_pelanggan || "User";
+        const status = (o.status || o.Status || "Pending").trim();
+        const rawDate = String(o.tanggal || o.date || "").split(" ")[0]; 
+        const orderDetail = o.detail || o.Detail || o.detail_order || o.pesanan || o.item || "-";
+        const totalBersih = String(o.total || o.total_bayar || 0).replace(/[^0-9]/g, '');
+        const total = parseInt(totalBersih) || 0;
         
-        const rawDateStr = String(o.tanggal || o.date || "");
-        if(!rawDateStr) return;
+        htmlOrders += `
+        <div class="flex flex-col md:flex-row justify-between md:items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-3">
+            <div>
+                <h6 class="font-black uppercase text-slate-800">${nama} <span class="text-[10px] font-bold text-slate-400 ml-2">${rawDate}</span></h6>
+                <p class="text-xs font-bold text-slate-500 italic truncate max-w-md">${orderDetail}</p>
+            </div>
+            <div class="flex items-center justify-between md:justify-end gap-4 border-t md:border-none border-slate-200 pt-2 md:pt-0">
+                <span class="font-black text-blue-600">Rp ${total.toLocaleString('id-ID')}</span>
+                <select onchange="updateStatus(${o.rowId}, this.value); setTimeout(loadAdminData, 1000);" class="text-xs font-black uppercase px-3 py-2 rounded-xl ${status.toLowerCase()==='selesai'?'bg-green-100 text-green-700':status.toLowerCase()==='proses'?'bg-yellow-100 text-yellow-700':'bg-red-100 text-red-700'} border-none outline-none cursor-pointer">
+                    <option value="Pending" ${status.toLowerCase()==='pending'?'selected':''}>Pending</option>
+                    <option value="Proses" ${status.toLowerCase()==='proses'?'selected':''}>Proses</option>
+                    <option value="Selesai" ${status.toLowerCase()==='selesai'?'selected':''}>Selesai</option>
+                </select>
+            </div>
+        </div>`;
+    });
+    document.getElementById('desktop-order-list').innerHTML = htmlOrders || `<p class="text-center text-slate-400 font-bold py-10">Pelanggan '${filterText}' tidak ditemukan.</p>`;
+};
 
-        let dateObj;
-        if(rawDateStr.includes("T") || rawDateStr.includes("-")) {
-             dateObj = new Date(rawDateStr.split(" ")[0]);
-        } else {
-             const parts = rawDateStr.split(" ")[0].split("/");
-             if(parts.length === 3) dateObj = new Date(parts[2], parts[1]-1, parts[0]);
-             else dateObj = new Date();
-        }
+// Render Laporan
+window.renderAdminLaporan = function(filterText = "") {
+    if(!window.globalAdminOrders) return;
+    let htmlLaporan = '';
+    let grandTotalFiltered = 0; // Buat ngitung otomatis kalo di-search
 
-        if(dateObj.getMonth() === month && dateObj.getFullYear() === year) {
-            const dayIndex = dateObj.getDate() - 1;
-            
-            const totalBersih = String(o.total || o.total_bayar || 0).replace(/[^0-9]/g, '');
-            const total = parseInt(totalBersih) || 0;
-            
-            dataSales[dayIndex] += total;
-            totalPendapatanBulanIni += total;
-
-            const orderDetail = o.detail || o.Detail || o.detail_order || o.pesanan || o.item || "";
-            const items = orderDetail.split(", ");
-            items.forEach(item => {
-                const qtyMatch = item.match(/^(\d+)x/);
-                if(qtyMatch) totalBarangBulanIni += parseInt(qtyMatch[1]);
-            });
-        }
+    const filtered = window.globalAdminOrders.slice().reverse().filter(o => {
+        const status = (o.status || o.Status || "Pending").trim().toLowerCase();
+        const nama = String(o.user || o.nama_pelanggan || "User").toLowerCase();
+        return status === "selesai" && nama.includes(filterText.toLowerCase());
     });
 
-    document.getElementById('stat-barang-terjual').innerText = totalBarangBulanIni;
-    document.getElementById('stat-pendapatan').innerText = `Rp ${totalPendapatanBulanIni.toLocaleString('id-ID')}`;
+    filtered.forEach(o => {
+        const nama = o.user || o.nama_pelanggan || "User";
+        const rawDate = String(o.tanggal || o.date || "").split(" ")[0]; 
+        const orderDetail = o.detail || o.Detail || o.detail_order || o.pesanan || o.item || "-";
+        const totalBersih = String(o.total || o.total_bayar || 0).replace(/[^0-9]/g, '');
+        const total = parseInt(totalBersih) || 0;
+        
+        grandTotalFiltered += total;
+
+        htmlLaporan += `
+        <tr>
+            <td class="p-4 font-bold text-slate-800 uppercase">${nama}</td>
+            <td class="p-4 text-slate-500 font-bold">${rawDate}</td>
+            <td class="p-4 text-slate-600 text-xs italic">${orderDetail}</td>
+            <td class="p-4 text-right font-black text-blue-600">Rp ${total.toLocaleString('id-ID')}</td>
+        </tr>`;
+    });
+
+    document.getElementById('desktop-laporan-list').innerHTML = htmlLaporan || `<tr><td colspan="4" class="text-center text-slate-400 font-bold py-10">Laporan pelanggan '${filterText}' tidak ditemukan.</td></tr>`;
     
+    // Total laporan otomatis update menyesuaikan search
     const laporanTotal = document.getElementById('desktop-laporan-total');
-    if(laporanTotal) laporanTotal.innerText = `Rp ${totalPendapatanBulanIni.toLocaleString('id-ID')}`;
+    if(laporanTotal) laporanTotal.innerText = `Rp ${grandTotalFiltered.toLocaleString('id-ID')}`;
+};
 
-    const ctx = document.getElementById('salesChart');
-    if(!ctx) return;
+// Render Ulasan
+window.renderAdminUlasan = function(filterText = "") {
+    if(!window.globalAdminReviews || window.globalAdminReviews.length === 0) {
+        document.getElementById('desktop-ulasan-list').innerHTML = '<div class="col-span-full text-center text-slate-400 py-10 font-bold">Belum ada ulasan yang masuk.</div>';
+        return;
+    }
 
-    if(adminChart) adminChart.destroy();
-    adminChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{ 
-                label: 'Pendapatan (Rp)', 
-                data: dataSales, 
-                borderColor: '#2563eb', 
-                backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
-        }
+    let htmlUlasan = '';
+    const filtered = window.globalAdminReviews.slice().reverse().filter(r => {
+        return String(r.nama).toLowerCase().includes(filterText.toLowerCase());
     });
-}
+
+    if(filtered.length > 0) {
+        filtered.forEach(r => {
+            htmlUlasan += `
+            <div class="bg-white p-6 rounded-[30px] border-2 border-slate-100 shadow-sm relative">
+                <button onclick="deleteReview(${r.rowId}); setTimeout(loadAdminData, 1000);" class="absolute top-4 right-4 text-red-400 hover:text-red-600 font-black">X</button>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 font-black flex items-center justify-center rounded-xl">${r.nama.charAt(0).toUpperCase()}</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 uppercase text-xs">${r.nama}</h4>
+                        <div class="text-yellow-400 text-[10px]">${'★'.repeat(r.rating)}</div>
+                    </div>
+                </div>
+                <p class="text-slate-600 text-sm italic mt-3">"${r.komentar}"</p>
+            </div>`;
+        });
+    } else {
+        htmlUlasan = `<div class="col-span-full text-center text-slate-400 py-10 font-bold">Reviewer '${filterText}' tidak ditemukan.</div>`;
+    }
+    document.getElementById('desktop-ulasan-list').innerHTML = htmlUlasan;
+};
 
     async function finishOrder(rowId) { if((await Swal.fire({ title: 'Finish?', showCancelButton: true, customClass: { popup: 'rounded-[35px] p-6 font-sans italic font-sans italic font-sans italic font-sans font-sans font-sans italic font-sans' }, confirmButtonColor: '#22c55e' })).isConfirmed) { await sendData({ action: 'delete_order', rowId }); loadOrders(); } }
    
@@ -2302,25 +2285,50 @@ window.addEventListener('resize', () => {
     }
 });
 
-// === 3. SINKRONISASI SAAT PERTAMA KALI LOGIN ===
+// === 3. SINKRONISASI SAAT PERTAMA KALI LOGIN (VERSI FIX) ===
 const _originalHandleLoginSystem = handleLogin;
 window.handleLogin = async function(existingUser) {
+    // Jalankan fungsi dasar login (UI Mobile)
     await _originalHandleLoginSystem(existingUser); 
     
-    const user = existingUser || document.getElementById('username').value.trim();
+    const user = (existingUser || document.getElementById('username').value || "").trim().toLowerCase();
     if (!user) return; 
 
-    const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
+    const isAdmin = ADMIN_USERS.includes(user);
     const isDesktop = window.innerWidth >= 980; 
 
-    // Munculkan/Sembunyikan tombol laptop
     const btnDesktop = document.getElementById('btn-desktop-toggle');
+    
     if (isAdmin) {
+        // Tampilkan tombol monitor/laptop hanya untuk admin
         if (btnDesktop) btnDesktop.classList.remove('hidden');
-        if (isDesktop) toggleDesktopMode(true); // Auto Trigger saat awal login
+        
+        // Hanya pindah ke mode desktop otomatis jika layar memang lebar
+        if (isDesktop) {
+            toggleDesktopMode(true); 
+        }
     } else {
+        // PAKSA ke mode mobile jika yang login adalah PELANGGAN
+        // Ini akan mencegah error "Akses Ditolak" muncul saat login
         if (btnDesktop) btnDesktop.classList.add('hidden');
-        toggleDesktopMode(false); // Pastikan pelanggan selalu di HP
+        
+        // Sembunyikan dashboard admin jika sebelumnya terbuka
+        isManualDesktop = false; 
+        const deskDash = document.getElementById('desktop-admin-dashboard');
+        if (deskDash) {
+            deskDash.classList.add('hidden');
+            deskDash.style.display = 'none';
+        }
+        
+        // Kembalikan tampilan ke dashboard utama pelanggan
+        document.body.style.width = '100%';
+        document.body.style.minWidth = '100%';
+        document.body.style.overflow = 'auto';
+        
+        const mainDash = document.getElementById('main-dashboard');
+        const botNav = document.getElementById('bottom-nav');
+        if (mainDash) mainDash.style.display = 'block';
+        if (botNav) botNav.style.display = 'flex';
     }
 };
 </script>
