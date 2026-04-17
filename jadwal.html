@@ -1,149 +1,1291 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasir Modern - XI TJKT</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s ease; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
-        .dark-card { background: #1a1a1a; color: white; border-radius: 24px; }
-        .neon-border { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
-        .hidden { display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SailorPiece Wiki</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="stylesheet"
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: #7a5f2a;
+    --dark: #0a0a0f;
+    --dark-2: #0f0f1a;
+    --dark-3: #141420;
+    --dark-4: #1a1a2e;
+    --dark-5: #1e1e35;
+    --accent: #4a9eff;
+    --accent2: #ff6b35;
+    --text: #d4c5a9;
+    --text-dim: #7a7060;
+    --border: rgba(201,168,76,0.2);
+    --border-bright: rgba(201,168,76,0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  .font-display { font-family: 'Cinzel Decorative', serif; }
+  .font-title { font-family: 'Cinzel', serif; }
+
+  /* Gold gradient text */
+  .gold-text {
+    background: linear-gradient(135deg, #c9a84c 0%, #e8c97a 50%, #c9a84c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--dark-2); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+  /* Header */
+  .header-bg {
+    background: linear-gradient(180deg, var(--dark) 0%, var(--dark-2) 100%);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .header-bg::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* Category cards */
+  .cat-card {
+    background: linear-gradient(135deg, var(--dark-3) 0%, var(--dark-4) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .cat-card:hover::before { opacity: 1; }
+
+  .cat-card:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.15);
+  }
+
+  .cat-card.active {
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(201,168,76,0.2);
+    background: linear-gradient(135deg, var(--dark-4) 0%, var(--dark-5) 100%);
+  }
+
+  /* Item cards */
+  .item-card {
+    background: linear-gradient(135deg, var(--dark-3), var(--dark-4));
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .item-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .item-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+  .item-card:hover::after { opacity: 1; }
+
+  /* Detail panel */
+  .detail-panel {
+    background: linear-gradient(135deg, var(--dark-3), var(--dark-4));
+    border: 1px solid var(--border-bright);
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .detail-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* Rarity badges */
+  .rarity-common { background: rgba(150,150,150,0.2); color: #aaa; border: 1px solid rgba(150,150,150,0.3); }
+  .rarity-uncommon { background: rgba(30,200,80,0.15); color: #4cde82; border: 1px solid rgba(30,200,80,0.3); }
+  .rarity-rare { background: rgba(60,120,255,0.15); color: #6ca8ff; border: 1px solid rgba(60,120,255,0.3); }
+  .rarity-epic { background: rgba(160,60,255,0.15); color: #c07aff; border: 1px solid rgba(160,60,255,0.3); }
+  .rarity-legendary { background: rgba(255,170,0,0.15); color: #ffaa00; border: 1px solid rgba(255,170,0,0.3); }
+  .rarity-mythic { background: rgba(255,40,80,0.15); color: #ff5577; border: 1px solid rgba(255,40,80,0.3); }
+
+  /* Stat bars */
+  .stat-bar-bg { background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+  .stat-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    transition: width 0.8s ease;
+  }
+
+  /* Search */
+  .search-input {
+    background: var(--dark-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { outline: none; border-color: var(--gold); }
+  .search-input::placeholder { color: var(--text-dim); }
+
+  /* Tag */
+  .tag {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--border);
+    color: var(--gold-light);
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .modal-box {
+    background: var(--dark-3);
+    border: 1px solid var(--border-bright);
+    border-radius: 16px;
+    max-width: 680px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .modal-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border-radius: 16px 16px 0 0;
+  }
+
+  /* Divider */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    margin: 16px 0;
+  }
+
+  /* Section label */
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* Glow icons */
+  .icon-glow { filter: drop-shadow(0 0 8px currentColor); }
+
+  /* Grid responsive */
+  .items-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  @media (max-width: 640px) { .items-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } }
+
+  .cats-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  @media (max-width: 640px) { .cats-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .anim-in { animation: fadeInUp 0.35s ease forwards; }
+
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  .shimmer { animation: shimmer 2s ease infinite; }
+
+  /* Nav mobile */
+  .sidebar {
+    background: linear-gradient(180deg, var(--dark-2), var(--dark));
+    border-right: 1px solid var(--border);
+  }
+
+  /* Table */
+  .wiki-table { width: 100%; border-collapse: collapse; }
+  .wiki-table th { background: rgba(201,168,76,0.08); color: var(--gold); font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.1em; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  .wiki-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; vertical-align: top; }
+  .wiki-table tr:last-child td { border-bottom: none; }
+  .wiki-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Star rating */
+  .stars { color: var(--gold); letter-spacing: 2px; }
+
+  /* Boss HP */
+  .boss-hp { background: rgba(255,50,50,0.15); border: 1px solid rgba(255,50,50,0.3); border-radius: 8px; }
+
+  /* NPC icon */
+  .npc-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--border-bright);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    background: var(--dark-4);
+    flex-shrink: 0;
+  }
+
+  /* Floating tooltip */
+  .tooltip { position: relative; }
+  .tooltip .tip {
+    display: none;
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark-5);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .tooltip:hover .tip { display: block; }
+
+  /* Back button */
+  .back-btn {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .back-btn:hover { background: rgba(201,168,76,0.15); border-color: var(--gold); }
+
+  /* Breadcrumb */
+  .breadcrumb { font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.08em; }
+
+  .material-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(74,158,255,0.1); border: 1px solid rgba(74,158,255,0.25);
+    color: #7ec8ff; border-radius: 6px; padding: 3px 10px; font-size: 0.8rem;
+    margin: 2px;
+  }
+
+  .drop-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.25);
+    color: #ff9066; border-radius: 6px; padding: 3px 10px; font-size: 0.8rem;
+    margin: 2px;
+  }
+
+  .location-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(80,220,120,0.1); border: 1px solid rgba(80,220,120,0.25);
+    color: #70e8a0; border-radius: 6px; padding: 3px 10px; font-size: 0.8rem;
+    margin: 2px;
+  }
+</style>
 </head>
-<body class="bg-slate-50 text-slate-900 overflow-x-hidden">
+<body>
 
-    <div id="login-page" class="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-blue-600 to-indigo-900">
-        <div class="max-w-md w-full glass p-10 rounded-[40px] shadow-2xl text-center">
-            <div class="mb-8">
-                <div class="w-20 h-20 bg-blue-500 rounded-3xl mx-auto flex items-center justify-center mb-4 rotate-12 shadow-lg">
-                    <span class="text-white text-3xl font-extrabold">-K-</span>
-                </div>
-                <h1 class="text-3xl font-extrabold text-slate-800">Point of Sales</h1>
-                <p class="text-slate-600 mt-2">Selamat datang, silakan masuk.</p>
-            </div>
-            
-            <input type="text" id="username" placeholder="Masukkan Nama / 'admin'" 
-                class="w-full p-4 rounded-2xl border-2 border-slate-200 mb-6 focus:border-blue-500 outline-none transition-all text-center font-semibold text-lg">
-            
-            <button onclick="handleLogin()" 
-                class="w-full bg-slate-900 text-white p-4 rounded-2xl font-bold hover:bg-blue-600 hover:scale-105 transition-all active:scale-95 shadow-lg">
-                Masuk Sekarang
-            </button>
+<!-- HEADER -->
+<header class="header-bg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="text-2xl shimmer">⚔️</div>
+      <div>
+        <h1 class="font-display text-sm sm:text-base gold-text leading-none">SAILOR PIECE WIKI</h1>
+        <p class="text-xs text-gray-500" style="font-family:'Cinzel',serif;letter-spacing:0.12em;">Everything is here</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 flex-1 max-w-xs">
+      <input id="globalSearch" type="text" placeholder="Cari item, npc, boss..." class="search-input w-full px-3 py-1.5 rounded-lg text-sm" oninput="handleGlobalSearch(this.value)">
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="max-w-7xl mx-auto px-4 py-6 relative z-10" id="mainContent">
+
+  <!-- HERO (visible when no category selected) -->
+  <div id="heroSection">
+    <div class="text-center py-8 mb-8">
+      <div class="text-5xl mb-4 shimmer">🌌</div>
+      <h2 class="font-display text-2xl sm:text-3xl gold-text mb-2">NEXUS CHRONICLES</h2>
+      <p class="text-gray-400 max-w-md mx-auto text-base">Database lengkap semua item, senjata, boss, NPC, dan lebih banyak lagi. Klik kategori untuk mulai.</p>
+    </div>
+
+    <!-- CATEGORY GRID -->
+    <div class="cats-grid mb-8">
+      <!-- Sword -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('sword')">
+        <div class="text-3xl mb-2">⚔️</div>
+        <div class="font-title text-xs gold-text mb-1">SWORD</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-sword">0 items</div>
+      </div>
+      <!-- Melee -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('melee')">
+        <div class="text-3xl mb-2">🪃</div>
+        <div class="font-title text-xs gold-text mb-1">MELEE</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-melee">0 items</div>
+      </div>
+      <!-- Devil Fruit -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('devil_fruit')">
+        <div class="text-3xl mb-2">🍈</div>
+        <div class="font-title text-xs gold-text mb-1">DEVIL FRUIT</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-devil_fruit">0 items</div>
+      </div>
+      <!-- Accessories -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('accessories')">
+        <div class="text-3xl mb-2">💍</div>
+        <div class="font-title text-xs gold-text mb-1">ACCESSORIES</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-accessories">0 items</div>
+      </div>
+      <!-- Race -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('race')">
+        <div class="text-3xl mb-2">🧬</div>
+        <div class="font-title text-xs gold-text mb-1">RACE</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-race">0 items</div>
+      </div>
+      <!-- Clan -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('clan')">
+        <div class="text-3xl mb-2">🏯</div>
+        <div class="font-title text-xs gold-text mb-1">CLAN</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-clan">0 items</div>
+      </div>
+      <!-- Rune -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('rune')">
+        <div class="text-3xl mb-2">🔮</div>
+        <div class="font-title text-xs gold-text mb-1">RUNE</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-rune">0 items</div>
+      </div>
+      <!-- NPC -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('npc')">
+        <div class="text-3xl mb-2">🧙</div>
+        <div class="font-title text-xs gold-text mb-1">NPC LOCATION</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-npc">0 items</div>
+      </div>
+      <!-- Items Drop -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('items_drop')">
+        <div class="text-3xl mb-2">📦</div>
+        <div class="font-title text-xs gold-text mb-1">ITEMS DROP</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-items_drop">0 items</div>
+      </div>
+      <!-- Boss -->
+      <div class="cat-card p-4 text-center" onclick="selectCategory('boss')">
+        <div class="text-3xl mb-2">👹</div>
+        <div class="font-title text-xs gold-text mb-1">BOSS</div>
+        <div class="text-xs text-gray-500">View More...</div>
+        <div class="tag mt-2" id="count-boss">0 items</div>
+      </div>
+            <div class="cat-card p-4 text-center" onclick="selectCategory('code_redeem')">
+        <div class="text-3xl mb-2">🎟️</div>
+        <div class="font-title text-xs gold-text mb-1">CODE REDEEM</div>
+        <div class="text-xs text-gray-500">Kode & Hadiah</div>
+        <div class="tag mt-2" id="count-code_redeem">0 items</div>
+      </div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="p-4 rounded-xl text-center" style="background:var(--dark-3);border:1px solid var(--border)">
+        <div class="text-2xl font-title gold-text" id="statTotal">0</div>
+        <div class="text-xs text-gray-500 mt-1">Total Sword</div>
+      </div>
+      <div class="p-4 rounded-xl text-center" style="background:var(--dark-3);border:1px solid var(--border)">
+        <div class="text-2xl font-title" style="color:#ff5577" id="statBoss">0</div>
+        <div class="text-xs text-gray-500 mt-1">Total Melee</div>
+      </div>
+      <div class="p-4 rounded-xl text-center" style="background:var(--dark-3);border:1px solid var(--border)">
+        <div class="text-2xl font-title" style="color:#c07aff" id="statLegendary">0</div>
+        <div class="text-xs text-gray-500 mt-1">Redeem Code Active</div>
+      </div>
+      <div class="p-4 rounded-xl text-center" style="background:var(--dark-3);border:1px solid var(--border)">
+        <div class="text-2xl font-title" style="color:#70e8a0" id="statNPC">0</div>
+        <div class="text-xs text-gray-500 mt-1">Total Fruit</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY VIEW -->
+  <div id="categoryView" class="hidden anim-in">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 mb-4">
+      <button class="back-btn px-3 py-1.5 text-xs flex items-center gap-1" onclick="backToHome()">
+        ← <span class="font-title">Home</span>
+      </button>
+      <span class="text-gray-600">/</span>
+      <span class="breadcrumb text-gray-400" id="breadcrumbCat"></span>
+    </div>
+
+    <!-- Category Header -->
+    <div class="detail-panel p-5 mb-5">
+      <div class="flex items-center gap-4">
+        <div class="text-4xl" id="catIcon"></div>
+        <div>
+          <h2 class="font-display text-lg sm:text-xl gold-text" id="catTitle"></h2>
+          <p class="text-gray-400 text-sm mt-0.5" id="catDesc"></p>
         </div>
+      </div>
     </div>
 
-    <div id="main-dashboard" class="hidden min-h-screen pb-20">
-        <header class="p-6 flex justify-between items-center glass sticky top-0 z-50">
-            <div>
-                <h2 id="role-title" class="text-xs font-bold uppercase tracking-widest text-blue-600">Pelanggan</h2>
-                <h3 class="text-xl font-extrabold">XI TJKT Store</h3>
-            </div>
-            <div class="flex items-center gap-4 bg-white py-2 px-4 rounded-full shadow-sm border border-slate-100">
-                <span id="display-name" class="font-bold text-slate-700 uppercase text-sm">User</span>
-                <div class="w-8 h-8 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full"></div>
-            </div>
-        </header>
-
-        <main class="p-6 max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row gap-8">
-                
-                <div class="flex-1">
-                    <div class="flex justify-between items-center mb-6">
-                        <h4 class="text-2xl font-extrabold">Daftar Menu</h4>
-                        <button id="admin-add-btn" class="hidden bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold">+ Tambah Stok</button>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="glass p-5 rounded-[32px] hover:shadow-xl transition-all cursor-pointer group">
-                            <div class="h-40 bg-slate-200 rounded-2xl mb-4 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <h5 class="font-bold text-lg">Salad Buah Segar</h5>
-                            <p class="text-blue-600 font-extrabold mt-1">Rp 25.000</p>
-                            <div class="mt-4 flex justify-between items-center">
-                                <span class="text-xs text-slate-400">Tersisa: 12</span>
-                                <button class="bg-slate-900 text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-blue-500">+</button>
-                            </div>
-                        </div>
-                        </div>
-                </div>
-
-                <div id="cart-section" class="w-full md:w-80">
-                    <div class="dark-card p-6 sticky top-28 shadow-2xl">
-                        <h4 class="text-xl font-bold mb-6">Keranjang 🛒</h4>
-                        <div class="space-y-4 mb-8 min-h-[100px] text-slate-400 text-sm italic">
-                            Belum ada barang dipilih...
-                        </div>
-                        <hr class="border-slate-800 mb-4">
-                        <div class="flex justify-between font-bold text-lg mb-6">
-                            <span>Total</span>
-                            <span class="text-blue-400">Rp 0</span>
-                        </div>
-                        <button onclick="checkout()" class="w-full bg-blue-500 text-white py-4 rounded-2xl font-extrabold shadow-lg shadow-blue-900/20 hover:bg-blue-400 transition-all">
-                            Checkout Sekarang
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-        </main>
+    <!-- Search in category -->
+    <div class="mb-4">
+      <input id="catSearch" type="text" placeholder="Cari dalam kategori ini..." class="search-input w-full px-4 py-2 rounded-lg text-sm" oninput="filterItems(this.value)">
     </div>
 
-    <script>
-        function handleLogin() {
-            const user = document.getElementById('username').value;
-            if (!user) {
-                Swal.fire('Opps!', 'Isi nama dulu ya', 'warning');
-                return;
-            }
+    <!-- Items Grid -->
+    <div class="items-grid" id="itemsGrid"></div>
 
-            // Simpan Session
-            localStorage.setItem('activeUser', user);
-            
-            // Logika Role
-            const isAdmin = (user.toLowerCase() === 'admin');
-            
-            // Update UI Dashboard
-            document.getElementById('display-name').innerText = user;
-            document.getElementById('login-page').classList.add('hidden');
-            document.getElementById('main-dashboard').classList.remove('hidden');
+    <!-- Empty state -->
+    <div id="emptyState" class="hidden text-center py-16">
+      <div class="text-4xl mb-3 opacity-30">🗃️</div>
+      <p class="text-gray-500 font-title text-sm">Belum ada item di kategori ini</p>
+      <p class="text-gray-600 text-xs mt-1">Klik "+ Tambah Item" untuk menambahkan</p>
+    </div>
+  </div>
 
-            if (isAdmin) {
-                document.getElementById('role-title').innerText = 'Admin / Karyawan';
-                document.getElementById('admin-add-btn').classList.remove('hidden');
-                document.getElementById('cart-section').classList.add('hidden'); // Admin ga belanja
-            } else {
-                document.getElementById('role-title').innerText = 'Pelanggan';
-            }
-            
-            Swal.fire({
-                title: 'Berhasil Masuk!',
-                text: 'Halo, ' + user,
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false
-            });
-        }
+</div>
 
-        function checkout() {
-            Swal.fire({
-                title: 'Konfirmasi Pesanan?',
-                text: "Data akan langsung dikirim ke Spreadsheet",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3b82f6',
-                confirmButtonText: 'Ya, Checkout!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire('Berhasil!', 'Pesanan masuk ke database.', 'success');
-                }
-            })
-        }
-    </script>
+<!-- ITEM DETAIL MODAL -->
+<div id="itemModal" class="modal-overlay hidden" onclick="closeItemModal(event)">
+  <div class="modal-box p-6 anim-in" onclick="event.stopPropagation()">
+    <button onclick="closeItemModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 text-xl z-10">✕</button>
+    <div id="itemModalContent"></div>
+  </div>
+</div>
+
+<!-- ADD ITEM MODAL -->
+<div id="addItemModal" class="modal-overlay hidden" onclick="closeAddItemModal(event)">
+  <div class="modal-box p-6 anim-in" onclick="event.stopPropagation()" style="max-width:560px">
+    <button onclick="closeAddItemModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 text-xl">✕</button>
+    <h3 class="font-display text-base gold-text mb-4" id="addModalTitle">Tambah Item Baru</h3>
+    <div class="space-y-3" id="addFormFields"></div>
+    <div class="flex gap-2 mt-5">
+      <button onclick="saveItem()" class="flex-1 py-2 rounded-lg text-sm font-title" style="background:rgba(201,168,76,0.2);border:1px solid var(--gold);color:var(--gold);cursor:pointer">Simpan</button>
+      <button onclick="closeAddItemModal()" class="px-4 py-2 rounded-lg text-sm" style="background:var(--dark-4);border:1px solid var(--border);color:var(--text-dim);cursor:pointer">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CATEGORY MODAL (Global) -->
+<div id="addGlobalModal" class="modal-overlay hidden" onclick="closeAddModal(event)">
+  <div class="modal-box p-6 anim-in" onclick="event.stopPropagation()" style="max-width:400px">
+    <button onclick="closeAddModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 text-xl">✕</button>
+    <h3 class="font-display text-base gold-text mb-4">Pilih Kategori</h3>
+    <div class="space-y-2" id="globalCatList"></div>
+  </div>
+</div>
+<div id="welcomeModal" class="modal-overlay hidden" onclick="closeWelcomeModal(event)">
+  <div class="modal-box p-6 anim-in text-center" onclick="event.stopPropagation()" style="max-width:420px">
+    <div class="text-4xl mb-3">🔔</div>
+    <h3 class="font-display text-xl gold-text mb-2">PENGUMUMAN</h3>
+    <div class="gold-divider"></div>
+    
+    <p class="text-gray-300 text-sm mb-6 leading-relaxed">
+      Selamat datang di SailorPiece Wiki! Ini masih dalam tahap pengembangan, baru ada sword guide.
+    </p>
+    
+    <button onclick="closeWelcomeModal()" class="w-full py-2 rounded-lg text-sm font-title" style="background:rgba(201,168,76,0.2);border:1px solid var(--gold);color:var(--gold);cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='rgba(201,168,76,0.3)'" onmouseout="this.style.background='rgba(201,168,76,0.2)'">
+      Oke, Mengerti
+    </button>
+  </div>
+</div>
+<script>
+  // ============================================================
+// DATA STORE - Edit di sini untuk menambah/ubah data
+// ============================================================
+
+const CATEGORIES = {
+  sword: {
+    icon: '⚔️', title: 'SWORD', desc: 'Click Pada Pedangnya Untuk Melihat Info yang Lebih detail terkait pedang tersebut',
+    fields: ['name','rarity','stats','description','how_to_get','materials','location','level_req','notes'],
+  },
+  melee: {
+    icon: '🪃', title: 'MELEE WEAPON', desc: 'Senjata melee selain pedang: palu, tombak, tongkat, dll',
+    fields: ['name','rarity','type','stats','description','how_to_get','materials','location','level_req','notes'],
+  },
+  devil_fruit: {
+    icon: '🍈', title: 'DEVIL FRUIT', desc: 'Buah iblis dengan kekuatan misterius. Sekali makan, kamu tidak bisa berenang',
+    fields: ['name','rarity','fruit_type','abilities','description','how_to_get','location','level_req','notes'],
+  },
+  accessories: {
+    icon: '💍', title: 'ACCESSORIES', desc: 'Ring, kalung, gelang, dan aksesoris yang memberikan stat bonus',
+    fields: ['name','rarity','slot','stats','description','how_to_get','materials','location','level_req','notes'],
+  },
+  race: {
+    icon: '🧬', title: 'RACE', desc: 'Ras karakter dengan trait dan kemampuan unik masing-masing',
+    fields: ['name','rarity','passives','abilities','description','how_to_get','notes'],
+  },
+  clan: {
+    icon: '🏯', title: 'CLAN', desc: 'Klan dengan bonus keturunan dan skill eksklusif',
+    fields: ['name','rarity','bonus','abilities','description','how_to_get','notes'],
+  },
+  rune: {
+    icon: '🔮', title: 'RUNE', desc: 'Rune untuk enchant senjata dan armor dengan efek elemental',
+    fields: ['name','rarity','element','effect','description','how_to_get','materials','location','level_req','notes'],
+  },
+  npc: {
+    icon: '🧙', title: 'NPC LOCATION', desc: 'Lokasi NPC, fungsi mereka, dan item yang bisa dibeli/ditukar',
+    fields: ['name','role','location','coordinates','functions','sells','description','notes'],
+  },
+  items_drop: {
+    icon: '📦', title: 'ITEMS DROP', desc: 'Item yang bisa di-drop dari monster atau chest di dunia game',
+    fields: ['name','rarity','drop_from','drop_rate','location','use','description','notes'],
+  },
+  boss: {
+    icon: '👹', title: 'BOSS', desc: 'Boss dan raid boss dengan drop table item langka',
+    fields: ['name','rarity','location','hp','respawn','drops','weaknesses','recommended_level','description','strategy','notes'],
+  },
+  code_redeem: {
+    icon: '🎟️', title: 'CODE REDEEM', desc: 'Daftar kode redeem yang bisa diklaim di dalam game'
+  },
+};
+
+const RARITY_ORDER = ['common','uncommon','rare','epic','legendary','mythic'];
+
+// Main data object - isi di sini atau lewat form tambah
+let DB = {
+  sword: [
+    {
+      id: 's2', 
+      name: 'Katana', rarity: 'rare',
+      stats: 'Skill Unlock X & Z',
+      description: 'Katana Polos.',
+      how_to_get: 'Buy from the Katana Seller.',
+      materials: '2.500 money',
+      location: 'Starter Island	',
+      level_req: '-',
+      notes: 'Mending langsung granding cari uang untuk beli dark blade karena jauh lebih bagus.',
+      image: 'sword/Katana.jpg'
+},
+    {
+      id: 's3', name: 'Dark Blade', rarity: 'epic',
+      stats: 'Skill Unlock X & Z',
+      description: 'senjata yang di adaptasi dari anime onepiece, lebih tepatnya karakter Mihawk',
+      how_to_get: 'Buy From The Dark Blade Seller',
+      materials: '250.000 money, 150 gems',
+      location: 'Snow Island',
+      level_req: '-',
+      notes: 'Senjata yang bagus untuk awal awal karena areanya yang luas dan murah.',
+      image: 'sword/Dark_Blade.jpg'
+    },
+    {
+      id: 's4', name: 'Gryphon', rarity: 'legendary',
+      stats: 'Skill Unlock X & Z',
+      description: 'Referensi Dari anime onepiece lebih tepatnya karakter shanks.',
+      how_to_get: 'Buy from the Gryphon Seller NPC.',
+      materials: '650.000 money, 650 gem',
+      location: 'Shibuya Station',
+      level_req: '-',
+      notes: 'Optional ajah, bagus kok.',
+      image: 'sword/Gryphon.jpg'
+    },
+    {
+      id: 's5', name: 'Excalibur', rarity: 'legendary',
+      stats: 'Skill Unlock X,Z & C',
+      description: '-.',
+      how_to_get: 'Buy from the boss ticket seller/Drop Loot From boss knight.',
+      materials: '150 boss ticket, drop loot knight boss',
+      location: 'boss island',
+      level_req: '-',
+      notes: 'Bagus tapi skillnya ngechargenya lama untuk keluar skillnya.',
+      image: 'sword/Excalibur.jpg'
+    },
+    {
+      id: 's7', name: 'Solo Hunter', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C & V',
+      description: 'Referensi Dari anime Solo Leveling Lebih Tepatnya Karakter Sung Jin Woo',
+      how_to_get: 'Complete Solo Hunter (Jinwoo) trainer quests  -  Quest 1 – Take 15 Million Damage Quest. 2 – Kill 750 Enemies Quest. 3 – Deal 75 Million Damage Quest. 4 – Kill 35 Players Quest. 5 – Kill the Jinwoo Boss 15 Times .',
+      materials: '2.500.000 Gold, 7.500 Gems, 3 Dark Ring, 6 Abyss Edge, 1 Shadow Heart',
+      location: 'Shibuya Station',
+      level_req: '-',
+      notes: 'enak buat farming.',
+      image: 'sword/Solo_Hunter_Sword.jpg'
+    },
+    {
+      id: 's6', name: 'Soul Reaper', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C & V',
+      description: 'Senjata Yang diambil dari anime bleach lebih tepatnya Karakter ichigo.',
+      how_to_get: 'Obtained from the Ichigo Trainer at Hollow Island for Buy from Soul Reaper Seller Or Buy from Boss Exchanger.',
+      materials: '(can buy with) 500 Boss Ticket, 2 Soul Flame, 4 Spiritual Core, 8 Soul Fragment, 5.000.000 Money, 8.500 Gems',
+      location: 'Boss Island',
+      level_req: '-',
+      notes: 'Best Farming Buat pemula, aoe skill yang bagus banget.',
+      image: 'sword/Soul_Reaper_Sword.jpg'
+    },
+    {
+      id: 's8', name: 'Manipulator', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C & V',
+      description: 'Senjata yang diambil dari anime bleach.',
+      how_to_get: 'Obtained from the Manipulator NPC at Hollow Island.',
+      materials: '1x Hyoguko Fragment, 3x Reiatsu Core, 6x Illusion Prism, 10x Mirage Pendant, 10.000 Gems, 6.000.000 Money',
+      location: 'Hollow Island',
+      level_req: '-',
+      notes: 'Fyi senjata ini ada v2 nya namanya true manipulator.',
+      image: 'sword/Manipulator_Sword.jpg'
+    },
+    {
+      id: 's9', name: 'Shadow', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C,V & F',
+      description: 'Senjata yang diambil dari anime The Eminence in Shadow.',
+      how_to_get: 'Obtained from the Shadow Seller NPC at Dungeon Island & you should have shadowborn race.',
+      materials: '10.000.000 Gold, 15.000 Gems, 1x Atomic Core, 8x Void Seed, 4x Shadow Essence, 20x Umbral Capsule',
+      location: 'Dungeon Island',
+      level_req: '-',
+      notes: 'Skill F Harus menyelesaikan misi dulu jika ingin membukanya.',
+      image: 'sword/Shadow_sword.jpg'
+    },
+        {
+      id: 's10', name: 'Yamato Sword', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C,V & F',
+      description: '.',
+      how_to_get: 'Obtained from the Yamato NPC at Judgement Island.',
+      materials: '1x Azure Heart, 3x Silent Storm, 7x Yamato Essence, 14x Frozen Will, Blade Sovereign Title',
+      location: 'Judgement Island',
+      level_req: '-',
+      notes: 'Langsung Dapet skill f tanpa harus menyelesaikan misi.',
+      image: 'sword/Yamato_sword.jpg'
+    },
+        {
+      id: 's11', name: 'Rimuru Sword', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C,V & F',
+      description: 'Senjata yang diambil dari anime Tensei Shitara Slime.',
+      how_to_get: 'Obtained from the Rimuru NPC at Slime Island.',
+      materials: 'Demon Lord Title, 30.000.000 Money, 20,000 Gems, 9x Sage Pulse, 6x Tempest Seal, 3x Slime Remnant, 1x Slime Core',
+      location: 'Slime Island',
+      level_req: '-',
+      notes: 'Skill F Harus menyelesaikan misi dulu jika ingin membukanya.',
+      image: 'sword/Rimuru.jpg'
+    },
+        {
+      id: 's12', name: 'Ragna Sword', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C, & V',
+      description: 'Senjata yang diambil dari anime Ragna Crimson.',
+      how_to_get: 'Obtained from the Dragon Slayer NPC at Snow Island; however materials currently unobtainable.',
+      materials: '1.000.000 Cash, 4.500 Gems, 1x Silver Reququum, 3x Black Frost, 7x WRM Brands. ',
+      location: 'Snow Island',
+      level_req: '-',
+      notes: 'Limited Sword.',
+      image: 'sword/Ragna.jpg'
+    },
+        {
+      id: 's13', name: 'Sin Of Pride', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C,V & F',
+      description: 'Senjata yang diambil dari anime Seven Deadly Sins.',
+      how_to_get: 'Obtained from the Sin of Pride Boss during Boss Rush at a base 3% chance.',
+      materials: '-',
+      location: 'boss rush',
+      level_req: '-',
+      notes: 'Skill F langsung dapat tanpa menyelesaikan misi.',
+      image: 'sword/Sin_Of_Pride_Sword.jpg'
+    },
+        {
+      id: 's14', name: 'Atomic', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C,V & F',
+      description: 'Senjata yang diambil dari anime The Eminence in Shadow.',
+      how_to_get: 'Obtained from the Atomic Trainer NPC at Lawless Island.',
+      materials: 'Eminence Incarnate Title, Shadow Sword (in inventory), 45.000 Gems, 1x Atomic Omen, 3x Eminence Essence, 9x Shadow Remnant, 16x Magic Shard, 80x Abyss Sigil',
+      location: 'Lawless Island',
+      level_req: '-',
+      notes: 'Skill F Harus menyelesaikan misi dulu jika ingin membukanya.',
+      image: 'sword/Atomic.jpg'
+    },
+            {
+      id: 's15', name: 'True Manipulator', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C,V & F',
+      description: 'Senjata yang diambil dari anime Bleach.',
+      how_to_get: 'Obtained from the Manipulator Master NPC at Soul Dominion Island.',
+      materials: 'Transcendent Being Title, Manipulator Sword (in inventory), 35.000 Gems, 1x Evolution Fragment, 3x Transcendent Cores, 8x Divinity Essence, 15x Fusion Rings, 75x Chrysalis Sigil',
+      location: 'Soul Domination Island',
+      level_req: '-',
+      notes: 'Skill F Harus menyelesaikan misi dulu jika ingin membukanya.',
+      image: 'sword/True_manipulator.jpg'
+    },
+            {
+      id: 's16', name: 'Shadow Monarch', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C,V & F',
+      description: 'Senjata yang diambil dari anime Solo Leveling.',
+      how_to_get: 'Obtained from the Shadow Monarch NPC at Dungeon Island for Purchase from the Shadow Monarch NPC.',
+      materials: 'King of Shadows Title, 10x Monarch Core, 5x Monarch Essence, 2x Kamish Dagger, 1x Shadow Crystal',
+      location: 'Dungeon Island',
+      level_req: '-',
+      notes: 'Skill F Harus menyelesaikan misi dulu jika ingin membukanya.',
+      image: 'sword/Shadow_monarch.jpg'
+    },
+            {
+      id: 's17', name: 'Abyssal Empress', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C,V & F',
+      description: 'Senjata yang diambil dari Game Honkai Star Rail.',
+      how_to_get: 'Obtained from boss waves during Infinite Tower runs at a base .02% chance or buy it for 4k tower tokens',
+      materials: '4.000 tower token, drop loot infinity tower',
+      location: 'tower Island',
+      level_req: '-',
+      notes: 'Skill F langsung kebuka tanpa harus menyelesaikan misinya terlebih dahulu.',
+      image: 'sword/Abyssal_Empress.jpg'
+    },
+            {
+      id: 's18', name: 'Ice Queen', rarity: 'mythic',
+      stats: 'Skill Unlock X,Z,C,V & F',
+      description: 'Senjata yang diambil dari anime -.',
+      how_to_get: 'Obtained from the Ice Queen NPC at Boss Island .',
+      materials: 'title Frost Empress, 1x Ice Core, 4x Frozen Brand,9x Glacier Remnant, 17x Battle Shard, 25x Frost Relic, 40.000 Gems',
+      location: 'Boss Island',
+      level_req: '-',
+      notes: 'Skill F Harus menyelesaikan misi dulu jika ingin membukanya.',
+      image: 'sword/Ice_Queen.jpg'
+    },
+  ],
+  melee: [
+    {
+      id: 'm1', name: 'Thunder Warhammer', rarity: 'legendary',
+      type: 'Hammer',
+      stats: 'ATK: 1200 | Lightning DMG: +350 | Stun Chance: 40%',
+      description: 'Palu perang raksasa yang diimbue petir dari dewa petir Thorkan.',
+      how_to_get: 'Drop dari Raid Boss "Thorkan" dengan drop rate 2%.',
+      materials: '-',
+      location: 'Thunder Peak Raid',
+      level_req: '85',
+      notes: 'Stun hanya efektif terhadap musuh non-boss.'
+    },
+    {
+      id: 'm2', name: 'Serpent Spear', rarity: 'epic',
+      type: 'Spear',
+      stats: 'ATK: 580 | Poison DMG: +180 | Range: +1',
+      description: 'Tombak bermotif ular yang mengandung racun mematikan di ujungnya.',
+      how_to_get: 'Craft menggunakan material dari Snake Den dungeon.',
+      materials: 'Viper Fang x6, Poison Gland x4, Ancient Wood x3',
+      location: 'Craftsman Naga - Jungle Village',
+      level_req: '50',
+      notes: 'Poison tick 3 detik sekali selama 15 detik.'
+    },
+  ],
+  devil_fruit: [
+    {
+      id: 'df1', name: 'Magu Magu no Mi', rarity: 'mythic',
+      fruit_type: 'Logia - Magma',
+      abilities: 'Kontrol magma, kebal api biasa, transformasi tubuh jadi magma',
+      description: 'Salah satu Devil Fruit terkuat bertipe Logia. User bisa menghasilkan, mengontrol, dan bertransformasi menjadi magma.',
+      how_to_get: 'Spawn random di dunia setiap 1 jam. Bisa juga drop dari World Boss "Volcano Titan" (0.5%).',
+      location: 'Anywhere (random spawn), Volcano Region (higher chance)',
+      level_req: '60',
+      notes: 'Logia immunity berlaku kecuali kena Haki atau senjata khusus.'
+    },
+    {
+      id: 'df2', name: 'Hito Hito no Mi, Model: Nika', rarity: 'mythic',
+      fruit_type: 'Mythical Zoan - Sun God',
+      abilities: 'Gear transformations, rubber body, environmental freedom, awakening aura',
+      description: 'Buah paling langka dan paling dicari. Memberi kebebasan mutlak kepada pemakainya.',
+      how_to_get: 'Hanya bisa di-spawn oleh Game Master saat event special. Sangat langka.',
+      location: 'GM Event Only',
+      level_req: '100',
+      notes: 'Tidak bisa dibeli atau di-trade. Satu-satunya cara lewat event.'
+    },
+    {
+      id: 'df3', name: 'Gura Gura no Mi', rarity: 'legendary',
+      fruit_type: 'Paramecia - Tremor',
+      abilities: 'Menciptakan gempa bumi dan gelombang kejut udara',
+      description: 'Fruit yang mampu menghancurkan dunia. Setiap pukulan membawa tremor dahsyat.',
+      how_to_get: 'Spawn random (rate lebih tinggi dari Mythic tier). Sekali per 2 jam.',
+      location: 'Random spawn di seluruh map',
+      level_req: '80',
+      notes: 'AoE tremor bisa merusak terrain secara temporer.'
+    },
+  ],
+  accessories: [
+    {
+      id: 'a1', name: 'Ring of the Ancient King', rarity: 'legendary',
+      slot: 'Ring',
+      stats: 'HP: +2500 | All Res: +15% | Cooldown: -10%',
+      description: 'Cincin milik raja kuno yang berkuasa ribuan tahun. Memancarkan energi yang terasa di sekitarnya.',
+      how_to_get: 'Drop dari Dungeon "Tomb of the Ancient" chest terakhir.',
+      materials: '-',
+      location: 'Tomb of the Ancient - Boss Chest',
+      level_req: '70',
+      notes: 'Hanya 1 yang bisa diequip bersamaan dengan unique ring lain.'
+    },
+    {
+      id: 'a2', name: 'Necklace of Shadows', rarity: 'epic',
+      slot: 'Necklace',
+      stats: 'DEF: +400 | Shadow Dmg: +20% | Stealth CD: -30%',
+      description: 'Kalung dari batu shadow crystal yang memberimu bayangan pelindung.',
+      how_to_get: 'Craft di Shadow Forge atau beli dari NPC di Shadow Market.',
+      materials: 'Shadow Crystal x5, Void Thread x2',
+      location: 'Shadow Forge - Nyx City',
+      level_req: '45',
+      notes: 'Cocok untuk build Rogue/Assassin.'
+    },
+  ],
+  race: [
+    {
+      id: 'r1', name: 'Dragon Race', rarity: 'legendary',
+      passives: 'Dragon Scale: DEF +30% | Fire Immunity | Flight (passive)',
+      abilities: 'Dragon Breath, Dragon Transformation (Ultimate), Scale Hardening',
+      description: 'Keturunan naga kuno. Memiliki kulit bersisik yang keras dan api dalam darahnya. Sangat langka.',
+      how_to_get: 'Spin menggunakan Race Scroll (dari event atau shop). Peluang: 0.5%',
+      notes: 'Ras terkuat untuk damage output. Lemah terhadap Ice dan Holy.'
+    },
+    {
+      id: 'r2', name: 'Human Race', rarity: 'common',
+      passives: 'Balanced Stats | Adaptable | EXP Boost: +10%',
+      abilities: 'Resolve (self buff), Quick Learner (passive)',
+      description: 'Ras manusia yang seimbang. Tidak punya kelemahan signifikan, cocok untuk semua build.',
+      how_to_get: 'Default race saat membuat karakter.',
+      notes: 'Tidak ada kelemahan elemental spesifik. Bonus EXP sangat berguna.'
+    },
+    {
+      id: 'r3', name: 'Mink Race', rarity: 'rare',
+      passives: 'Electro innate | Night Vision | Speed +20%',
+      abilities: 'Sulong Form (under full moon), Lightning Release, Fur Armor',
+      description: 'Ras manusia berbulu dari Zou. Bisa mengeluarkan Electro dari tubuh mereka secara alami.',
+      how_to_get: 'Race Scroll spin atau dari NPC Carrot di Zou Island. Peluang: 3%',
+      notes: 'Sulong Form hanya aktif saat malam hari (game time).'
+    },
+  ],
+  clan: [
+    {
+      id: 'cl1', name: 'Uchiha Clan', rarity: 'legendary',
+      bonus: 'Sharingan: +30% accuracy | Ninjutsu DMG +25% | Copy Enemy Skill',
+      abilities: 'Sharingan Activation, Mangekyo Sharingan (unlock), Fire Style Jutsu',
+      description: 'Klan ninja terkenal dengan mata Sharingan mereka yang legendaris. Bisa menyalin skill musuh.',
+      how_to_get: 'Clan Scroll spin dengan peluang 0.3%. Bisa di-trade dengan player lain.',
+      notes: 'Mangekyo perlu unlock lewat quest khusus.'
+    },
+    {
+      id: 'cl2', name: 'Senju Clan', rarity: 'epic',
+      bonus: 'Vitality +40% HP | Wood Style affinity | Healing +25%',
+      abilities: 'Wood Style Release, Cellular Regeneration, Nature Energy',
+      description: 'Klan dengan vitalitas luar biasa dan affinitas terhadap elemen kayu.',
+      how_to_get: 'Clan Scroll spin dengan peluang 1%.',
+      notes: 'Pasangan sempurna dengan build support/healer.'
+    },
+  ],
+  rune: [
+    {
+      id: 'ru1', name: 'Void Rune', rarity: 'mythic',
+      element: 'Void',
+      effect: 'Serangan menembus DEF 50% | Chance apply Nullify (hapus 1 buff musuh)',
+      description: 'Rune dari dimensi kekosongan. Serangan yang di-enchant olehnya mengandung kehampaan.',
+      how_to_get: 'Drop dari Dimensional Rift Event Boss.',
+      materials: '-',
+      location: 'Dimensional Rift (Event)',
+      level_req: '80',
+      notes: 'Sangat efektif vs buff-heavy enemies.'
+    },
+    {
+      id: 'ru2', name: 'Flame Rune', rarity: 'rare',
+      element: 'Fire',
+      effect: 'Tambahkan Fire DMG +150 | Burn chance 20% (3 detik)',
+      description: 'Rune api paling umum. Bisa diaplikasikan ke hampir semua senjata.',
+      how_to_get: 'Beli dari Rune Shop NPC atau craft di Rune Forge.',
+      materials: 'Fire Essence x3, Blank Rune Stone x1',
+      location: 'Rune Shop - Ignis City',
+      level_req: '25',
+      notes: 'Tidak bisa distack dengan Ice Rune pada senjata yang sama.'
+    },
+    {
+      id: 'ru3', name: 'Storm Rune', rarity: 'epic',
+      element: 'Lightning',
+      effect: 'Lightning DMG +250 | Stun 0.5 detik | AoE splash 30%',
+      description: 'Rune petir yang membuat senjata mengeluarkan kilatan listrik di setiap serangan.',
+      how_to_get: 'Drop dari Storm Eagle boss atau craft.',
+      materials: 'Storm Crystal x4, Conductor Core x2, Blank Rune Stone x2',
+      location: 'Storm Peaks / Rune Forge Advanced',
+      level_req: '50',
+      notes: 'AoE splash sangat efektif di group farming.'
+    },
+  ],
+  npc: [
+    {
+      id: 'n1', name: 'Elara the Merchant', role: 'Weapon Vendor & Quest Giver',
+      location: 'Silver Town', coordinates: 'X: 450, Y: 230',
+      functions: 'Jual beli senjata, tukar material, kasih quest side chain "The Lost Relic"',
+      sells: 'Silver Dagger, Iron Sword, Bronze Shield, Basic Potions',
+      description: 'Pedagang wanita setengah elf yang ramah. Dia memiliki banyak koneksi ke dungeon-dungeon di wilayah barat.',
+      notes: 'Quest "The Lost Relic" memberikan reward Rare Accessory saat selesai.'
+    },
+    {
+      id: 'n2', name: 'Blacksmith Ignar', role: 'Craftsman & Forge Master',
+      location: 'Ignis City - Volcano District', coordinates: 'X: 820, Y: 115',
+      functions: 'Craft senjata api, upgrade weapon tier, tempa material Volcanic',
+      sells: 'Craft service (bayar Gold), Volcanic Steel, Magma Ore',
+      description: 'Blacksmith tua dengan lengan yang dipenuhi luka bakar. Satu-satunya yang bisa menempa senjata dari material Volcano.',
+      notes: 'Perlu reputasi "Ignis Guild" minimal Honored untuk bisa craft item Legendary.'
+    },
+    {
+      id: 'n3', name: 'Shadow Master Nyx', role: 'Skill Trainer & Black Market',
+      location: 'Nyx City - Underground', coordinates: 'X: 300, Y: 580',
+      functions: 'Mengajarkan Shadow skills, jual item black market, reset skill tree',
+      sells: 'Shadow Scroll, Stealth Potion, Forbidden Tome, Void Essence',
+      description: 'Entitas misterius yang hanya muncul setelah matahari terbenam. Tidak ada yang tahu apakah dia manusia atau bukan.',
+      notes: 'Unlock dengan menyelesaikan quest "Into the Shadows". Lokasi tersembunyi (trapdoor di belakang kedai).'
+    },
+  ],
+  items_drop: [
+    {
+      id: 'id1', name: 'Soul Shard', rarity: 'uncommon',
+      drop_from: 'Ghost, Specter, Soul Guardian',
+      drop_rate: '15% dari Ghost, 8% dari Soul Guardian',
+      location: 'Haunted Forest, Ghost Dungeon B1-B3',
+      use: 'Material craft untuk Dark-type weapons dan beberapa aksesori. Juga digunakan sebagai currency oleh NPC Reaper.',
+      description: 'Pecahan jiwa yang terkristal. Memancarkan cahaya biru redup yang agak menyeramkan.',
+      notes: 'Max stack 99. Bisa dijual ke NPC seharga 500 Gold masing-masing.'
+    },
+    {
+      id: 'id2', name: 'Phoenix Feather', rarity: 'epic',
+      drop_from: 'Phoenix Boss, Flame Bird Elite',
+      drop_rate: '5% dari Phoenix Boss, 1% dari Flame Bird',
+      location: 'Volcano Summit, Fire Dungeon Layer 5',
+      use: 'Material crafting untuk weapon api tier tinggi. Juga digunakan untuk quest "Rise from Ashes".',
+      description: 'Bulu dari phoenix yang tidak pernah padam. Hangat saat disentuh dan sedikit bercahaya.',
+      notes: 'Sangat dicari untuk Blazing Katana craft.'
+    },
+    {
+      id: 'id3', name: 'Dragon Scale Fragment', rarity: 'rare',
+      drop_from: 'Young Dragon, Dragon Minion, Dragon Boss',
+      drop_rate: '20% Young Dragon, 5% Dragon Boss',
+      location: 'Dragon Lair, Sky Island',
+      use: 'Material untuk armor Dragon tier dan beberapa aksesori DEF tinggi.',
+      description: 'Fragment sisik naga. Sangat keras - bahkan pisau biasa tidak bisa menggoresnya.',
+      notes: '5 fragment bisa digabungkan menjadi 1 Dragon Scale penuh di Blacksmith.'
+    },
+  ],
+  boss: [
+    {
+      id: 'b1', name: 'Hollowed King', rarity: 'legendary',
+      location: 'Dark Castle - Floor B5',
+      hp: '2,500,000',
+      respawn: 'Setiap 24 jam (real time)',
+      drops: 'Zangetsu Blade (2%), Dark Crown (5%), Void Essence x10 (30%), King\'s Soul (15%), Gold 50,000-100,000',
+      weaknesses: 'Holy damage, Light element, Dawn\'s Blessing buff',
+      recommended_level: '70+',
+      description: 'Raja yang dikutuk dan dibuat menjadi hantu oleh penyihir gelap. Bertahta di kedalaman Dark Castle.',
+      strategy: 'Phase 1 (100-60% HP): Main DPS, hindari Shadow Slam. Phase 2 (60-30%): Mulai spam AOE Shadow, butuh healer aktif. Phase 3 (30-0%): Berserk, interval serangan 2x lebih cepat. Gunakan Holy buff sebelum P3.',
+      notes: 'Party minimum 4 orang. Bawa Holy Water sebanyak mungkin.'
+    },
+    {
+      id: 'b2', name: 'Volcano Titan', rarity: 'mythic',
+      location: 'Volcano Summit - Eruption Zone',
+      hp: '8,000,000',
+      respawn: 'Setiap 72 jam (real time)',
+      drops: 'Magu Magu no Mi (0.5%), Titan Core (3%), Magma Essence x20 (25%), Titan\'s Gauntlet (2%), Gold 200,000-500,000',
+      weaknesses: 'Water/Ice element, special: Volcano Seal item',
+      recommended_level: '90+',
+      description: 'Titan purba yang terjaga dari tidurnya ketika gunung berapi mulai meletus. Boss tier tertinggi di dunia overworld.',
+      strategy: 'Butuh minimum 10 player. Water mage wajib ada minimal 3 orang untuk reduce damage. Hindari ground cracks (indikator lava eruption). Focus DPS di kaki, bukan badan.',
+      notes: 'World Boss - semua player bisa ikut. Drop dibagi berdasarkan damage contribution.'
+    },
+    {
+      id: 'b3', name: 'Thorkan, God of Thunder', rarity: 'legendary',
+      location: 'Thunder Peak - Raid Instance',
+      hp: '5,000,000',
+      respawn: 'Instance reset setiap minggu',
+      drops: 'Thunder Warhammer (2%), Thorkan\'s Helm (3%), Storm Rune (8%), Thunder Crystal x5 (40%), Gold 80,000',
+      weaknesses: 'Earth element, Ground attacks (stagger)',
+      recommended_level: '80+',
+      description: 'Dewa petir yang diturunkan dari pantheon karena melanggar aturan ilahi. Kekuatannya masih dahsyat meski sudah dihukum.',
+      strategy: 'Tank wajib punya lightning resistance minimal 50%. DPS jangan clump karena chain lightning. Interupsi skill "Thunder Judgment" dengan Stagger sebelum cast selesai.',
+      notes: 'Raid 8 orang. Weekly lockout per karakter.'
+    },
+  ],
+  code_redeem: [
+    {
+      id: 'cr1', name: 'UPDATE1', rarity: 'epic',
+      description: 'Hadiah: 2x EXP (30 Menit) & 50.000 Gold',
+      notes: 'Hanya bisa diklaim 1x per akun. Kedaluwarsa: -'
+    }
+  ],
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let currentCategory = null;
+let currentFilter = '';
+let editingItem = null;
+
+// ============================================================
+// INIT
+// ============================================================
+window.onload = function() {
+  updateStats();
+  updateCounts();
+  document.getElementById('welcomeModal').classList.remove('hidden');
+};
+
+function updateStats() {
+  let total = 0;
+  let legendary = 0;
+  Object.values(DB).forEach(arr => {
+    arr.forEach(item => {
+      total++;
+      if (item.rarity === 'legendary' || item.rarity === 'mythic') legendary++;
+    });
+  });
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statBoss').textContent = DB.boss.length;
+  document.getElementById('statLegendary').textContent = legendary;
+  document.getElementById('statNPC').textContent = DB.npc.length;
+}
+
+function updateCounts() {
+  Object.keys(CATEGORIES).forEach(key => {
+    const el = document.getElementById('count-' + key);
+    if (el) el.textContent = (DB[key] || []).length + ' items';
+  });
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function selectCategory(key) {
+  currentCategory = key;
+  currentFilter = '';
+  const cat = CATEGORIES[key];
+
+  document.getElementById('heroSection').classList.add('hidden');
+  const cv = document.getElementById('categoryView');
+  cv.classList.remove('hidden');
+  cv.classList.add('anim-in');
+
+  document.getElementById('catIcon').textContent = cat.icon;
+  document.getElementById('catTitle').textContent = cat.title;
+  document.getElementById('catDesc').textContent = cat.desc;
+  document.getElementById('breadcrumbCat').textContent = cat.title;
+  document.getElementById('catSearch').value = '';
+
+  renderItems();
+}
+
+function backToHome() {
+  currentCategory = null;
+  document.getElementById('heroSection').classList.remove('hidden');
+  document.getElementById('categoryView').classList.add('hidden');
+  updateStats();
+  updateCounts();
+}
+
+// ============================================================
+// RENDER ITEMS
+// ============================================================
+function renderItems() {
+  const grid = document.getElementById('itemsGrid');
+  const empty = document.getElementById('emptyState');
+  const items = (DB[currentCategory] || []).filter(item => {
+    if (!currentFilter) return true;
+    return JSON.stringify(item).toLowerCase().includes(currentFilter.toLowerCase());
+  });
+
+  if (items.length === 0) {
+    grid.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  grid.innerHTML = items.map(item => renderItemCard(item)).join('');
+}
+
+function getRarityBadge(rarity) {
+  const labels = {common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',legendary:'Legendary',mythic:'Mythic'};
+  return `<span class="rarity-${rarity || 'common'} text-xs px-2 py-0.5 rounded-full font-title" style="font-size:0.65rem;letter-spacing:0.05em">${labels[rarity] || rarity || 'Common'}</span>`;
+}
+
+function getCatIcon(key) {
+  return CATEGORIES[key]?.icon || '📄';
+}
+
+
+
+// ============================================================
+// ITEM MODAL
+// ============================================================
+function openItemModal(id) {
+  const items = DB[currentCategory] || [];
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+
+  document.getElementById('itemModal').classList.remove('hidden');
+  document.getElementById('itemModalContent').innerHTML = renderItemDetail(item);
+}
+
+function closeItemModal(e) {
+  if (!e || e.target === document.getElementById('itemModal') || !e.target) {
+    document.getElementById('itemModal').classList.add('hidden');
+  }
+}
+
+function renderItemCard(item) {
+  const imgCats = ['sword', 'melee', 'accessories', 'items_drop'];
+  let visualHtml = '';
+  
+  if (imgCats.includes(currentCategory)) {
+    // Pakai gambar untuk kategori tertentu
+    visualHtml = `<img src="${item.image || 'https://via.placeholder.com/48x48/1a1a2e/c9a84c?text=IMG'}" alt="img" class="w-12 h-12 object-cover rounded-lg border border-[var(--border-bright)] flex-shrink-0">`;
+  } else {
+    // Pakai emoji untuk kategori lainnya
+    const icon = CATEGORIES[currentCategory]?.icon || '📄';
+    visualHtml = `<div class="text-2xl flex-shrink-0 w-12 text-center">${icon}</div>`;
+  }
+  
+  return `
+  <div class="item-card p-4" onclick="openItemModal('${item.id}')">
+    <div class="flex items-start gap-3">
+      ${visualHtml}
+      <div class="flex-1 min-w-0">
+        <div class="font-title text-sm text-white truncate">${item.name}</div>
+        <div class="mt-1">${getRarityBadge(item.rarity)}</div>
+        ${item.stats ? `<div class="text-xs text-gray-500 mt-2 truncate">${item.stats}</div>` : ''}
+        ${item.role ? `<div class="text-xs text-gray-500 mt-2 truncate">${item.role}</div>` : ''}
+        ${item.fruit_type ? `<div class="text-xs mt-2 truncate" style="color:#c07aff">${item.fruit_type}</div>` : ''}
+        ${item.element ? `<div class="text-xs mt-2 truncate" style="color:#6ca8ff">${item.element} Element</div>` : ''}
+        ${item.location ? `<div class="text-xs text-gray-600 mt-1 truncate">📍 ${item.location}</div>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderItemDetail(item) {
+  const imgCats = ['sword', 'melee', 'accessories', 'items_drop'];
+  let visualHtml = '';
+  
+  if (imgCats.includes(currentCategory)) {
+    visualHtml = `<img src="${item.image || 'https://via.placeholder.com/64x64/1a1a2e/c9a84c?text=IMG'}" alt="img" class="w-16 h-16 object-cover rounded-xl border border-[var(--gold)]">`;
+  } else {
+    const icon = CATEGORIES[currentCategory]?.icon || '📄';
+    visualHtml = `<div class="text-4xl w-16 text-center">${icon}</div>`;
+  }
+  
+  // Bagian tombol edit sudah dihapus dari sini
+  let html = `
+  <div class="flex items-center gap-4 mb-4">
+    ${visualHtml}
+    <div>
+      <h2 class="font-display text-lg gold-text">${item.name}</h2>
+      <div class="flex items-center gap-2 mt-1">
+        ${getRarityBadge(item.rarity)}
+        ${item.type ? `<span class="tag">${item.type}</span>` : ''}
+        ${item.fruit_type ? `<span class="tag" style="color:#c07aff;border-color:rgba(192,122,255,0.3)">${item.fruit_type}</span>` : ''}
+        ${item.element ? `<span class="tag" style="color:#6ca8ff;border-color:rgba(106,168,255,0.3)">${item.element}</span>` : ''}
+        ${item.slot ? `<span class="tag">${item.slot}</span>` : ''}
+        ${item.role ? `<span class="tag">${item.role}</span>` : ''}
+      </div>
+    </div>
+  </div>
+  <div class="gold-divider"></div>`;
+  
+  if (item.description) {
+    html += `<p class="text-gray-300 text-sm mb-3 leading-relaxed">${item.description}</p>`;
+    html += `<div class="gold-divider"></div>`;
+  }
+  
+  // Sisa kodenya (stats, hp, dll) biarkan sama seperti sebelumnya:
+  if (item.stats) html += `<div class="mb-4"><div class="section-label mb-2">📊 Stats</div><div class="p-3 rounded-lg text-sm" style="background:rgba(201,168,76,0.06);border:1px solid var(--border)">${item.stats}</div></div>`;
+  if (item.hp) html += `<div class="mb-4 boss-hp p-3 rounded-lg"><div class="section-label mb-2">💀 Boss Info</div><div class="grid grid-cols-2 gap-2 text-sm"><div><span class="text-gray-500">HP:</span> <span style="color:#ff5577">${item.hp}</span></div><div><span class="text-gray-500">Respawn:</span> <span class="text-gray-300">${item.respawn || '-'}</span></div><div><span class="text-gray-500">Min. Level:</span> <span style="color:var(--gold)">${item.recommended_level || '-'}</span></div><div><span class="text-gray-500">Weakness:</span> <span style="color:#6ca8ff">${item.weaknesses || '-'}</span></div></div></div>`;
+  if (item.location && currentCategory === 'npc') html += `<div class="mb-4"><div class="section-label mb-2">📍 Lokasi & Info</div><table class="wiki-table rounded-lg overflow-hidden" style="background:var(--dark-4)"><tr><th>Lokasi</th><td>${item.location}</td></tr>${item.coordinates ? `<tr><th>Koordinat</th><td>${item.coordinates}</td></tr>` : ''}${item.functions ? `<tr><th>Fungsi</th><td>${item.functions}</td></tr>` : ''}${item.sells ? `<tr><th>Jual</th><td>${item.sells}</td></tr>` : ''}</table></div>`;
+  if (item.how_to_get) html += `<div class="mb-4"><div class="section-label mb-2">🎯 Cara Mendapatkan</div><div class="p-3 rounded-lg text-sm text-gray-300 leading-relaxed" style="background:rgba(80,220,120,0.05);border:1px solid rgba(80,220,120,0.15)">${item.how_to_get}</div></div>`;
+  if (item.materials && item.materials !== '-') html += `<div class="mb-4"><div class="section-label mb-2">🧪 Material Craft</div><div class="flex flex-wrap gap-1">${item.materials.split(',').map(m => `<span class="material-tag">🧪 ${m.trim()}</span>`).join('')}</div></div>`;
+  if (item.location && currentCategory !== 'npc') html += `<div class="mb-4"><div class="section-label mb-2">📍 Lokasi</div><span class="location-tag">📍 ${item.location}</span></div>`;
+  if (item.level_req) html += `<div class="mb-4"><div class="section-label mb-2">⚡ Level Requirement</div><span style="color:var(--gold);font-family:'Cinzel',serif;font-size:0.9rem">Level ${item.level_req}+</span></div>`;
+  if (item.drops) html += `<div class="mb-4"><div class="section-label mb-2">💎 Drop Table</div><div class="flex flex-wrap gap-1">${item.drops.split(',').map(d => `<span class="drop-tag">💎 ${d.trim()}</span>`).join('')}</div></div>`;
+  if (item.drop_from) html += `<div class="mb-4"><div class="section-label mb-2">👾 Drop Info</div><table class="wiki-table rounded-lg overflow-hidden" style="background:var(--dark-4)"><tr><th>Drop Dari</th><td>${item.drop_from}</td></tr><tr><th>Drop Rate</th><td>${item.drop_rate}</td></tr>${item.use ? `<tr><th>Kegunaan</th><td>${item.use}</td></tr>` : ''}</table></div>`;
+  if (item.abilities) html += `<div class="mb-4"><div class="section-label mb-2">✨ Abilities</div><div class="p-3 rounded-lg text-sm text-gray-300" style="background:rgba(160,60,255,0.05);border:1px solid rgba(160,60,255,0.2)">${item.abilities}</div></div>`;
+  if (item.passives) html += `<div class="mb-4"><div class="section-label mb-2">🛡️ Passives</div><div class="p-3 rounded-lg text-sm text-gray-300" style="background:rgba(74,158,255,0.05);border:1px solid rgba(74,158,255,0.2)">${item.passives}</div></div>`;
+  if (item.bonus) html += `<div class="mb-4"><div class="section-label mb-2">⭐ Clan Bonus</div><div class="p-3 rounded-lg text-sm text-gray-300" style="background:rgba(201,168,76,0.06);border:1px solid var(--border)">${item.bonus}</div></div>`;
+  if (item.effect) html += `<div class="mb-4"><div class="section-label mb-2">🔮 Effect</div><div class="p-3 rounded-lg text-sm text-gray-300" style="background:rgba(160,60,255,0.05);border:1px solid rgba(160,60,255,0.2)">${item.effect}</div></div>`;
+  if (item.strategy) html += `<div class="mb-4"><div class="section-label mb-2">🗺️ Strategi</div><div class="p-3 rounded-lg text-sm text-gray-300 leading-relaxed" style="background:rgba(255,107,53,0.05);border:1px solid rgba(255,107,53,0.2)">${item.strategy}</div></div>`;
+  if (item.notes) html += `<div class="mb-2"><div class="section-label mb-2">📝 Notes</div><div class="p-3 rounded-lg text-sm text-gray-400 italic" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">${item.notes}</div></div>`;
+  
+  return html;
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+function filterItems(val) {
+  currentFilter = val;
+  renderItems();
+}
+
+function handleGlobalSearch(val) {
+  if (!val) return;
+  // Just a hint - could expand to cross-category search
+}
+function closeWelcomeModal(e) {
+  // Menutup modal jika tombol diklik atau area luar modal diklik
+  if (!e || e.target === document.getElementById('welcomeModal') || !e.target) {
+    document.getElementById('welcomeModal').classList.add('hidden');
+  }
+}
+</script>
 </body>
 </html>
