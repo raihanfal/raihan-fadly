@@ -1,409 +1,1621 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iFood - Many Food And Drink</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
-        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.4); }
-        .dark-card { background: #121212; color: white; border-radius: 32px; }
-        .hidden { display: none !important; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-        
-        /* Animasi Bola Terbang */
-        .fly-item {
-            position: fixed; width: 35px; height: 35px; background: #3b82f6; border-radius: 50%;
-            z-index: 9999; pointer-events: none; transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raihan Fadly Al Ichsani — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-        #cart-sidebar { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .cart-open { transform: translateX(0) !important; }
+  <style>
+    /* =============================================
+       CSS VARIABLES & RESET
+    ============================================= */
+    :root {
+      --black: #080810;
+      --deep: #0d0d1a;
+      --surface: #111120;
+      --border: rgba(255,255,255,0.07);
+      --border-light: rgba(255,255,255,0.13);
+      --white: #f0f0f5;
+      --white-dim: rgba(240,240,245,0.6);
+      --white-faint: rgba(240,240,245,0.25);
+      --accent: #c8c8d8;
+      --accent-dim: rgba(200,200,216,0.4);
+      --star: rgba(255,255,255,0.85);
+      --font-display: 'Syne', sans-serif;
+      --font-serif: 'Cormorant Garamond', serif;
+      --font-mono: 'DM Mono', monospace;
+      --transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      --transition-fast: 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+    }
 
-        /* Filter Button States */
-        .filter-btn { transition: all 0.3s ease; border: 2px solid #e2e8f0; }
-        .filter-btn:hover { border-color: #3b82f6; color: #3b82f6; transform: translateY(-2px); }
-        .filter-btn.active { background: #1e293b; color: white; border-color: transparent; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Login Culinary Background */
-        .login-bg {
-            background-color: #0f172a;
-            background-image: url("https://www.transparenttextures.com/patterns/food.png"); /* Pattern Makanan */
-        }
-        .login-blob {
-            position: absolute; width: 500px; height: 500px; background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-            filter: blur(120px); border-radius: 50%; z-index: -1; animation: drift 20s infinite alternate ease-in-out;
-        }
-        @keyframes drift { from { transform: translate(-10%, -10%); } to { transform: translate(15%, 15%); } }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-    </style>
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-display);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+    /* =============================================
+       CUSTOM CURSOR
+    ============================================= */
+    #cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--white);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.3s, height 0.3s, opacity 0.3s;
+      mix-blend-mode: difference;
+    }
+    #cursor-glow {
+      position: fixed;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(200,200,216,0.04) 0%, transparent 70%);
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    body:hover #cursor { opacity: 1; }
+
+    /* =============================================
+       CANVAS BACKGROUND
+    ============================================= */
+    #space-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background var(--transition), backdrop-filter var(--transition);
+    }
+    nav.scrolled {
+      background: rgba(8,8,16,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--white-dim);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--white-dim);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color var(--transition-fast);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--white);
+      transition: width var(--transition);
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hamburger */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: none;
+      background: none;
+      border: none;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 22px; height: 1px;
+      background: var(--white-dim);
+      transition: var(--transition-fast);
+    }
+
+    /* =============================================
+       HERO SECTION
+    ============================================= */
+    #home {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 2rem;
+    }
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--white-faint);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s forwards 0.3s;
+    }
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp 1s forwards 0.6s;
+      margin-bottom: 0.5rem;
+    }
+    .hero-name span {
+      color: var(--white-dim);
+      font-weight: 300;
+      font-style: italic;
+      font-family: var(--font-serif);
+    }
+    .hero-typing-wrap {
+      height: 2rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 1s forwards 0.9s;
+    }
+    .hero-typing {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+    .cursor-blink {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--accent);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    .hero-sub {
+      font-family: var(--font-serif);
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white-dim);
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1s forwards 1.2s;
+    }
+    .hero-btn {
+      opacity: 0;
+      animation: fadeUp 1s forwards 1.5s;
+    }
+    .btn {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--white);
+      padding: 1rem 2.5rem;
+      border: 1px solid var(--border-light);
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+      transition: color var(--transition), border-color var(--transition);
+      background: transparent;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--white);
+      transform: translateY(100%);
+      transition: transform var(--transition);
+      z-index: -1;
+    }
+    .btn:hover { color: var(--black); border-color: var(--white); }
+    .btn:hover::before { transform: translateY(0); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeIn 1s forwards 2s;
+    }
+    .hero-scroll span {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--white-faint);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--white-faint), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* =============================================
+       SECTION COMMONS
+    ============================================= */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 8rem 0;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--white-faint);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .section-label::before {
+      content: '';
+      width: 30px; height: 1px;
+      background: var(--white-faint);
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .section-title em {
+      font-style: italic;
+      font-weight: 300;
+      font-family: var(--font-serif);
+      color: var(--white-dim);
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s var(--transition), transform 0.8s var(--transition);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =============================================
+       ABOUT SECTION
+    ============================================= */
+    #about {
+      border-top: 1px solid var(--border);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      margin-top: 4rem;
+    }
+    .about-text p {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--white-dim);
+      margin-bottom: 1.5rem;
+    }
+    .about-text p strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+    .about-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 2.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--white-faint);
+      text-transform: uppercase;
+      margin-top: 0.35rem;
+    }
+
+    /* Solar system illustration */
+    .about-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 350px;
+    }
+    .solar-system {
+      position: relative;
+      width: 280px;
+      height: 280px;
+    }
+    .orbit-ring {
+      position: absolute;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .orbit-ring:nth-child(1) { width: 100px; height: 100px; border-color: rgba(255,255,255,0.05); }
+    .orbit-ring:nth-child(2) { width: 170px; height: 170px; border-color: rgba(255,255,255,0.06); }
+    .orbit-ring:nth-child(3) { width: 260px; height: 260px; border-color: rgba(255,255,255,0.04); }
+
+    .planet-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #d8d8e8, #606070);
+      box-shadow: 0 0 30px rgba(200,200,216,0.15);
+    }
+    .orbiting-dot {
+      position: absolute;
+      border-radius: 50%;
+      top: 50%; left: 50%;
+    }
+    .od-1 {
+      width: 10px; height: 10px;
+      background: #a0a0b8;
+      margin: -5px;
+      animation: orbit1 6s linear infinite;
+      transform-origin: 0 0;
+    }
+    .od-2 {
+      width: 7px; height: 7px;
+      background: #787890;
+      margin: -3.5px;
+      animation: orbit2 10s linear infinite;
+      transform-origin: 0 0;
+    }
+    .od-3 {
+      width: 5px; height: 5px;
+      background: #505060;
+      margin: -2.5px;
+      animation: orbit3 16s linear infinite;
+      transform-origin: 0 0;
+    }
+
+    .astronaut-svg {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 90px;
+      opacity: 0.4;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* =============================================
+       SKILLS SECTION
+    ============================================= */
+    #skills {
+      border-top: 1px solid var(--border);
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 4rem;
+      border: 1px solid var(--border);
+    }
+    .skill-card {
+      padding: 2.5rem 2rem;
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+      transition: background var(--transition);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .skill-card:hover { background: var(--surface); }
+    .skill-card:hover::before { opacity: 1; }
+
+    .skill-icon {
+      font-size: 1.1rem;
+      color: var(--white-faint);
+      margin-bottom: 1.5rem;
+      transition: color var(--transition);
+    }
+    .skill-card:hover .skill-icon { color: var(--accent); }
+    .skill-name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--white);
+    }
+    .skill-bar-wrap {
+      height: 2px;
+      background: var(--border);
+      width: 100%;
+      overflow: hidden;
+    }
+    .skill-bar {
+      height: 100%;
+      background: var(--white);
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .skill-percent {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--white-faint);
+      letter-spacing: 0.1em;
+      margin-top: 0.6rem;
+    }
+
+    /* =============================================
+       PROJECTS SECTION
+    ============================================= */
+    #projects {
+      border-top: 1px solid var(--border);
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+    .project-card {
+      border: 1px solid var(--border);
+      background: var(--deep);
+      cursor: none;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition);
+      group: project;
+    }
+    .project-card:hover {
+      border-color: var(--border-light);
+      transform: translateY(-4px);
+    }
+    .project-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .project-thumb-art {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Generative thumbnail art per project */
+    .thumb-pos { background: radial-gradient(ellipse at 30% 40%, rgba(120,120,150,0.25) 0%, transparent 65%), radial-gradient(ellipse at 80% 70%, rgba(80,80,120,0.15) 0%, transparent 50%); }
+    .thumb-ai { background: radial-gradient(ellipse at 60% 30%, rgba(150,150,170,0.2) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(100,100,130,0.2) 0%, transparent 50%); }
+    .thumb-game { background: radial-gradient(ellipse at 50% 50%, rgba(130,130,160,0.2) 0%, transparent 70%), radial-gradient(ellipse at 85% 20%, rgba(90,90,130,0.15) 0%, transparent 40%); }
+    .thumb-grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .thumb-label {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--white-faint);
+      text-transform: uppercase;
+    }
+    .project-info {
+      padding: 1.75rem;
+    }
+    .project-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--white);
+    }
+    .project-desc {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--white-dim);
+      margin-bottom: 1.25rem;
+    }
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      color: var(--white-faint);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.7rem;
+      text-transform: uppercase;
+    }
+    .project-btn {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      cursor: none;
+      padding: 0;
+      transition: color var(--transition-fast);
+    }
+    .project-btn:hover { color: var(--white); }
+    .project-btn .arrow {
+      transition: transform var(--transition-fast);
+    }
+    .project-btn:hover .arrow { transform: translateX(4px); }
+
+    /* =============================================
+       PROJECT MODAL
+    ============================================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,8,16,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: var(--deep);
+      border: 1px solid var(--border-light);
+      max-width: 460px;
+      width: 90%;
+      padding: 3rem;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform var(--transition);
+    }
+    .modal-overlay.active .modal {
+      transform: translateY(0) scale(1);
+    }
+    .modal-icon {
+      width: 48px; height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: var(--white-dim);
+      margin-bottom: 2rem;
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .modal-sub {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--white-dim);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+    }
+    .modal-btn-cancel {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      border: 1px solid var(--border);
+      padding: 0.9rem;
+      background: none;
+      cursor: none;
+      transition: border-color var(--transition-fast), color var(--transition-fast);
+    }
+    .modal-btn-cancel:hover { border-color: var(--border-light); color: var(--white); }
+    .modal-btn-go {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--black);
+      border: 1px solid var(--white);
+      padding: 0.9rem;
+      background: var(--white);
+      cursor: none;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    .modal-btn-go:hover { background: var(--accent); border-color: var(--accent); }
+    .modal-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      color: var(--white-faint);
+      background: none; border: none; cursor: none;
+      transition: color var(--transition-fast);
+    }
+    .modal-close:hover { color: var(--white); }
+
+    /* =============================================
+       CONTACT SECTION
+    ============================================= */
+    #contact {
+      border-top: 1px solid var(--border);
+    }
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 6rem;
+      margin-top: 4rem;
+      align-items: start;
+    }
+    .contact-info p {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--white-dim);
+      margin-bottom: 2.5rem;
+    }
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--white-faint);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color var(--transition-fast);
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .social-link:last-child { border-bottom: none; }
+    .social-link:hover { color: var(--white); }
+    .social-link i { font-size: 0.9rem; }
+
+    /* Form */
+    .contact-form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form-group { position: relative; }
+    .form-group label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--white-faint);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 300;
+      padding: 1rem 1.25rem;
+      outline: none;
+      transition: border-color var(--transition-fast);
+      resize: none;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--white-faint);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--border-light);
+    }
+    .form-group textarea { height: 130px; }
+    .form-error {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: #a06060;
+      letter-spacing: 0.08em;
+      margin-top: 0.4rem;
+      display: none;
+    }
+    .form-error.show { display: block; }
+
+    .form-status {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      padding: 1rem 1.25rem;
+      border: 1px solid;
+      display: none;
+    }
+    .form-status.success { border-color: rgba(100,160,100,0.4); color: #80c080; background: rgba(80,140,80,0.05); display: block; }
+    .form-status.error { border-color: rgba(160,80,80,0.4); color: #c08080; background: rgba(140,60,60,0.05); display: block; }
+
+    .btn-submit {
+      width: 100%;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      border: 1px solid var(--white);
+      padding: 1.1rem;
+      cursor: none;
+      transition: background var(--transition-fast), color var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    .btn-submit:hover { background: var(--accent); border-color: var(--accent); }
+    .btn-submit:disabled { opacity: 0.5; pointer-events: none; }
+    .loading-dots { display: none; }
+    .loading-dots.active { display: inline-flex; gap: 4px; }
+    .loading-dots span {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--black);
+      animation: loadDot 1.2s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 3rem 0;
+      text-align: center;
+    }
+    .footer-stars {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .footer-star {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--white);
+      animation: twinkle var(--tw-dur) ease-in-out infinite var(--tw-delay);
+    }
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--white-faint);
+      text-transform: uppercase;
+    }
+
+    /* =============================================
+       KEYFRAMES
+    ============================================= */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50%       { opacity: 0.8; transform: scaleY(0.6); }
+    }
+    @keyframes orbit1 {
+      from { transform: rotate(0deg) translateX(50px); }
+      to   { transform: rotate(360deg) translateX(50px); }
+    }
+    @keyframes orbit2 {
+      from { transform: rotate(40deg) translateX(85px); }
+      to   { transform: rotate(400deg) translateX(85px); }
+    }
+    @keyframes orbit3 {
+      from { transform: rotate(200deg) translateX(130px); }
+      to   { transform: rotate(560deg) translateX(130px); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50%       { transform: translateY(-12px) rotate(5deg); }
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.1; }
+      50%       { opacity: 0.6; }
+    }
+    @keyframes loadDot {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40%           { transform: scale(1); opacity: 1; }
+    }
+    @keyframes shootStar {
+      0%   { transform: translateX(0) translateY(0); opacity: 1; }
+      100% { transform: translateX(300px) translateY(150px); opacity: 0; }
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: rgba(8,8,16,0.97); border-top: 1px solid var(--border); padding: 2rem 1.5rem; gap: 1.5rem; }
+      .nav-links.open { display: flex; }
+      .nav-toggle { display: flex; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .about-visual { height: 220px; }
+      .solar-system { width: 180px; height: 180px; }
+      .orbit-ring:nth-child(3) { width: 170px; height: 170px; }
+      .od-3 { animation: orbit3 16s linear infinite; }
+      @keyframes orbit3 { from { transform: rotate(200deg) translateX(85px); } to { transform: rotate(560deg) translateX(85px); } }
+
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+      .projects-grid { grid-template-columns: 1fr; }
+      .contact-wrap { grid-template-columns: 1fr; gap: 3rem; }
+      .about-stats { gap: 2rem; }
+      section { padding: 5rem 0; }
+    }
+    @media (max-width: 480px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .hero-name { font-size: 2.2rem; }
+    }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen font-sans overflow-x-hidden">
+<body>
 
-    <div id="login-page" class="min-h-screen flex items-center justify-center p-6 login-bg relative overflow-hidden text-center">
-        <div class="login-blob" style="top: -10%; left: -10%;"></div>
-        <div class="login-blob" style="bottom: -10%; right: -10%; background: #4f46e5;"></div>
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-glow"></div>
 
-        <div class="max-w-md w-full glass p-10 rounded-[60px] shadow-2xl text-center border border-white/20 relative z-10">
-            <div class="mb-10 flex flex-col items-center text-slate-900">
-                <div class="w-24 h-24 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-[35px] flex items-center justify-center mb-6 rotate-12 shadow-2xl border-4 border-white/20 text-white text-4xl font-extrabold italic">iF</div>
-                <h1 class="text-5xl font-extrabold tracking-tighter leading-none mb-2">iFood</h1>
-                <p class="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px] italic">Culinary Experience Awaits</p>
-            </div>
-            
-            <div class="bg-blue-50/50 p-6 rounded-[35px] mb-8 border border-blue-100">
-                <h2 class="text-blue-800 font-bold text-lg mb-1">Laper atau Haus?</h2>
-                <p class="text-blue-600/70 text-xs font-medium">Masukan namamu untuk mulai melihat menu spesial kami hari ini!</p>
-            </div>
+  <!-- Space Canvas -->
+  <canvas id="space-canvas"></canvas>
 
-            <div class="space-y-4">
-                <input type="text" id="username" placeholder="Nama kamu..." class="w-full p-5 rounded-3xl border-2 border-slate-100 bg-white/70 text-center font-bold outline-none focus:border-blue-500 transition-all text-slate-800 shadow-inner">
-                <button onclick="handleLogin()" class="w-full bg-slate-900 text-white p-5 rounded-3xl font-extrabold hover:bg-blue-600 shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3">
-                    Buka Menu 🍱
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="main-dashboard" class="hidden">
-        <header class="p-6 glass sticky top-0 z-40 border-b border-white/30 px-4 md:px-12 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center shadow-xl text-white font-black text-2xl italic rotate-3">iF</div>
-                <div>
-                    <h2 id="role-title" class="text-[10px] font-black uppercase tracking-widest text-blue-600 leading-none mb-1 italic">ROLE</h2>
-                    <h3 class="text-2xl font-extrabold text-slate-800 tracking-tighter">iFood <span class="text-blue-600">STORE</span></h3>
-                </div>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-3 bg-white/80 py-2 px-5 rounded-full shadow-sm border border-slate-200">
-                    <span id="display-name" class="font-bold text-sm uppercase text-slate-700">User</span>
-                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full border-2 border-white shadow-inner"></div>
-                </div>
-                <button onclick="handleLogout()" class="bg-red-50 text-red-500 p-3.5 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm active:scale-90">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                </button>
-            </div>
-        </header>
-
-        <main class="p-6 md:p-12 max-w-7xl mx-auto">
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-8">
-                <div>
-                    <h4 class="text-4xl font-extrabold tracking-tighter text-slate-900 mb-4">Discover Menu</h4>
-                    <div id="filter-container" class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
-                        <button onclick="filterProducts('all')" class="filter-btn active px-8 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all whitespace-nowrap">All Menu</button>
-                        <button onclick="filterProducts('Makanan')" class="filter-btn px-8 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all whitespace-nowrap">🍱 Makanan</button>
-                        <button onclick="filterProducts('Minuman')" class="filter-btn px-8 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all whitespace-nowrap">🥤 Minuman</button>
-                    </div>
-                </div>
-                <div class="flex gap-4 w-full md:w-auto font-black">
-                    <button id="admin-view-orders" onclick="toggleOrderMonitor()" class="hidden flex-1 bg-slate-900 text-white px-8 py-4 rounded-3xl shadow-2xl text-xs uppercase tracking-widest hover:bg-blue-600 transition-all italic font-sans">Monitor 🛰️</button>
-                    <button id="admin-add-btn" onclick="openAddProductModal()" class="hidden flex-1 bg-blue-600 text-white px-8 py-4 rounded-3xl shadow-2xl text-xs uppercase tracking-widest hover:bg-blue-700 transition-all font-sans">+ New Item</button>
-                </div>
-            </div>
-            
-            <div id="loading-state" class="flex flex-col items-center justify-center py-32 text-center">
-                <div class="w-20 h-20 border-8 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-6 shadow-2xl shadow-blue-500/20"></div>
-                <p class="text-slate-400 font-black animate-pulse text-xs uppercase tracking-[0.4em]">Connecting Cloud...</p>
-            </div>
-
-            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"></div>
-        </main>
-    </div>
-
-    <button id="floating-cart-btn" onclick="toggleCart()" class="hidden fixed bottom-10 right-10 w-24 h-24 bg-blue-600 text-white rounded-[40px] shadow-[0_25px_60px_rgba(37,99,235,0.6)] flex items-center justify-center z-50 hover:scale-110 active:scale-95 transition-all border-4 border-white">
-        <div class="relative">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-            <span id="cart-count" class="absolute -top-4 -right-4 bg-red-500 text-sm px-3 py-1.5 rounded-2xl font-black border-4 border-white shadow-xl animate-bounce">0</span>
-        </div>
+  <!-- ============ NAVBAR ============ -->
+  <nav id="navbar">
+    <a href="#home" class="nav-logo">RAIHAN FADLY AL ICHSANI</a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home" onclick="closeMenu()">Home</a></li>
+      <li><a href="#about" onclick="closeMenu()">About</a></li>
+      <li><a href="#skills" onclick="closeMenu()">Skills</a></li>
+      <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
+      <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
     </button>
+  </nav>
 
-    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-[500px] dark-card z-[60] shadow-[-30px_0_80px_rgba(0,0,0,0.7)] translate-x-full flex flex-col p-10 border-l border-white/10">
-        <div class="flex justify-between items-center mb-12">
-            <h4 class="text-4xl font-extrabold uppercase tracking-tighter italic">YOUR <span class="text-blue-500">CART</span></h4>
-            <button onclick="toggleCart()" class="text-slate-400 hover:text-white border-2 border-white/10 px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all">Close</button>
-        </div>
-        <div id="cart-items" class="flex-1 overflow-y-auto space-y-8 custom-scrollbar pr-4">
-            <p class="text-slate-600 text-center italic py-24 uppercase tracking-widest opacity-40 text-xs font-sans">Empty basket</p>
-        </div>
-        <div class="mt-10 pt-10 border-t border-white/10 text-white">
-            <div class="flex justify-between font-bold text-3xl mb-10 leading-none">
-                <span class="text-slate-500 text-xs font-black uppercase tracking-[0.3em] mt-2">TOTAL</span>
-                <span id="total-price" class="text-blue-400 font-black tracking-tighter italic leading-none">Rp 0</span>
-            </div>
-            <button onclick="checkout()" class="w-full bg-blue-600 text-white py-8 rounded-[40px] font-black hover:bg-blue-500 shadow-2xl active:scale-95 transition-all text-2xl tracking-tighter uppercase italic">🚀 Place Order</button>
-        </div>
+  <!-- ============ HERO ============ -->
+  <section id="home">
+    <div class="hero-label">Portfolio — 2026</div>
+    <h1 class="hero-name">
+      Raihan <span>Fadly</span><br>Al Ichsani
+    </h1>
+    <div class="hero-typing-wrap">
+      <span class="hero-typing" id="typing-text"></span>
+      <span class="cursor-blink"></span>
     </div>
-
-    <div id="admin-order-section" class="hidden fixed inset-0 bg-black/90 z-[70] backdrop-blur-xl flex items-center justify-center p-4">
-        <div class="glass w-full max-w-4xl max-h-[85vh] rounded-[70px] p-16 flex flex-col border-2 border-white/50 shadow-2xl text-slate-900 font-sans">
-            <div class="flex justify-between items-center mb-12">
-                <div>
-                    <h4 class="text-4xl font-black uppercase tracking-tighter leading-none mb-2 italic">Dapur Feed</h4>
-                    <p class="text-[11px] text-slate-400 font-black uppercase tracking-[0.4em] ml-1">Live Management Console</p>
-                </div>
-                <div class="flex gap-5">
-                    <button onclick="loadOrders()" class="bg-blue-600 text-white px-8 py-4 rounded-3xl font-black text-xs uppercase hover:bg-blue-700 shadow-xl transition-all">Refresh</button>
-                    <button onclick="toggleOrderMonitor()" class="bg-slate-200 text-slate-600 px-8 py-4 rounded-3xl font-black text-xs uppercase hover:bg-red-500 hover:text-white transition-all">Exit</button>
-                </div>
-            </div>
-            <div id="order-monitor-list" class="flex-1 overflow-y-auto space-y-6 custom-scrollbar pr-4"></div>
-        </div>
+    <p class="hero-sub">"Exploring ideas through code and creativity."</p>
+    <div class="hero-btn">
+      <a href="#projects" class="btn">Lihat Portfolio</a>
     </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
 
-<script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwreSzyGvv8creSoDUN_62weoM3f0zCSSmKIjVgSftwkPxdJYoHzHPd1VRtDmOqLsnm/exec"; 
-    const addSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
-    
-    const ADMIN_USERS = ['admin', 'tungtungsahur', 'ifoodadmin', 'raihan'];
-    
-    let products = [];
-    let cart = [];
-    let currentFilter = 'all';
+  <!-- ============ ABOUT ============ -->
+  <section id="about">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Tentang Saya</div>
+        <h2 class="section-title">Siswa muda yang <em>penasaran</em><br>dengan semesta digital.</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>Halo. Nama saya <strong>Raihan Fadly Al Ichsani</strong>, seorang siswa kelas XI TJKT yang percaya bahwa batas antara imajinasi dan kenyataan hanya sejauh satu baris kode.</p>
+          <p>Saya tertarik pada perpaduan antara <strong>teknologi dan estetika</strong> — bagaimana sesuatu yang berfungsi juga bisa terasa indah. Dari prompt engineering hingga vibe coding, saya terus menjelajahi cara baru untuk menciptakan pengalaman digital yang bermakna.</p>
+          <p>Seperti luar angkasa yang tak bertepi, saya percaya <strong>pembelajaran tak punya batas</strong>. Setiap proyek adalah ekspedisi baru ke wilayah yang belum pernah saya kunjungi sebelumnya.</p>
+          <div class="about-stats">
+            <div class="stat-item">
+              <div class="stat-num">5+</div>
+              <div class="stat-label">Skill Aktif</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">3+</div>
+              <div class="stat-label">Project Selesai</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">XI</div>
+              <div class="stat-label">Kelas TJKT</div>
+            </div>
+          </div>
+        </div>
+        <div class="about-visual reveal">
+          <!-- Solar System Illustration -->
+          <div class="solar-system">
+            <div class="orbit-ring"></div>
+            <div class="orbit-ring"></div>
+            <div class="orbit-ring"></div>
+            <div class="planet-center"></div>
+            <div class="orbiting-dot od-1"></div>
+            <div class="orbiting-dot od-2"></div>
+            <div class="orbiting-dot od-3"></div>
+          </div>
+          <!-- Astronaut SVG -->
+          <svg class="astronaut-svg" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="50" cy="55" rx="28" ry="32" fill="rgba(200,200,216,0.15)" stroke="rgba(200,200,216,0.3)" stroke-width="1"/>
+            <circle cx="50" cy="32" r="18" fill="rgba(200,200,216,0.1)" stroke="rgba(200,200,216,0.35)" stroke-width="1"/>
+            <ellipse cx="50" cy="32" rx="12" ry="11" fill="rgba(80,90,110,0.5)" stroke="rgba(200,200,216,0.2)" stroke-width="0.5"/>
+            <rect x="22" y="50" width="10" height="20" rx="5" fill="rgba(200,200,216,0.12)" stroke="rgba(200,200,216,0.25)" stroke-width="1"/>
+            <rect x="68" y="50" width="10" height="20" rx="5" fill="rgba(200,200,216,0.12)" stroke="rgba(200,200,216,0.25)" stroke-width="1"/>
+            <rect x="38" y="82" width="10" height="22" rx="5" fill="rgba(200,200,216,0.1)" stroke="rgba(200,200,216,0.2)" stroke-width="1"/>
+            <rect x="52" y="82" width="10" height="22" rx="5" fill="rgba(200,200,216,0.1)" stroke="rgba(200,200,216,0.2)" stroke-width="1"/>
+            <rect x="40" y="46" width="20" height="14" rx="2" fill="rgba(150,150,180,0.15)" stroke="rgba(200,200,216,0.2)" stroke-width="0.5"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    window.onload = () => {
-        const savedUser = sessionStorage.getItem('activeUser');
-        if (savedUser) handleLogin(savedUser);
-        else {
-            document.getElementById('login-page').classList.remove('hidden');
-            document.getElementById('floating-cart-btn').classList.add('hidden');
+  <!-- ============ SKILLS ============ -->
+  <section id="skills">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Kemampuan</div>
+        <h2 class="section-title">Tools dalam <em>arsenal</em><br>eksplorasi saya.</h2>
+      </div>
+      <div class="skills-grid reveal" id="skills-grid">
+        <!-- Skill cards generated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Proyek</div>
+        <h2 class="section-title">Misi yang <em>telah</em><br>berhasil diluncurkan.</h2>
+      </div>
+      <div class="projects-grid reveal" id="projects-grid">
+        <!-- Project cards generated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Kontak</div>
+        <h2 class="section-title">Kirim <em>sinyal</em><br>ke misi kontrol.</h2>
+      </div>
+      <div class="contact-wrap">
+        <div class="contact-info reveal">
+          <p>Punya ide, pertanyaan, atau sekadar ingin menyapa? Jangan ragu untuk menghubungi. Saya selalu terbuka untuk percakapan yang bermakna.</p>
+          <div class="social-links">
+            <!-- Ganti href dengan link sosmed kamu -->
+            <a href="https://wa.me/6282315522328" target="_blank" class="social-link">
+              <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+            <a href="https://instagram.com/beyourself" target="_blank" class="social-link">
+              <i class="fab fa-instagram"></i> Instagram
+            </a>
+            <a href="https://tiktok.com/@selalualways123_" target="_blank" class="social-link">
+              <i class="fab fa-tiktok"></i> TikTok
+            </a>
+            <a href="https://discord.com/users/yowki.o" target="_blank" class="social-link">
+              <i class="fab fa-discord"></i> Discord
+            </a>
+          </div>
+        </div>
+
+        <form class="contact-form reveal" id="contact-form" onsubmit="submitForm(event)">
+          <!-- Ganti URL ini dengan Google Apps Script URL kamu -->
+          <!-- Cara: Buka Google Sheets → Extensions → Apps Script → deploy sebagai web app → copy URL -->
+
+          <div class="form-group">
+            <label for="name">Nama</label>
+            <input type="text" id="name" name="name" placeholder="Nama lengkap kamu" autocomplete="off" />
+            <div class="form-error" id="name-error">Nama tidak boleh kosong.</div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="email@contoh.com" autocomplete="off" />
+            <div class="form-error" id="email-error">Masukkan alamat email yang valid.</div>
+          </div>
+          <div class="form-group">
+            <label for="message">Pesan</label>
+            <textarea id="message" name="message" placeholder="Tulis pesanmu di sini..."></textarea>
+            <div class="form-error" id="msg-error">Pesan tidak boleh kosong.</div>
+          </div>
+
+          <div class="form-status" id="form-status"></div>
+
+          <button type="submit" class="btn-submit" id="submit-btn">
+            <span id="btn-text">Kirim Pesan</span>
+            <div class="loading-dots" id="loading-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="footer-stars" id="footer-stars"></div>
+    <p class="footer-text">Crafted by Raihan Fadly Al Ichsani &nbsp;·&nbsp; 2025</p>
+  </footer>
+
+  <!-- ============ PROJECT MODAL ============ -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModalDirect()"><i class="fas fa-times"></i></button>
+      <div class="modal-icon"><i class="fas fa-rocket"></i></div>
+      <div class="modal-title" id="modal-title">Nama Project</div>
+      <p class="modal-sub" id="modal-sub">Apakah kamu ingin melihat project ini? Kamu akan diarahkan ke halaman project.</p>
+      <div class="modal-actions">
+        <button class="modal-btn-cancel" onclick="closeModalDirect()">Batal</button>
+        <a href="#" class="modal-btn-go" id="modal-go" target="_blank">Lihat Project</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =============================================
+       GOOGLE APPS SCRIPT URL
+       Ganti string ini dengan URL dari Apps Script kamu
+    ============================================= */
+    const scriptURL = "https://script.google.com/macros/s/AKfycbz3r3yFonh3ZAdbQtN2QIJKsVRrwLi_h2cDCXU_4_oFhrEAiw6pfEB8lb6nQgnyFBWQkA/exec";
+
+    /* =============================================
+       DATA: SKILLS
+       Tambah / edit skill di sini
+    ============================================= */
+    const skills = [
+      { name: "Prompt Engineering", icon: "fas fa-brain", percent: 85 },
+      { name: "Vibe Coding",        icon: "fas fa-music",  percent: 80 },
+      { name: "HTML",               icon: "fab fa-html5",  percent: 70 },
+      { name: "CSS",                icon: "fab fa-css3-alt",percent: 65 },
+      { name: "JavaScript",         icon: "fab fa-js",     percent: 55 },
+      { name: "UI Thinking",        icon: "fas fa-eye",    percent: 75 },
+    ];
+
+    /* =============================================
+       DATA: PROJECTS
+       Tambah project baru di sini, ikuti format yang ada
+    ============================================= */
+    const projects = [
+      {
+        name: "Modern POS System",
+        desc: "Sistem kasir modern berbasis web dengan antarmuka bersih dan alur transaksi yang intuitif.",
+        tags: ["HTML", "CSS", "JavaScript"],
+        thumb: "thumb-pos",
+        label: "Point of Sale",
+        url: "#" // Ganti dengan URL project kamu
+      },
+      {
+        name: "AI Chat Website",
+        desc: "Antarmuka percakapan berbasis AI dengan desain minimalis dan respons real-time yang mulus.",
+        tags: ["Prompt Engineering", "JavaScript", "API"],
+        thumb: "thumb-ai",
+        label: "AI Interface",
+        url: "#"
+      },
+      {
+        name: "Interactive Game Website",
+        desc: "Website game interaktif dengan mekanik sederhana, animasi halus, dan pengalaman yang menyenangkan.",
+        tags: ["JavaScript", "Canvas", "CSS"],
+        thumb: "thumb-game",
+        label: "Web Game",
+        url: "#"
+      },
+    ];
+
+    /* =============================================
+       SPACE CANVAS — Stars, Milky Way, Shooting Stars
+    ============================================= */
+    (function initCanvas() {
+      const canvas = document.getElementById('space-canvas');
+      const ctx    = canvas.getContext('2d');
+      let W, H, stars = [], shooters = [];
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        buildStars();
+      }
+
+      function buildStars() {
+        stars = [];
+        const count = Math.floor((W * H) / 4000);
+        for (let i = 0; i < count; i++) {
+          stars.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.2 + 0.2,
+            a: Math.random(),
+            speed: Math.random() * 0.003 + 0.001,
+            phase: Math.random() * Math.PI * 2
+          });
         }
-    };
+      }
 
-    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('cart-open'); }
-    function toggleOrderMonitor() { document.getElementById('admin-order-section').classList.toggle('hidden'); }
+      /* Milky Way band */
+      function drawMilkyWay() {
+        const grad = ctx.createLinearGradient(W * 0.1, H * 0.1, W * 0.9, H * 0.85);
+        grad.addColorStop(0,   'transparent');
+        grad.addColorStop(0.3, 'rgba(160,160,200,0.025)');
+        grad.addColorStop(0.5, 'rgba(200,200,230,0.04)');
+        grad.addColorStop(0.7, 'rgba(160,160,200,0.025)');
+        grad.addColorStop(1,   'transparent');
+        ctx.save();
+        ctx.translate(W / 2, H / 2);
+        ctx.rotate(-0.35);
+        ctx.translate(-W / 2, -H / 2);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      }
 
-    async function handleLogin(existingUser) {
-        const user = existingUser || document.getElementById('username').value.trim();
-        if (!user) return Swal.fire('Oops!', 'Siapa namamu?', 'warning');
-        sessionStorage.setItem('activeUser', user.toLowerCase());
-        document.getElementById('display-name').innerText = user;
-        document.getElementById('login-page').classList.add('hidden');
-        document.getElementById('main-dashboard').classList.remove('hidden');
-        const isAdmin = ADMIN_USERS.includes(user.toLowerCase());
-        document.getElementById('role-title').innerText = isAdmin ? "SYSTEM ADMINISTRATOR" : "HAPPY CUSTOMER";
-        if(isAdmin) {
-            document.getElementById('admin-add-btn').classList.remove('hidden');
-            document.getElementById('admin-view-orders').classList.remove('hidden');
-            document.getElementById('floating-cart-btn').classList.add('hidden');
-        } else {
-            document.getElementById('floating-cart-btn').classList.remove('hidden');
+      /* Distant planet */
+      function drawPlanet(t) {
+        const px = W * 0.78, py = H * 0.22, pr = 55;
+        // planet body
+        const pGrad = ctx.createRadialGradient(px - 15, py - 15, 5, px, py, pr);
+        pGrad.addColorStop(0,   'rgba(170,170,190,0.18)');
+        pGrad.addColorStop(0.6, 'rgba(80,80,110,0.10)');
+        pGrad.addColorStop(1,   'rgba(30,30,50,0.04)');
+        ctx.beginPath();
+        ctx.arc(px, py, pr, 0, Math.PI * 2);
+        ctx.fillStyle = pGrad;
+        ctx.fill();
+        // ring
+        ctx.save();
+        ctx.translate(px, py);
+        ctx.rotate(0.35);
+        ctx.scale(1, 0.28);
+        ctx.beginPath();
+        ctx.arc(0, 0, pr * 1.7, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(200,200,216,0.07)';
+        ctx.lineWidth = 6;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      /* Shooting star logic */
+      function spawnShooter() {
+        const side = Math.random();
+        let sx, sy, angle;
+        if (side < 0.5) { sx = Math.random() * W; sy = 0; angle = (Math.PI / 4) + (Math.random() * Math.PI / 6); }
+        else { sx = 0; sy = Math.random() * H * 0.5; angle = Math.random() * Math.PI / 6; }
+        shooters.push({ x: sx, y: sy, angle, speed: 8 + Math.random() * 6, len: 100 + Math.random() * 80, life: 1, alpha: 1 });
+      }
+
+      let lastShoot = 0;
+      function drawShooters() {
+        shooters = shooters.filter(s => s.alpha > 0);
+        shooters.forEach(s => {
+          const ex = s.x + Math.cos(s.angle) * s.len;
+          const ey = s.y + Math.sin(s.angle) * s.len;
+          const grad = ctx.createLinearGradient(s.x, s.y, ex, ey);
+          grad.addColorStop(0,   `rgba(255,255,255,0)`);
+          grad.addColorStop(0.3, `rgba(255,255,255,${s.alpha * 0.3})`);
+          grad.addColorStop(1,   `rgba(255,255,255,${s.alpha})`);
+          ctx.beginPath();
+          ctx.moveTo(s.x, s.y);
+          ctx.lineTo(ex, ey);
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          s.x += Math.cos(s.angle) * s.speed;
+          s.y += Math.sin(s.angle) * s.speed;
+          s.alpha -= 0.018;
+        });
+      }
+
+      let frame = 0;
+      function draw(t) {
+        ctx.clearRect(0, 0, W, H);
+        drawMilkyWay();
+        drawPlanet(t);
+
+        // Stars
+        const now = t / 1000;
+        stars.forEach(s => {
+          const alpha = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin(now * s.speed * 6 + s.phase));
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${alpha * s.a})`;
+          ctx.fill();
+        });
+
+        drawShooters();
+
+        // Spawn shooting star randomly
+        if (t - lastShoot > 3500 + Math.random() * 4000) {
+          spawnShooter();
+          lastShoot = t;
         }
-        loadProducts();
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+      requestAnimationFrame(draw);
+    })();
+
+    /* =============================================
+       CUSTOM CURSOR
+    ============================================= */
+    const cursor     = document.getElementById('cursor');
+    const cursorGlow = document.getElementById('cursor-glow');
+    let mx = 0, my = 0, glowX = 0, glowY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+    });
+
+    (function animGlow() {
+      glowX += (mx - glowX) * 0.08;
+      glowY += (my - glowY) * 0.08;
+      cursorGlow.style.left = glowX + 'px';
+      cursorGlow.style.top  = glowY + 'px';
+      requestAnimationFrame(animGlow);
+    })();
+
+    document.querySelectorAll('a, button, .skill-card, .project-card, .social-link').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width  = '18px';
+        cursor.style.height = '18px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width  = '8px';
+        cursor.style.height = '8px';
+      });
+    });
+
+    /* =============================================
+       NAVBAR SCROLL
+    ============================================= */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    function toggleMenu() {
+      document.getElementById('nav-links').classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('nav-links').classList.remove('open');
     }
 
-    function handleLogout() { 
-        Swal.fire({ title: 'Sign Out?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes, Exit' }).then(res => {
-            if(res.isConfirmed) { sessionStorage.removeItem('activeUser'); location.reload(); }
-        });
-    }
+    /* =============================================
+       TYPING ANIMATION
+    ============================================= */
+    const phrases = [
+      "Prompt Engineer",
+      "Vibe Coder",
+      "Web Explorer",
+      "Digital Dreamer",
+      "TJKT — Class XI"
+    ];
+    let pi = 0, ci = 0, deleting = false, typingEl = document.getElementById('typing-text');
 
-    function filterProducts(category) {
-        currentFilter = category;
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.remove('active');
-            // Menghapus ikon untuk perbandingan teks
-            const btnText = btn.innerText.replace(/🍱 |🥤 /g, '').toLowerCase().trim();
-            const targetCat = category.toLowerCase().trim();
-            if (btnText === targetCat || (category === 'all' && btnText === 'all menu')) {
-                btn.classList.add('active');
-            }
-        });
-        renderProducts();
+    function type() {
+      const phrase = phrases[pi];
+      if (!deleting) {
+        typingEl.textContent = phrase.slice(0, ++ci);
+        if (ci === phrase.length) { deleting = true; setTimeout(type, 1800); return; }
+      } else {
+        typingEl.textContent = phrase.slice(0, --ci);
+        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+      }
+      setTimeout(type, deleting ? 60 : 90);
     }
+    setTimeout(type, 1800);
 
-    async function loadProducts() {
-        document.getElementById('loading-state').classList.remove('hidden');
-        document.getElementById('product-list').innerHTML = '';
-        try {
-            const res = await fetch(SCRIPT_URL + "?v=" + Date.now());
-            products = await res.json();
-            renderProducts();
-        } catch (err) { Swal.fire('Error', 'Connection failed!', 'error'); } 
-        finally { document.getElementById('loading-state').classList.add('hidden'); }
-    }
-
-    function renderProducts() {
-        const list = document.getElementById('product-list');
-        const isAdmin = ADMIN_USERS.includes(sessionStorage.getItem('activeUser'));
-        const filtered = currentFilter === 'all' ? products : products.filter(p => String(p.category).toLowerCase().trim() === currentFilter.toLowerCase().trim());
-        
-        list.innerHTML = filtered.map(p => {
-            const oriPrice = Number(p.price) || 0;
-            const disc = Number(p.discount) || 0;
-            const finalPrice = oriPrice - disc;
-            return `
-                <div class="glass p-8 rounded-[55px] relative group border border-white shadow-xl transition-all hover:shadow-2xl hover:-translate-y-3">
-                    ${isAdmin ? `<div class="absolute top-6 right-6 flex gap-3 z-10 scale-110"><button onclick="editProduct(${p.id})" class="bg-blue-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg hover:rotate-12 transition-all font-black italic">✎</button><button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg hover:rotate-12 transition-all font-black">×</button></div>` : ''}
-                    <div class="h-60 bg-slate-200 rounded-[45px] mb-8 overflow-hidden shadow-inner border border-white"><img src="${p.img}" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" onerror="this.src='https://via.placeholder.com/600x600?text=Menu'"></div>
-                    <div class="flex items-center gap-2 mb-4"><span class="text-[10px] bg-blue-600 text-white px-4 py-1.5 rounded-full font-black uppercase tracking-widest italic">${String(p.category || 'TJKT').toUpperCase()}</span></div>
-                    <h6 class="font-extrabold text-slate-800 uppercase text-xl leading-tight mb-4 tracking-tighter">${p.name}</h6>
-                    <div class="mb-6">
-                        ${disc > 0 ? `<span class="text-sm text-red-500 line-through font-bold">Rp ${oriPrice.toLocaleString('id-ID')}</span>` : ''}
-                        <p class="text-blue-600 font-black text-3xl tracking-tighter mt-1 italic leading-none">Rp ${finalPrice.toLocaleString('id-ID')}</p>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-slate-100 pt-7 mt-2 font-sans text-slate-900">
-                        <div class="flex flex-col"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">STOK</span><span class="font-black text-slate-700 text-lg italic tracking-tighter leading-none">${p.stock} pcs</span></div>
-                        ${!isAdmin ? `<button onclick="addToCart(${p.id}, event)" class="bg-slate-900 text-white w-16 h-16 rounded-[24px] flex items-center justify-center hover:bg-blue-600 transition-all shadow-xl active:scale-90 font-black text-3xl">+</button>` : ''}
-                    </div>
-                </div>`;
-        }).join('');
-    }
-
-    function addToCart(id, event) {
-        const p = products.find(x => x.id == id);
-        if (!p || p.stock <= 0) return Swal.fire('Sold Out!', 'Sudah habis bos.', 'error');
-        addSound.currentTime = 0; addSound.play().catch(()=>{});
-        const cartBtn = document.getElementById('floating-cart-btn');
-        const flyItem = document.createElement('div'); flyItem.className = 'fly-item';
-        flyItem.style.left = `${event.clientX - 16}px`; flyItem.style.top = `${event.clientY - 16}px`;
-        document.body.appendChild(flyItem);
-        const target = cartBtn.getBoundingClientRect();
-        setTimeout(() => { flyItem.style.left = `${target.left + 30}px`; flyItem.style.top = `${target.top + 30}px`; flyItem.style.transform = 'scale(0.2)'; flyItem.style.opacity = '0.3'; }, 80);
-        setTimeout(() => { flyItem.remove(); const inCart = cart.find(x => x.id == id); if (inCart) inCart.qty++; else cart.push({ ...p, qty: 1 }); p.stock--; updateCartUI(); }, 1200);
-    }
-
-    function updateCartUI() {
-        const list = document.getElementById('cart-items');
-        let total = 0;
-        list.innerHTML = cart.map(item => {
-            const finalPrice = Number(item.price) - Number(item.discount || 0);
-            total += finalPrice * item.qty;
-            return `<div class="flex justify-between items-center bg-white/5 p-8 rounded-[40px] border border-white/5 shadow-inner">
-                <div><span class="font-black text-white uppercase text-lg leading-tight block mb-1 tracking-tight italic">${item.name}</span><span class="text-sm text-slate-500 font-bold italic">${item.qty} pcs • Rp ${finalPrice.toLocaleString('id-ID')}</span></div>
-                <button onclick="removeFromCart(${item.id})" class="text-red-500 bg-red-500/10 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest">DEL</button>
-            </div>`;
-        }).join('');
-        if (cart.length === 0) list.innerHTML = '<p class="text-slate-600 text-center italic py-24 uppercase tracking-[0.3em] opacity-40 text-xs">Empty basket</p>';
-        document.getElementById('total-price').innerText = `Rp ${total.toLocaleString('id-ID')}`;
-        document.getElementById('cart-count').innerText = cart.reduce((a,b)=>a+b.qty, 0);
-    }
-
-    function removeFromCart(id) {
-        const idx = cart.findIndex(x => x.id == id);
-        if (idx !== -1) {
-            products.find(x => x.id == id).stock++;
-            if (cart[idx].qty > 1) cart[idx].qty--; else cart.splice(idx, 1);
-            updateCartUI();
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          // Trigger skill bars when skills section visible
+          if (e.target.id === 'skills-grid' || e.target.closest('#skills-grid')) {
+            setTimeout(animateBars, 200);
+          }
         }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* =============================================
+       BUILD SKILL CARDS
+    ============================================= */
+    const sgrid = document.getElementById('skills-grid');
+    skills.forEach(s => {
+      sgrid.innerHTML += `
+        <div class="skill-card">
+          <div class="skill-icon"><i class="${s.icon}"></i></div>
+          <div class="skill-name">${s.name}</div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar" data-w="${s.percent}"></div>
+          </div>
+          <div class="skill-percent">${s.percent}%</div>
+        </div>
+      `;
+    });
+
+    function animateBars() {
+      document.querySelectorAll('.skill-bar').forEach(bar => {
+        bar.style.width = bar.dataset.w + '%';
+      });
     }
 
-    async function checkout() {
-        if (cart.length === 0) return;
-        const total = cart.reduce((a, b) => a + ((Number(b.price) - Number(b.discount || 0)) * b.qty), 0);
-        const detail = cart.map(x => `${x.qty}x ${x.name}`).join(", ");
-        const QRIS_PHOTO_URL = "https://i.ibb.co.com/8LtmwfV1/IMG-20260209-210056.png"; 
-        Swal.fire({
-            title: '<span class="uppercase font-black text-xs tracking-[0.3em] text-slate-400 italic">Payment Details</span>',
-            html: `<div class="py-6 text-slate-900 font-sans">
-                        <b class="text-6xl text-blue-600 font-black block mb-10 leading-none tracking-tighter italic">Rp ${total.toLocaleString('id-ID')}</b>
-                        <div class="bg-white p-8 rounded-[55px] border-4 border-slate-100 inline-block mb-10 shadow-2xl"><img src="${QRIS_PHOTO_URL}" class="w-72 h-72 rounded-3xl object-cover shadow-sm"></div>
-                        <p class="text-[10px] text-slate-400 font-black tracking-widest uppercase leading-relaxed px-12 italic italic">Pay and Confirm</p>
-                   </div>`,
-            showCancelButton: true, confirmButtonText: 'I Have Paid', confirmButtonColor: '#2563eb', customClass: { popup: 'rounded-[60px] p-12' }
-        }).then(async (res) => {
-            if (res.isConfirmed) {
-                await sendData({ action: 'checkout', user: sessionStorage.getItem('activeUser'), detail, total });
-                cart = []; updateCartUI(); toggleCart();
-                Swal.fire({ icon: 'success', title: 'Confirmed!', timer: 3000 });
-            }
-        });
+    // Observe skills grid for bar animation
+    observer.observe(sgrid);
+
+    /* =============================================
+       BUILD PROJECT CARDS
+    ============================================= */
+    const pgrid = document.getElementById('projects-grid');
+    projects.forEach((p, i) => {
+      pgrid.innerHTML += `
+        <div class="project-card reveal" style="transition-delay:${i * 0.1}s">
+          <div class="project-thumb">
+            <div class="project-thumb-art ${p.thumb}">
+              <div class="thumb-grid-lines"></div>
+              <div class="thumb-label">${p.label}</div>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="project-name">${p.name}</div>
+            <p class="project-desc">${p.desc}</p>
+            <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+            <button class="project-btn" onclick="openModal('${p.name}', '${p.url}')">
+              Lihat Project <span class="arrow">→</span>
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    // Re-observe newly added cards
+    document.querySelectorAll('.project-card').forEach(el => observer.observe(el));
+
+    /* =============================================
+       PROJECT MODAL
+    ============================================= */
+    function openModal(name, url) {
+      document.getElementById('modal-title').textContent = name;
+      document.getElementById('modal-go').href = url;
+      document.getElementById('modal-overlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(e) {
+      if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+    }
+    function closeModalDirect() {
+      document.getElementById('modal-overlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+    /* =============================================
+       CONTACT FORM — Google Apps Script
+    ============================================= */
+    async function submitForm(e) {
+      e.preventDefault();
+      let valid = true;
+
+      const name    = document.getElementById('name');
+      const email   = document.getElementById('email');
+      const message = document.getElementById('message');
+      const status  = document.getElementById('form-status');
+
+      // Reset errors
+      ['name-error','email-error','msg-error'].forEach(id => {
+        document.getElementById(id).classList.remove('show');
+      });
+      status.className = 'form-status';
+      status.textContent = '';
+
+      // Validate
+      if (!name.value.trim()) {
+        document.getElementById('name-error').classList.add('show');
+        valid = false;
+      }
+      const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRx.test(email.value.trim())) {
+        document.getElementById('email-error').classList.add('show');
+        valid = false;
+      }
+      if (!message.value.trim()) {
+        document.getElementById('msg-error').classList.add('show');
+        valid = false;
+      }
+      if (!valid) return;
+
+      // Check if URL is placeholder
+      if (scriptURL === "PASTE_GOOGLE_APPS_SCRIPT_URL_HERE") {
+        status.textContent = '⚠ URL Apps Script belum diisi. Ganti scriptURL di kode JavaScript.';
+        status.className = 'form-status error';
+        return;
+      }
+
+      // Show loading
+      const submitBtn = document.getElementById('submit-btn');
+      document.getElementById('btn-text').style.display = 'none';
+      document.getElementById('loading-dots').classList.add('active');
+      submitBtn.disabled = true;
+
+      try {
+        const formData = new FormData();
+        formData.append('name',    name.value.trim());
+        formData.append('email',   email.value.trim());
+        formData.append('message', message.value.trim());
+
+        await fetch(scriptURL, { method: 'POST', body: formData });
+
+        status.textContent = '✓ Pesan terkirim. Terima kasih sudah menghubungi!';
+        status.className = 'form-status success';
+        document.getElementById('contact-form').reset();
+      } catch (err) {
+        status.textContent = '✕ Gagal mengirim pesan. Coba lagi beberapa saat.';
+        status.className = 'form-status error';
+      } finally {
+        document.getElementById('btn-text').style.display = '';
+        document.getElementById('loading-dots').classList.remove('active');
+        submitBtn.disabled = false;
+      }
     }
 
-    async function sendData(payload) { return fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) }); }
-
-    async function openAddProductModal() {
-        const { value: f } = await Swal.fire({
-            title: 'Inventory Manager',
-            html: `<div class="text-left space-y-6 p-4 font-sans text-slate-900 italic">
-                    <div class="bg-slate-100 p-10 rounded-[55px] border-4 border-white shadow-xl">
-                        <div class="mb-6"><label class="text-[11px] font-black text-blue-600 uppercase tracking-widest ml-3 mb-2 block italic underline">Product Info</label><input id="n" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black text-slate-800 outline-none focus:border-blue-500 shadow-sm" placeholder="Product Name"></div>
-                        <div class="grid grid-cols-2 gap-6 mb-6">
-                            <div><label class="text-[10px] font-black text-blue-600 uppercase tracking-widest ml-3">Price</label><input id="p" type="number" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black text-blue-600"></div>
-                            <div><label class="text-[10px] font-black text-red-500 uppercase tracking-widest ml-3">Discount</label><input id="d" type="number" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black text-red-500" value="0"></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-6 mb-6">
-                            <div><label class="text-[10px] font-black text-blue-600 uppercase tracking-widest ml-3">Stock</label><input id="s" type="number" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black"></div>
-                            <div><label class="text-[10px] font-black text-blue-600 uppercase tracking-widest ml-3">Type</label>
-                                <select id="c" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black outline-none italic uppercase text-xs">
-                                    <option value="Makanan">🍱 Makanan</option><option value="Minuman">🥤 Minuman</option>
-                                </select>
-                            </div>
-                        </div>
-                        <input id="i" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 text-xs font-bold italic" placeholder="Image URL">
-                    </div>
-                </div>`,
-            showCancelButton: true, confirmButtonText: 'Publish', customClass: { popup: 'rounded-[75px] p-8' },
-            preConfirm: () => ({ name: document.getElementById('n').value, price: document.getElementById('p').value, discount: document.getElementById('d').value, stock: document.getElementById('s').value, category: document.getElementById('c').value, img: document.getElementById('i').value })
-        });
-        if (f) { await sendData({ action: 'add', ...f }); loadProducts(); }
+    /* =============================================
+       FOOTER STARS
+    ============================================= */
+    const footerStars = document.getElementById('footer-stars');
+    for (let i = 0; i < 40; i++) {
+      const s = document.createElement('div');
+      s.className = 'footer-star';
+      const size = Math.random() * 2 + 0.5;
+      s.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random()*100}%;
+        top:${Math.random()*100}%;
+        --tw-dur:${2 + Math.random()*3}s;
+        --tw-delay:${Math.random()*3}s;
+      `;
+      footerStars.appendChild(s);
     }
-
-    async function editProduct(id) {
-        const p = products.find(x => x.id == id);
-        const { value: f } = await Swal.fire({
-            title: 'Control Center',
-            html: `<div class="text-left space-y-6 p-4 font-sans text-slate-900 italic">
-                    <div class="bg-slate-100 p-10 rounded-[55px] border-4 border-white shadow-xl">
-                        <input id="en" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black mb-6" value="${p.name}">
-                        <div class="grid grid-cols-2 gap-6 mb-6">
-                            <input id="ep" type="number" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black text-blue-600 shadow-sm" value="${p.price}">
-                            <input id="ed" type="number" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black text-red-500 shadow-sm" value="${p.discount}">
-                        </div>
-                        <div class="grid grid-cols-2 gap-6 mb-6">
-                            <input id="es" type="number" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black shadow-sm" value="${p.stock}">
-                            <select id="ec" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 font-black shadow-sm uppercase text-xs italic">
-                                <option value="Makanan" ${p.category === 'Makanan' ? 'selected' : ''}>Makanan</option>
-                                <option value="Minuman" ${p.category === 'Minuman' ? 'selected' : ''}>Minuman</option>
-                            </select>
-                        </div>
-                        <input id="ei" class="w-full bg-white p-6 rounded-3xl border-2 border-slate-200 text-xs font-bold italic" value="${p.img}">
-                    </div>
-                </div>`,
-            showCancelButton: true, confirmButtonText: 'Update', customClass: { popup: 'rounded-[75px] p-8' },
-            preConfirm: () => ({ name: document.getElementById('en').value, price: document.getElementById('ep').value, discount: document.getElementById('ed').value, stock: document.getElementById('es').value, category: document.getElementById('ec').value, img: document.getElementById('ei').value })
-        });
-        if (f) { await sendData({ action: 'edit', id, ...f }); loadProducts(); }
-    }
-
-    async function deleteProduct(id) {
-        if((await Swal.fire({ title: 'Remove?', icon: 'warning', showCancelButton: true, customClass: { popup: 'rounded-[40px]' } })).isConfirmed) {
-            await sendData({ action: 'delete', id }); loadProducts();
-        }
-    }
-
-    async function loadOrders() {
-        const monitorList = document.getElementById('order-monitor-list');
-        monitorList.innerHTML = '<div class="text-center py-24 animate-pulse font-black text-sm text-slate-400 uppercase tracking-[0.5em] italic">Accessing Live Data...</div>';
-        try {
-            const res = await fetch(SCRIPT_URL + "?v=" + Date.now() + "&action=get_orders");
-            const data = await res.json();
-            const orders = Array.isArray(data) ? data.reverse() : [];
-            if (orders.length === 0) { monitorList.innerHTML = '<p class="text-center py-24 italic text-slate-400 text-sm font-black uppercase opacity-20 tracking-[0.5em] italic">No active orders</p>'; return; }
-            monitorList.innerHTML = orders.map(o => `
-                <div class="bg-white p-10 rounded-[50px] border-4 border-slate-50 shadow-sm flex justify-between items-center transition-all hover:border-blue-100 hover:shadow-xl">
-                    <div class="flex gap-8 items-center text-slate-900">
-                        <div class="w-20 h-20 bg-blue-50 rounded-[28px] flex items-center justify-center font-black text-blue-600 text-3xl shadow-inner italic">${(o.nama_pelanggan || o.user || 'U').charAt(0).toUpperCase()}</div>
-                        <div>
-                            <h6 class="font-extrabold uppercase text-xl tracking-tighter leading-none mb-2 italic">${o.nama_pelanggan || o.user}</h6>
-                            <p class="text-[13px] text-slate-400 font-bold uppercase italic leading-tight mb-3 tracking-widest">${o.detail_order || o.detail}</p>
-                            <span class="text-[11px] text-slate-300 font-black uppercase tracking-[0.2em] italic">${o.tanggal ? new Date(o.tanggal).toLocaleTimeString() : '-'} • <span class="text-blue-500 font-black">Rp ${Number(o.total_bayar || o.total || 0).toLocaleString('id-ID')}</span></span>
-                        </div>
-                    </div>
-                    <button onclick="finishOrder(${o.rowId})" class="bg-green-500 text-white w-20 h-20 rounded-[30px] flex items-center justify-center active:scale-90 shadow-2xl transition-all text-4xl italic font-black shadow-green-200">✔</button>
-                </div>`).join('');
-        } catch (err) { monitorList.innerHTML = '<p class="text-red-400 text-center font-bold tracking-widest py-24 italic">Offline</p>'; }
-    }
-
-    async function finishOrder(rowId) {
-        if((await Swal.fire({ title: 'Complete Order?', showCancelButton: true, customClass: { popup: 'rounded-[50px] p-12' }, confirmButtonColor: '#22c55e' })).isConfirmed) {
-            await sendData({ action: 'delete_order', rowId }); loadOrders();
-        }
-    }
-</script>
+  </script>
 </body>
 </html>
