@@ -1,44 +1,58 @@
---// Raihan Hub V2
---// UI Speed + Jump Controller
---// Mobile Support + Draggable + Minimize + Rainbow
+--// Raihan Hub V3
+--// Fixed Jump + Fly System
+--// Mobile Support + Draggable + Better UI
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
 local Player = Players.LocalPlayer
-
 local Character = Player.Character or Player.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
+local RootPart = Character:WaitForChild("HumanoidRootPart")
 
 Player.CharacterAdded:Connect(function(char)
 	Character = char
 	Humanoid = char:WaitForChild("Humanoid")
+	RootPart = char:WaitForChild("HumanoidRootPart")
 end)
 
---========================
+--====================================================
 -- GUI
---========================
+--====================================================
+
+if game.CoreGui:FindFirstChild("RaihanHubV3") then
+	game.CoreGui.RaihanHubV3:Destroy()
+end
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "RaihanHub"
+ScreenGui.Name = "RaihanHubV3"
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
 
 local Main = Instance.new("Frame")
 Main.Parent = ScreenGui
-Main.Size = UDim2.new(0,320,0,260)
-Main.Position = UDim2.new(0.5,-160,0.5,-130)
-Main.BackgroundColor3 = Color3.fromRGB(20,20,20)
+Main.Size = UDim2.new(0,360,0,420)
+Main.Position = UDim2.new(0.5,-180,0.5,-210)
+Main.BackgroundColor3 = Color3.fromRGB(18,18,18)
 Main.BorderSizePixel = 0
 Main.Active = true
 
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0,12)
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0,16)
 
--- Rainbow Border
+local Gradient = Instance.new("UIGradient")
+Gradient.Parent = Main
+Gradient.Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(25,25,25)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(45,45,45))
+}
+Gradient.Rotation = 90
+
 local Stroke = Instance.new("UIStroke")
 Stroke.Parent = Main
 Stroke.Thickness = 3
+
+-- Rainbow Border
 
 task.spawn(function()
 	while true do
@@ -49,43 +63,43 @@ task.spawn(function()
 	end
 end)
 
---========================
+--====================================================
 -- TITLE
---========================
+--====================================================
 
 local Title = Instance.new("TextLabel")
 Title.Parent = Main
-Title.Size = UDim2.new(1,0,0,40)
+Title.Size = UDim2.new(1,0,0,45)
 Title.BackgroundTransparency = 1
-Title.Text = "RAIHAN HUB"
+Title.Text = "RAIHAN HUB V3"
+Title.Font = Enum.Font.GothamBlack
 Title.TextScaled = true
-Title.Font = Enum.Font.GothamBold
 Title.TextColor3 = Color3.new(1,1,1)
 
---========================
--- MINIMIZE BUTTON
---========================
+--====================================================
+-- MINIMIZE
+--====================================================
 
 local Minimize = Instance.new("TextButton")
 Minimize.Parent = Main
 Minimize.Size = UDim2.new(0,35,0,35)
-Minimize.Position = UDim2.new(1,-40,0,5)
+Minimize.Position = UDim2.new(1,-45,0,5)
 Minimize.Text = "-"
-Minimize.TextScaled = true
 Minimize.Font = Enum.Font.GothamBold
-Minimize.BackgroundColor3 = Color3.fromRGB(40,40,40)
+Minimize.TextScaled = true
+Minimize.BackgroundColor3 = Color3.fromRGB(60,60,60)
 Minimize.TextColor3 = Color3.new(1,1,1)
 
 Instance.new("UICorner", Minimize)
 
 local OpenButton = Instance.new("TextButton")
 OpenButton.Parent = ScreenGui
-OpenButton.Size = UDim2.new(0,120,0,40)
+OpenButton.Size = UDim2.new(0,130,0,45)
 OpenButton.Position = UDim2.new(0,20,0.5,0)
 OpenButton.Text = "Open Hub"
 OpenButton.Visible = false
-OpenButton.TextScaled = true
 OpenButton.Font = Enum.Font.GothamBold
+OpenButton.TextScaled = true
 OpenButton.BackgroundColor3 = Color3.fromRGB(30,30,30)
 OpenButton.TextColor3 = Color3.new(1,1,1)
 
@@ -101,9 +115,9 @@ OpenButton.MouseButton1Click:Connect(function()
 	OpenButton.Visible = false
 end)
 
---========================
+--====================================================
 -- DRAGGABLE
---========================
+--====================================================
 
 local dragging = false
 local dragInput
@@ -112,6 +126,7 @@ local startPos
 
 local function update(input)
 	local delta = input.Position - dragStart
+
 	Main.Position = UDim2.new(
 		startPos.X.Scale,
 		startPos.X.Offset + delta.X,
@@ -123,7 +138,7 @@ end
 Main.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1
 	or input.UserInputType == Enum.UserInputType.Touch then
-		
+
 		dragging = true
 		dragStart = input.Position
 		startPos = Main.Position
@@ -139,132 +154,106 @@ end)
 Main.InputChanged:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseMovement
 	or input.UserInputType == Enum.UserInputType.Touch then
-		
 		dragInput = input
 	end
 end)
 
 UIS.InputChanged:Connect(function(input)
-	if input == dragInput and dragging then
+	if dragging and input == dragInput then
 		update(input)
 	end
 end)
 
---========================
--- SPEED SECTION
---========================
+--====================================================
+-- UI HELPER
+--====================================================
 
-local SpeedToggle = false
+local function CreateSection(text, posY)
+	local Label = Instance.new("TextLabel")
+	Label.Parent = Main
+	Label.Position = UDim2.new(0,15,0,posY)
+	Label.Size = UDim2.new(1,-30,0,25)
+	Label.BackgroundTransparency = 1
+	Label.Text = text
+	Label.Font = Enum.Font.GothamBold
+	Label.TextScaled = true
+	Label.TextColor3 = Color3.new(1,1,1)
 
-local SpeedText = Instance.new("TextLabel")
-SpeedText.Parent = Main
-SpeedText.Position = UDim2.new(0,15,0,50)
-SpeedText.Size = UDim2.new(1,-30,0,25)
-SpeedText.BackgroundTransparency = 1
-SpeedText.Text = "Speed Hack"
-SpeedText.TextScaled = true
-SpeedText.Font = Enum.Font.GothamBold
-SpeedText.TextColor3 = Color3.new(1,1,1)
+	local Slider = Instance.new("TextButton")
+	Slider.Parent = Main
+	Slider.Position = UDim2.new(0,15,0,posY + 30)
+	Slider.Size = UDim2.new(0,240,0,20)
+	Slider.Text = ""
+	Slider.BackgroundColor3 = Color3.fromRGB(55,55,55)
 
-local SpeedSlider = Instance.new("TextButton")
-SpeedSlider.Parent = Main
-SpeedSlider.Position = UDim2.new(0,15,0,80)
-SpeedSlider.Size = UDim2.new(0,220,0,20)
-SpeedSlider.Text = ""
-SpeedSlider.BackgroundColor3 = Color3.fromRGB(50,50,50)
+	Instance.new("UICorner", Slider)
 
-Instance.new("UICorner", SpeedSlider)
+	local Fill = Instance.new("Frame")
+	Fill.Parent = Slider
+	Fill.Size = UDim2.new(0.2,0,1,0)
+	Fill.BackgroundColor3 = Color3.fromRGB(0,170,255)
 
-local SpeedFill = Instance.new("Frame")
-SpeedFill.Parent = SpeedSlider
-SpeedFill.Size = UDim2.new(0.2,0,1,0)
-SpeedFill.BackgroundColor3 = Color3.fromRGB(0,170,255)
+	Instance.new("UICorner", Fill)
 
-Instance.new("UICorner", SpeedFill)
+	local ValueLabel = Instance.new("TextLabel")
+	ValueLabel.Parent = Main
+	ValueLabel.Position = UDim2.new(0,265,0,posY + 22)
+	ValueLabel.Size = UDim2.new(0,70,0,35)
+	ValueLabel.BackgroundTransparency = 1
+	ValueLabel.TextScaled = true
+	ValueLabel.Font = Enum.Font.GothamBold
+	ValueLabel.TextColor3 = Color3.new(1,1,1)
 
+	local Toggle = Instance.new("TextButton")
+	Toggle.Parent = Main
+	Toggle.Position = UDim2.new(0,15,0,posY + 60)
+	Toggle.Size = UDim2.new(1,-30,0,35)
+	Toggle.BackgroundColor3 = Color3.fromRGB(120,0,0)
+	Toggle.TextColor3 = Color3.new(1,1,1)
+	Toggle.Font = Enum.Font.GothamBold
+	Toggle.TextScaled = true
+
+	Instance.new("UICorner", Toggle)
+
+	return Slider, Fill, ValueLabel, Toggle
+end
+
+--====================================================
+-- SPEED
+--====================================================
+
+local SpeedEnabled = false
 local SpeedValue = 16
 
-local SpeedLabel = Instance.new("TextLabel")
-SpeedLabel.Parent = Main
-SpeedLabel.Position = UDim2.new(0,245,0,73)
-SpeedLabel.Size = UDim2.new(0,60,0,35)
-SpeedLabel.BackgroundTransparency = 1
-SpeedLabel.Text = tostring(SpeedValue)
-SpeedLabel.TextScaled = true
-SpeedLabel.Font = Enum.Font.GothamBold
-SpeedLabel.TextColor3 = Color3.new(1,1,1)
+local SpeedSlider, SpeedFill, SpeedLabel, SpeedToggle = CreateSection("Speed Hack", 55)
+SpeedLabel.Text = "16"
+SpeedToggle.Text = "Speed: OFF"
 
-local SpeedToggleBtn = Instance.new("TextButton")
-SpeedToggleBtn.Parent = Main
-SpeedToggleBtn.Position = UDim2.new(0,15,0,110)
-SpeedToggleBtn.Size = UDim2.new(1,-30,0,35)
-SpeedToggleBtn.Text = "Speed: OFF"
-SpeedToggleBtn.TextScaled = true
-SpeedToggleBtn.Font = Enum.Font.GothamBold
-SpeedToggleBtn.BackgroundColor3 = Color3.fromRGB(120,0,0)
-SpeedToggleBtn.TextColor3 = Color3.new(1,1,1)
+--====================================================
+-- JUMP
+--====================================================
 
-Instance.new("UICorner", SpeedToggleBtn)
-
---========================
--- JUMP SECTION
---========================
-
-local JumpToggle = false
-
-local JumpText = Instance.new("TextLabel")
-JumpText.Parent = Main
-JumpText.Position = UDim2.new(0,15,0,155)
-JumpText.Size = UDim2.new(1,-30,0,25)
-JumpText.BackgroundTransparency = 1
-JumpText.Text = "Jump Hack"
-JumpText.TextScaled = true
-JumpText.Font = Enum.Font.GothamBold
-JumpText.TextColor3 = Color3.new(1,1,1)
-
-local JumpSlider = Instance.new("TextButton")
-JumpSlider.Parent = Main
-JumpSlider.Position = UDim2.new(0,15,0,185)
-JumpSlider.Size = UDim2.new(0,220,0,20)
-JumpSlider.Text = ""
-JumpSlider.BackgroundColor3 = Color3.fromRGB(50,50,50)
-
-Instance.new("UICorner", JumpSlider)
-
-local JumpFill = Instance.new("Frame")
-JumpFill.Parent = JumpSlider
-JumpFill.Size = UDim2.new(0.25,0,1,0)
-JumpFill.BackgroundColor3 = Color3.fromRGB(0,255,120)
-
-Instance.new("UICorner", JumpFill)
-
+local JumpEnabled = false
 local JumpValue = 50
 
-local JumpLabel = Instance.new("TextLabel")
-JumpLabel.Parent = Main
-JumpLabel.Position = UDim2.new(0,245,0,178)
-JumpLabel.Size = UDim2.new(0,60,0,35)
-JumpLabel.BackgroundTransparency = 1
-JumpLabel.Text = tostring(JumpValue)
-JumpLabel.TextScaled = true
-JumpLabel.Font = Enum.Font.GothamBold
-JumpLabel.TextColor3 = Color3.new(1,1,1)
+local JumpSlider, JumpFill, JumpLabel, JumpToggle = CreateSection("Jump Hack", 165)
+JumpLabel.Text = "50"
+JumpToggle.Text = "Jump: OFF"
 
-local JumpToggleBtn = Instance.new("TextButton")
-JumpToggleBtn.Parent = Main
-JumpToggleBtn.Position = UDim2.new(0,15,0,215)
-JumpToggleBtn.Size = UDim2.new(1,-30,0,35)
-JumpToggleBtn.Text = "Jump: OFF"
-JumpToggleBtn.TextScaled = true
-JumpToggleBtn.Font = Enum.Font.GothamBold
-JumpToggleBtn.BackgroundColor3 = Color3.fromRGB(120,0,0)
-JumpToggleBtn.TextColor3 = Color3.new(1,1,1)
+--====================================================
+-- FLY
+--====================================================
 
-Instance.new("UICorner", JumpToggleBtn)
+local FlyEnabled = false
+local FlySpeed = 50
 
---========================
+local FlySlider, FlyFill, FlyLabel, FlyToggle = CreateSection("Fly Hack", 275)
+FlyLabel.Text = "50"
+FlyToggle.Text = "Fly: OFF"
+
+--====================================================
 -- SLIDER FUNCTION
---========================
+--====================================================
 
 local function MakeSlider(slider, fill, min, max, callback)
 	local draggingSlider = false
@@ -279,14 +268,14 @@ local function MakeSlider(slider, fill, min, max, callback)
 
 		fill.Size = UDim2.new(sizeX,0,1,0)
 
-		local value = math.floor((min + (max-min)*sizeX))
+		local value = math.floor(min + ((max - min) * sizeX))
 		callback(value)
 	end
 
 	slider.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1
 		or input.UserInputType == Enum.UserInputType.Touch then
-			
+
 			draggingSlider = true
 			updateSlider(input)
 		end
@@ -304,37 +293,43 @@ local function MakeSlider(slider, fill, min, max, callback)
 	UIS.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1
 		or input.UserInputType == Enum.UserInputType.Touch then
-			
 			draggingSlider = false
 		end
 	end)
 end
 
--- SPEED SLIDER
+--====================================================
+-- SLIDERS
+--====================================================
+
 MakeSlider(SpeedSlider, SpeedFill, 16, 200, function(val)
 	SpeedValue = val
 	SpeedLabel.Text = tostring(val)
 end)
 
--- JUMP SLIDER
 MakeSlider(JumpSlider, JumpFill, 50, 250, function(val)
 	JumpValue = val
 	JumpLabel.Text = tostring(val)
 end)
 
---========================
+MakeSlider(FlySlider, FlyFill, 20, 300, function(val)
+	FlySpeed = val
+	FlyLabel.Text = tostring(val)
+end)
+
+--====================================================
 -- TOGGLES
---========================
+--====================================================
 
-SpeedToggleBtn.MouseButton1Click:Connect(function()
-	SpeedToggle = not SpeedToggle
+SpeedToggle.MouseButton1Click:Connect(function()
+	SpeedEnabled = not SpeedEnabled
 
-	if SpeedToggle then
-		SpeedToggleBtn.Text = "Speed: ON"
-		SpeedToggleBtn.BackgroundColor3 = Color3.fromRGB(0,170,0)
+	if SpeedEnabled then
+		SpeedToggle.Text = "Speed: ON"
+		SpeedToggle.BackgroundColor3 = Color3.fromRGB(0,170,0)
 	else
-		SpeedToggleBtn.Text = "Speed: OFF"
-		SpeedToggleBtn.BackgroundColor3 = Color3.fromRGB(120,0,0)
+		SpeedToggle.Text = "Speed: OFF"
+		SpeedToggle.BackgroundColor3 = Color3.fromRGB(120,0,0)
 
 		if Humanoid then
 			Humanoid.WalkSpeed = 16
@@ -342,36 +337,94 @@ SpeedToggleBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
-JumpToggleBtn.MouseButton1Click:Connect(function()
-	JumpToggle = not JumpToggle
+JumpToggle.MouseButton1Click:Connect(function()
+	JumpEnabled = not JumpEnabled
 
-	if JumpToggle then
-		JumpToggleBtn.Text = "Jump: ON"
-		JumpToggleBtn.BackgroundColor3 = Color3.fromRGB(0,170,0)
+	if JumpEnabled then
+		JumpToggle.Text = "Jump: ON"
+		JumpToggle.BackgroundColor3 = Color3.fromRGB(0,170,0)
 	else
-		JumpToggleBtn.Text = "Jump: OFF"
-		JumpToggleBtn.BackgroundColor3 = Color3.fromRGB(120,0,0)
+		JumpToggle.Text = "Jump: OFF"
+		JumpToggle.BackgroundColor3 = Color3.fromRGB(120,0,0)
 
 		if Humanoid then
+			Humanoid.UseJumpPower = true
 			Humanoid.JumpPower = 50
 		end
 	end
 end)
 
---========================
--- LOOP
---========================
+FlyToggle.MouseButton1Click:Connect(function()
+	FlyEnabled = not FlyEnabled
+
+	if FlyEnabled then
+		FlyToggle.Text = "Fly: ON"
+		FlyToggle.BackgroundColor3 = Color3.fromRGB(0,170,0)
+	else
+		FlyToggle.Text = "Fly: OFF"
+		FlyToggle.BackgroundColor3 = Color3.fromRGB(120,0,0)
+
+		if RootPart then
+			RootPart.AssemblyLinearVelocity = Vector3.zero
+		end
+	end
+end)
+
+--====================================================
+-- FLY CONTROL
+--====================================================
+
+local FlyDirection = Vector3.zero
+
+UIS.InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+
+	if input.KeyCode == Enum.KeyCode.W then
+		FlyDirection = Vector3.new(0,0,-1)
+	elseif input.KeyCode == Enum.KeyCode.S then
+		FlyDirection = Vector3.new(0,0,1)
+	elseif input.KeyCode == Enum.KeyCode.A then
+		FlyDirection = Vector3.new(-1,0,0)
+	elseif input.KeyCode == Enum.KeyCode.D then
+		FlyDirection = Vector3.new(1,0,0)
+	end
+end)
+
+UIS.InputEnded:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.W
+	or input.KeyCode == Enum.KeyCode.S
+	or input.KeyCode == Enum.KeyCode.A
+	or input.KeyCode == Enum.KeyCode.D then
+		FlyDirection = Vector3.zero
+	end
+end)
+
+--====================================================
+-- MAIN LOOP
+--====================================================
 
 RunService.RenderStepped:Connect(function()
 
 	if Humanoid then
 
-		if SpeedToggle then
+		if SpeedEnabled then
 			Humanoid.WalkSpeed = SpeedValue
 		end
 
-		if JumpToggle then
+		if JumpEnabled then
+			Humanoid.UseJumpPower = true
 			Humanoid.JumpPower = JumpValue
+		end
+
+		if FlyEnabled and RootPart then
+			Humanoid.PlatformStand = true
+
+			local cam = workspace.CurrentCamera
+			local moveVector = cam.CFrame:VectorToWorldSpace(FlyDirection)
+
+			RootPart.AssemblyLinearVelocity = moveVector * FlySpeed
+		else
+			Humanoid.PlatformStand = false
 		end
 
 	end
