@@ -8,46 +8,53 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#05070d;
-    --surface:#0b0f1a;
-    --cyan:#22d3ee;
-    --violet:#a78bfa;
-    --rose:#fb7185;
-    --green:#34d399;
-    --line: rgba(148,163,184,0.14);
-  }
+:root{
+--bg:#f3f6fb;
+  --surface:#ffffff;
+  --primary:#2563eb;
+  --danger:#dc2626;
+  --text:#111827;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+}
   *{box-sizing:border-box;}
-  html,body{background:var(--bg); font-family:'Inter',sans-serif; color:#e5e7eb;}
+  html,body{
+    background:var(--bg);
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+}
   .font-disp{font-family:'Rajdhani',sans-serif;}
   .font-mono{font-family:'Space Mono',monospace;}
 
-  .grid-bg{
-    background-image:
-      linear-gradient(rgba(34,211,238,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(34,211,238,0.05) 1px, transparent 1px);
-    background-size: 42px 42px;
-    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
-            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
-  }
-  .scanline{
-    position:fixed; inset:0; pointer-events:none; z-index:60; opacity:0.035;
-    background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, transparent 1px, transparent 3px);
-  }
-  .glass{
-    background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015));
-    border:1px solid var(--line);
-    backdrop-filter: blur(10px);
-  }
-  .glow-cyan{ box-shadow: 0 0 0 1px rgba(34,211,238,0.25), 0 0 30px -8px rgba(34,211,238,0.35); }
-  .glow-violet{ box-shadow: 0 0 0 1px rgba(167,139,250,0.25), 0 0 30px -8px rgba(167,139,250,0.35); }
 
-  .btn-primary{
-    background: linear-gradient(135deg, rgba(34,211,238,0.15), rgba(167,139,250,0.15));
-    border:1px solid rgba(34,211,238,0.4);
-    transition:.2s;
-  }
-  .btn-primary:hover{ background: linear-gradient(135deg, rgba(34,211,238,0.28), rgba(167,139,250,0.28)); transform: translateY(-1px); }
+.glass{
+    background:#fff;
+    border:1px solid #edf1f7;
+    border-radius:18px;
+
+    box-shadow:
+        0 6px 20px rgba(15,23,42,.06),
+        0 1px 2px rgba(15,23,42,.05);
+
+    transition:.25s;
+}
+
+.glass:hover{
+    transform:translateY(-2px);
+    box-shadow:
+        0 14px 30px rgba(15,23,42,.10);
+}
+.btn-primary {
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, .20);
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
 
   .tag{
     font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.12em;
@@ -97,19 +104,19 @@
 </head>
 <body class="min-h-screen relative">
 
-<div class="scanline"></div>
-<div class="fixed inset-0 grid-bg -z-10"></div>
+
 
 <!-- TOP BAR -->
-<header class="sticky top-0 z-40 border-b border-[var(--line)] bg-[#05070d]/85 backdrop-blur-md">
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+  <div class="h-1 w-full bg-gradient-to-r from-blue-600 via-sky-400 to-cyan-300"></div>
   <div class="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
     <button onclick="goHome()" class="flex items-center gap-2.5 group">
-      <div class="w-8 h-8 rounded-lg glass glow-cyan flex items-center justify-center">
-        <span class="w-2 h-2 rounded-full bg-[var(--cyan)] pulse-dot"></span>
+      <div class="w-8 h-8 rounded-lg glass  flex items-center justify-center">
+        <span class="w-2 h-2 rounded-full bg-blue-100 pulse-dot"></span>
       </div>
       <div class="text-left">
-        <div class="font-disp font-700 text-[15px] tracking-wide leading-none text-white">LOGBOOK<span class="text-[var(--cyan)]">_PKL</span></div>
-        <div class="font-mono text-[9px] text-slate-500 tracking-widest">MISSION CONSOLE</div>
+        <div class="font-disp font-700 text-[15px] tracking-wide leading-none text-gray-900">LOGBOOK<span class="text-blue-600">_PKL</span></div>
+        <div class="font-mono text-[9px] text-gray-500 tracking-widest">MISSION CONSOLE</div>
       </div>
     </button>
 
@@ -127,46 +134,48 @@
   <!-- ===================== LANDING VIEW ===================== -->
   <section data-view="landing" class="active fade-in">
     <div class="text-center pt-14 pb-10">
-      <div class="inline-flex items-center gap-2 tag font-mono text-[var(--cyan)] mb-4">
-        <span class="w-1.5 h-1.5 rounded-full bg-[var(--cyan)] pulse-dot"></span> SYSTEM ONLINE
+      <div class="inline-flex items-center gap-2 tag font-mono text-blue-600 mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-100 pulse-dot"></span> SYSTEM ONLINE
       </div>
-      <h1 class="font-disp font-700 text-4xl md:text-6xl text-white tracking-tight">
+      <h1 class="font-disp font-700 text-4xl md:text-6xl text-gray-900 tracking-tight">
         Praktik Kerja Lapangan
       </h1>
-      <p class="text-slate-400 mt-3 max-w-lg mx-auto text-sm md:text-base">
+      <p class="text-gray-500 mt-3 max-w-lg mx-auto text-sm md:text-base">
         Catatan waktu, aktivitas lapangan, dan arus kas selama PKL — semua tersinkron setiap hari.
       </p>
     </div>
 
     <div class="grid md:grid-cols-2 gap-5 mt-4">
       <!-- Card Dokumentasi -->
-      <button onclick="showView('dokumentasi')" class="glass glow-cyan rounded-2xl p-6 text-left hover:-translate-y-1 transition-transform group">
+      <button onclick="showView('dokumentasi')" class="glass rounded-2xl overflow-hidden p-6 text-left hover:-translate-y-1 transition-transform group">
+        <div class="h-1 -mx-6 -mt-6 mb-6 bg-blue-500"></div>
         <div class="flex items-start justify-between">
-          <div class="w-11 h-11 rounded-xl bg-[var(--cyan)]/10 border border-[var(--cyan)]/30 flex items-center justify-center text-xl">📋</div>
-          <span class="tag font-mono text-slate-500">01</span>
+          <div class="w-11 h-11 rounded-xl bg-blue-100/10 border border-blue-200 flex items-center justify-center text-xl">📋</div>
+          <span class="tag font-mono text-gray-500">01</span>
         </div>
-        <h2 class="font-disp font-700 text-2xl text-white mt-5">Dokumentasi PKL</h2>
-        <p class="text-slate-400 text-sm mt-1.5 leading-relaxed">Jam mulai/selesai, kegiatan harian, dan foto lapangan.</p>
-        <div class="mt-5 text-[var(--cyan)] text-sm font-disp font-600 flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
+        <h2 class="font-disp font-700 text-2xl text-gray-900 mt-5">Dokumentasi PKL</h2>
+        <p class="text-gray-500 text-sm mt-1.5 leading-relaxed">Jam mulai/selesai, kegiatan harian, dan foto lapangan.</p>
+        <div class="mt-5 text-blue-600 text-sm font-disp font-600 flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
           Buka log <span>→</span>
         </div>
       </button>
 
       <!-- Card Pengeluaran -->
-      <button onclick="showView('pengeluaran')" class="glass glow-violet rounded-2xl p-6 text-left hover:-translate-y-1 transition-transform group">
+      <button onclick="showView('pengeluaran')" class="glass rounded-2xl overflow-hidden p-6 text-left hover:-translate-y-1 transition-transform group">
+        <div class="h-1 -mx-6 -mt-6 mb-6 bg-emerald-500"></div>
         <div class="flex items-start justify-between">
           <div class="w-11 h-11 rounded-xl bg-[var(--violet)]/10 border border-[var(--violet)]/30 flex items-center justify-center text-xl">💰</div>
-          <span class="tag font-mono text-slate-500">02</span>
+          <span class="tag font-mono text-gray-500">02</span>
         </div>
-        <h2 class="font-disp font-700 text-2xl text-white mt-5">Pengeluaran Uang</h2>
-        <p class="text-slate-400 text-sm mt-1.5 leading-relaxed">Sisa saldo real-time dan riwayat setiap pengeluaran.</p>
+        <h2 class="font-disp font-700 text-2xl text-gray-900 mt-5">Pengeluaran Uang</h2>
+        <p class="text-gray-500 text-sm mt-1.5 leading-relaxed">Sisa saldo real-time dan riwayat setiap pengeluaran.</p>
         <div class="mt-5 text-[var(--violet)] text-sm font-disp font-600 flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
           Buka catatan <span>→</span>
         </div>
       </button>
     </div>
 
-    <p class="text-center text-slate-600 font-mono text-[11px] mt-10">
+    <p class="text-center text-gray-600 font-mono text-[11px] mt-10">
       Mode Viewer: lihat data saja &nbsp;•&nbsp; Mode Editor: bisa tambah &amp; hapus data
     </p>
   </section>
@@ -176,28 +185,96 @@
     <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
       <div>
       <button onclick="goHome()"
-class="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-cyan-400 hover:bg-slate-800 transition">
+class="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white border border-gray-300 hover:border-cyan-400 hover:bg-gray-100 transition">
 
 <div class="w-7 h-7 rounded-lg bg-cyan-500/15 flex items-center justify-center text-cyan-300">
 ←
 </div>
 
-<span class="font-disp font-semibold text-slate-200">
+<span class="font-disp font-semibold text-gray-800">
 Kembali
 </span>
 
 </button>
-        <h2 class="font-disp font-700 text-3xl text-white">Dokumentasi PKL</h2>
+        <h2 class="font-disp font-700 text-3xl text-gray-900">Dokumentasi PKL</h2>
       </div>
       <button onclick="openDokModal()" data-editor-only class="btn-primary hidden font-disp font-600 text-sm px-4 py-2.5 rounded-xl">
         + Tambah Log
       </button>
     </div>
 
-    <div class="divider mb-8"></div>
+<div class="divider mb-6"></div>
 
-    <div id="dokList" class="relative pl-8"></div>
-    <div id="dokEmpty" class="hidden text-center py-16 text-slate-500 font-mono text-sm">
+<!-- SEARCH & FILTER -->
+<div class="glass rounded-2xl overflow-hidden p-4 mb-6">
+
+<div class="grid md:grid-cols-4 gap-3">
+
+<!-- Search -->
+<div class="md:col-span-2">
+<input
+id="searchDok"
+type="text"
+placeholder="🔍 Cari kegiatan..."
+class="w-full rounded-lg px-3 py-2">
+</div>
+
+<!-- Tanggal -->
+<div>
+<select id="filterTanggal"
+class="w-full rounded-lg px-3 py-2">
+
+<option value="">Semua Tanggal</option>
+
+</select>
+</div>
+
+<!-- Bulan -->
+<div>
+<select id="filterBulan"
+class="w-full rounded-lg px-3 py-2">
+
+<option value="">Semua Bulan</option>
+
+<option value="1">Januari</option>
+<option value="2">Februari</option>
+<option value="3">Maret</option>
+<option value="4">April</option>
+<option value="5">Mei</option>
+<option value="6">Juni</option>
+<option value="7">Juli</option>
+<option value="8">Agustus</option>
+<option value="9">September</option>
+<option value="10">Oktober</option>
+<option value="11">November</option>
+<option value="12">Desember</option>
+
+</select>
+</div>
+
+</div>
+
+<div class="flex justify-between items-center mt-3">
+
+<p id="hasilFilter"
+class="text-xs text-gray-500 font-mono">
+Menampilkan 0 dari 0 log
+</p>
+
+<button
+id="resetFilter"
+class="text-xs text-cyan-300 hover:text-cyan-200">
+
+↺ Reset Filter
+
+</button>
+
+</div>
+
+</div>
+
+<div id="dokList" class="relative pl-8"></div>
+    <div id="dokEmpty" class="hidden text-center py-16 text-gray-500 font-mono text-sm">
       // BELUM ADA LOG — data akan muncul di sini
     </div>
   </section>
@@ -207,18 +284,18 @@ Kembali
     <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
       <div>
       <button onclick="goHome()"
-class="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-cyan-400 hover:bg-slate-800 transition">
+class="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white border border-gray-300 hover:border-cyan-400 hover:bg-gray-100 transition">
 
 <div class="w-7 h-7 rounded-lg bg-cyan-500/15 flex items-center justify-center text-cyan-300">
 ←
 </div>
 
-<span class="font-disp font-semibold text-slate-200">
+<span class="font-disp font-semibold text-gray-800">
 Kembali
 </span>
 
 </button>
-        <h2 class="font-disp font-700 text-3xl text-white">Pengeluaran Uang</h2>
+        <h2 class="font-disp font-700 text-3xl text-gray-900">Pengeluaran Uang</h2>
       </div>
       <div class="flex gap-2">
         <button onclick="openSaldoModal()" data-editor-only class="hidden font-disp font-600 text-sm px-4 py-2.5 rounded-xl glass border border-[var(--line)] hover:border-[var(--violet)]/50">
@@ -233,7 +310,7 @@ Kembali
     <div class="divider mb-8"></div>
 
     <!-- Saldo Gauge -->
-    <div class="glass rounded-2xl p-6 md:p-8 mb-8 flex flex-col md:flex-row items-center gap-8">
+    <div class="glass rounded-2xl overflow-hidden p-6 md:p-8 mb-8 flex flex-col md:flex-row items-center gap-8">
       <div class="relative w-40 h-40 shrink-0">
         <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
           <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
@@ -246,29 +323,29 @@ Kembali
           </defs>
         </svg>
         <div class="absolute inset-0 flex flex-col items-center justify-center">
-          <span class="font-mono text-[9px] text-slate-500 tracking-widest">SALDO</span>
-          <span class="font-disp font-700 text-lg text-white">📊</span>
+          <span class="font-mono text-[9px] text-gray-500 tracking-widest">SALDO</span>
+          <span class="font-disp font-700 text-lg text-gray-900">📊</span>
         </div>
       </div>
       <div class="flex-1 w-full">
-        <div class="font-mono text-[10px] text-slate-500 tracking-widest mb-1">SISA SALDO SAAT INI</div>
-        <div id="saldoNow" class="font-disp font-700 text-4xl md:text-5xl text-white tracking-tight">Rp 0</div>
+        <div class="font-mono text-[10px] text-gray-500 tracking-widest mb-1">SISA SALDO SAAT INI</div>
+        <div id="saldoNow" class="font-disp font-700 text-4xl md:text-5xl text-gray-900 tracking-tight">Rp 0</div>
         <div class="flex gap-6 mt-4 text-sm">
           <div>
-            <div class="font-mono text-[9px] text-slate-500">SALDO AWAL</div>
-            <div id="saldoAwalDisp" class="font-disp font-600 text-[var(--cyan)]">Rp 0</div>
+            <div class="font-mono text-[9px] text-gray-500">SALDO AWAL</div>
+            <div id="saldoAwalDisp" class="font-disp font-600 text-blue-600">Rp 0</div>
           </div>
           <div>
-            <div class="font-mono text-[9px] text-slate-500">TOTAL TERPAKAI</div>
+            <div class="font-mono text-[9px] text-gray-500">TOTAL TERPAKAI</div>
             <div id="totalTerpakaiDisp" class="font-disp font-600 text-[var(--rose)]">Rp 0</div>
           </div>
         </div>
       </div>
     </div>
 
-    <h3 class="font-disp font-600 text-sm text-slate-400 tracking-widest mb-4">RIWAYAT TRANSAKSI</h3>
+    <h3 class="font-disp font-600 text-sm text-gray-500 tracking-widest mb-4">RIWAYAT TRANSAKSI</h3>
     <div id="pengList" class="space-y-2.5"></div>
-    <div id="pengEmpty" class="hidden text-center py-16 text-slate-500 font-mono text-sm">
+    <div id="pengEmpty" class="hidden text-center py-16 text-gray-500 font-mono text-sm">
       // BELUM ADA TRANSAKSI
     </div>
   </section>
@@ -285,17 +362,17 @@ Kembali
 
 <!-- Toast -->
 <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden">
-  <div id="toastBody" class="glass rounded-xl px-5 py-3 font-mono text-sm text-white glow-cyan"></div>
+  <div id="toastBody" class="glass rounded-xl px-5 py-3 font-mono text-sm text-gray-900 "></div>
 </div>
 
 <!-- ===== MODAL: Editor Password ===== -->
 <div id="modalEditorAuth" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop p-4">
-  <div class="glass glow-cyan rounded-2xl p-6 w-full max-w-sm fade-in">
-    <h3 class="font-disp font-700 text-xl text-white mb-1">Masuk Mode Editor</h3>
-    <p class="text-slate-400 text-xs mb-4">Masukkan password editor untuk bisa menambah/menghapus data.</p>
+  <div class="glass rounded-2xl overflow-hidden p-6 w-full max-w-sm fade-in">
+    <h3 class="font-disp font-700 text-xl text-gray-900 mb-1">Masuk Mode Editor</h3>
+    <p class="text-gray-500 text-xs mb-4">Masukkan password editor untuk bisa menambah/menghapus data.</p>
     <input id="editorPassInput" type="password" placeholder="Password editor" class="w-full rounded-lg px-3.5 py-2.5 text-sm mb-4" onkeydown="if(event.key==='Enter')submitEditorAuth()">
     <div class="flex gap-2 justify-end">
-      <button onclick="closeModal('modalEditorAuth')" class="px-4 py-2 rounded-lg text-sm text-slate-400 hover:text-white">Batal</button>
+      <button onclick="closeModal('modalEditorAuth')" class="px-4 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-900">Batal</button>
       <button onclick="submitEditorAuth()" class="btn-primary px-4 py-2 rounded-lg text-sm font-600">Masuk</button>
     </div>
   </div>
@@ -303,43 +380,43 @@ Kembali
 
 <!-- ===== MODAL: Tambah Dokumentasi ===== -->
 <div id="modalDok" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop p-4 overflow-y-auto">
-  <div class="glass glow-cyan rounded-2xl p-6 w-full max-w-lg fade-in my-8">
-    <h3 class="font-disp font-700 text-xl text-white mb-4">Tambah Log Dokumentasi</h3>
+  <div class="glass rounded-2xl overflow-hidden p-6 w-full max-w-lg fade-in my-8">
+    <h3 class="font-disp font-700 text-xl text-gray-900 mb-4">Tambah Log Dokumentasi</h3>
     <div class="space-y-3">
       <div>
-        <label class="font-mono text-[10px] text-slate-500">TANGGAL</label>
+        <label class="font-mono text-[10px] text-gray-500">TANGGAL</label>
         <input id="dokTanggal" type="date" class="w-full rounded-lg px-3.5 py-2.5 text-sm mt-1">
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="font-mono text-[10px] text-slate-500">JAM MULAI</label>
+          <label class="font-mono text-[10px] text-gray-500">JAM MULAI</label>
           <input id="dokJamMulai" type="time" class="w-full rounded-lg px-3.5 py-2.5 text-sm mt-1">
         </div>
         <div>
-          <label class="font-mono text-[10px] text-slate-500">JAM SELESAI</label>
+          <label class="font-mono text-[10px] text-gray-500">JAM SELESAI</label>
           <input id="dokJamSelesai" type="time" class="w-full rounded-lg px-3.5 py-2.5 text-sm mt-1">
         </div>
       </div>
       <div>
-        <label class="font-mono text-[10px] text-slate-500">KEGIATAN</label>
+        <label class="font-mono text-[10px] text-gray-500">KEGIATAN</label>
         <textarea id="dokKegiatan" rows="3" placeholder="cth: Setting jaringan LAN ruang staff..." class="w-full rounded-lg px-3.5 py-2.5 text-sm mt-1"></textarea>
       </div>
       <div>
-        <label class="font-mono text-[10px] text-slate-500">CATATAN (opsional)</label>
+        <label class="font-mono text-[10px] text-gray-500">CATATAN (opsional)</label>
         <input id="dokCatatan" type="text" placeholder="Catatan tambahan" class="w-full rounded-lg px-3.5 py-2.5 text-sm mt-1">
       </div>
       <div>
-        <label class="font-mono text-[10px] text-slate-500">UPLOAD FOTO (otomatis dikompres, opsional)</label>
-        <input id="dokFotoFile" type="file" accept="image/*" class="w-full rounded-lg px-3.5 py-2 text-xs mt-1 file:mr-3 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-[var(--cyan)]/20 file:text-[var(--cyan)] file:text-xs">
+        <label class="font-mono text-[10px] text-gray-500">UPLOAD FOTO (otomatis dikompres, opsional)</label>
+        <input id="dokFotoFile" type="file" accept="image/*" class="w-full rounded-lg px-3.5 py-2 text-xs mt-1 file:mr-3 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-blue-100/20 file:text-blue-600 file:text-xs">
         <img id="dokFotoPreview" class="hidden mt-2 rounded-lg max-h-40 border border-[var(--line)]">
       </div>
       <div>
-        <label class="font-mono text-[10px] text-slate-500">ATAU TEMPEL URL FOTO (opsional, kualitas lebih baik)</label>
+        <label class="font-mono text-[10px] text-gray-500">ATAU TEMPEL URL FOTO (opsional, kualitas lebih baik)</label>
         <input id="dokFotoUrl" type="text" placeholder="https://..." class="w-full rounded-lg px-3.5 py-2.5 text-sm mt-1">
       </div>
     </div>
     <div class="flex gap-2 justify-end mt-5">
-      <button onclick="closeModal('modalDok')" class="px-4 py-2 rounded-lg text-sm text-slate-400 hover:text-white">Batal</button>
+      <button onclick="closeModal('modalDok')" class="px-4 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-900">Batal</button>
       <button onclick="submitDok()" class="btn-primary px-4 py-2 rounded-lg text-sm font-600">Simpan Log</button>
     </div>
   </div>
@@ -347,24 +424,24 @@ Kembali
 
 <!-- ===== MODAL: Tambah Pengeluaran ===== -->
 <div id="modalPeng" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop p-4">
-  <div class="glass glow-violet rounded-2xl p-6 w-full max-w-md fade-in">
-    <h3 class="font-disp font-700 text-xl text-white mb-4">Tambah Pengeluaran</h3>
+  <div class="glass rounded-2xl overflow-hidden p-6 w-full max-w-md fade-in">
+    <h3 class="font-disp font-700 text-xl text-gray-900 mb-4">Tambah Pengeluaran</h3>
     <div class="space-y-3">
       <div>
-        <label class="font-mono text-[10px] text-slate-500">NAMA ITEM</label>
+        <label class="font-mono text-[10px] text-gray-500">NAMA ITEM</label>
         <input id="pengItem" type="text" placeholder="cth: Bensin, Fotokopi, Makan siang" class="w-full rounded-lg px-3.5 py-2.5 text-sm mt-1">
       </div>
       <div>
-        <label class="font-mono text-[10px] text-slate-500">JUMLAH (Rp)</label>
+        <label class="font-mono text-[10px] text-gray-500">JUMLAH (Rp)</label>
         <input id="pengJumlah" type="number" placeholder="15000" class="w-full rounded-lg px-3.5 py-2.5 text-sm mt-1">
       </div>
       <div>
-        <label class="font-mono text-[10px] text-slate-500">WAKTU</label>
+        <label class="font-mono text-[10px] text-gray-500">WAKTU</label>
         <input id="pengWaktu" type="datetime-local" class="w-full rounded-lg px-3.5 py-2.5 text-sm mt-1">
       </div>
     </div>
     <div class="flex gap-2 justify-end mt-5">
-      <button onclick="closeModal('modalPeng')" class="px-4 py-2 rounded-lg text-sm text-slate-400 hover:text-white">Batal</button>
+      <button onclick="closeModal('modalPeng')" class="px-4 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-900">Batal</button>
       <button onclick="submitPeng()" class="btn-primary px-4 py-2 rounded-lg text-sm font-600">Simpan</button>
     </div>
   </div>
@@ -372,12 +449,12 @@ Kembali
 
 <!-- ===== MODAL: Set Saldo Awal ===== -->
 <div id="modalSaldo" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop p-4">
-  <div class="glass glow-violet rounded-2xl p-6 w-full max-w-sm fade-in">
-    <h3 class="font-disp font-700 text-xl text-white mb-1">Set Saldo Awal</h3>
-    <p class="text-slate-400 text-xs mb-4">Ini adalah saldo total yang diberikan di awal PKL.</p>
+  <div class="glass rounded-2xl overflow-hidden p-6 w-full max-w-sm fade-in">
+    <h3 class="font-disp font-700 text-xl text-gray-900 mb-1">Set Saldo Awal</h3>
+    <p class="text-gray-500 text-xs mb-4">Ini adalah saldo total yang diberikan di awal PKL.</p>
     <input id="saldoAwalInput" type="number" placeholder="500000" class="w-full rounded-lg px-3.5 py-2.5 text-sm mb-4">
     <div class="flex gap-2 justify-end">
-      <button onclick="closeModal('modalSaldo')" class="px-4 py-2 rounded-lg text-sm text-slate-400 hover:text-white">Batal</button>
+      <button onclick="closeModal('modalSaldo')" class="px-4 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-900">Batal</button>
       <button onclick="submitSaldoAwal()" class="btn-primary px-4 py-2 rounded-lg text-sm font-600">Simpan</button>
     </div>
   </div>
@@ -400,6 +477,11 @@ const CONFIG = {
 /* ============================================================
    STATE
    ============================================================ */
+   let filterDok = {
+    search: "",
+    tanggal: "",
+    bulan: ""
+};
 let state = {
   mode: sessionStorage.getItem('pkl_mode') || 'viewer', // 'viewer' | 'editor'
   saldoAwal: 0,
@@ -465,7 +547,7 @@ function toast(msg, isError=false){
   const t = document.getElementById('toast');
   const b = document.getElementById('toastBody');
   b.textContent = msg;
-  b.classList.toggle('glow-cyan', !isError);
+  b.classList.toggle('', !isError);
   b.style.borderColor = isError ? 'rgba(251,113,133,0.5)' : '';
   t.classList.remove('hidden');
   clearTimeout(window._toastTimer);
@@ -611,10 +693,56 @@ async function deleteDok(id){
 function renderDokumentasi(){
   const list = document.getElementById('dokList');
   const empty = document.getElementById('dokEmpty');
-  const items = [...state.dokumentasi].sort((a,b)=> new Date(b.tanggal+'T'+(b.jamMulai||'00:00')) - new Date(a.tanggal+'T'+(a.jamMulai||'00:00')));
+  const totalData = state.dokumentasi.length;
 
+const items = [...state.dokumentasi]
+
+.filter(it=>{
+
+    const keyword = filterDok.search.toLowerCase();
+
+    const cocokSearch =
+        !keyword ||
+
+        (it.kegiatan||"")
+        .toLowerCase()
+        .includes(keyword)
+
+        ||
+
+        (it.catatan||"")
+        .toLowerCase()
+        .includes(keyword);
+
+    const date = new Date(it.tanggal);
+
+    const cocokTanggal =
+        !filterDok.tanggal ||
+        date.getDate()==filterDok.tanggal;
+
+    const cocokBulan =
+        !filterDok.bulan ||
+        (date.getMonth()+1)==filterDok.bulan;
+
+    return cocokSearch &&
+           cocokTanggal &&
+           cocokBulan;
+
+})
+
+.sort((a,b)=>
+
+new Date(b.tanggal+'T'+(b.jamMulai||'00:00'))
+
+-
+
+new Date(a.tanggal+'T'+(a.jamMulai||'00:00'))
+
+);
+document.getElementById("hasilFilter").textContent =
+`Menampilkan ${items.length} dari ${totalData} log`;
   if(items.length === 0){
-    list.innerHTML = '';
+    list.innerHTML="";
     empty.classList.remove('hidden');
     return;
   }
@@ -622,15 +750,15 @@ function renderDokumentasi(){
 
   list.innerHTML = `<div class="absolute left-[3px] top-1 bottom-1 timeline-line"></div>` + items.map(it => `
     <div class="relative mb-6">
-      <div class="absolute -left-8 top-1.5 w-2.5 h-2.5 rounded-full bg-[var(--cyan)] ring-4 ring-[#05070d]"></div>
+      <div class="absolute -left-8 top-1.5 w-2.5 h-2.5 rounded-full bg-blue-100 ring-4 ring-[#05070d]"></div>
       <div class="glass rounded-xl p-4 md:p-5">
         <div class="flex flex-wrap items-center gap-2 mb-2">
-          <span class="tag font-mono text-[var(--cyan)] border-[var(--cyan)]/30">${formatTanggal(it.tanggal)}</span>
-          <span class="tag font-mono text-slate-400">⏱ ${it.jamMulai || '--:--'} – ${it.jamSelesai || '--:--'}</span>
-          ${state.mode==='editor' ? `<button onclick="deleteDok('${it.id}')" class="ml-auto text-slate-500 hover:text-[var(--rose)] text-xs font-mono">✕ hapus</button>` : ''}
+          <span class="tag font-mono text-blue-600 border-blue-200">${formatTanggal(it.tanggal)}</span>
+          <span class="tag font-mono text-gray-500">⏱ ${it.jamMulai || '--:--'} – ${it.jamSelesai || '--:--'}</span>
+          ${state.mode==='editor' ? `<button onclick="deleteDok('${it.id}')" class="ml-auto text-gray-500 hover:text-[var(--rose)] text-xs font-mono">✕ hapus</button>` : ''}
         </div>
-        <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-wrap">${escapeHtml(it.kegiatan||'')}</p>
-        ${it.catatan ? `<p class="text-slate-500 text-xs mt-2 italic">"${escapeHtml(it.catatan)}"</p>` : ''}
+        <p class="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">${escapeHtml(it.kegiatan||'')}</p>
+        ${it.catatan ? `<p class="text-gray-500 text-xs mt-2 italic">"${escapeHtml(it.catatan)}"</p>` : ''}
         ${it.foto ? `<img src="${it.foto}" onclick="openLightbox('${it.foto.replace(/'/g,"\\'")}')" class="mt-3 rounded-lg max-h-56 object-cover cursor-zoom-in border border-[var(--line)] hover:opacity-90 transition">` : ''}
       </div>
     </div>
@@ -715,7 +843,7 @@ function renderPengeluaran(){
   const saldoNow = state.saldoAwal - totalTerpakai;
 
   document.getElementById('saldoNow').textContent = formatRupiah(saldoNow);
-  document.getElementById('saldoNow').className = 'font-disp font-700 text-4xl md:text-5xl tracking-tight ' + (saldoNow < 0 ? 'text-[var(--rose)]' : 'text-white');
+  document.getElementById('saldoNow').className = 'font-disp font-700 text-4xl md:text-5xl tracking-tight ' + (saldoNow < 0 ? 'text-[var(--rose)]' : 'text-gray-900');
   document.getElementById('saldoAwalDisp').textContent = formatRupiah(state.saldoAwal);
   document.getElementById('totalTerpakaiDisp').textContent = formatRupiah(totalTerpakai);
 
@@ -738,13 +866,13 @@ function renderPengeluaran(){
     <div class="glass rounded-xl px-4 py-3.5 flex items-center gap-3">
       <div class="w-9 h-9 rounded-lg bg-[var(--rose)]/10 border border-[var(--rose)]/25 flex items-center justify-center text-sm shrink-0">🧾</div>
       <div class="flex-1 min-w-0">
-        <div class="text-sm font-600 text-slate-200 truncate">${escapeHtml(it.item)}</div>
-        <div class="font-mono text-[10px] text-slate-500">${formatWaktu(it.waktu)} • saldo sisa ${formatRupiah(it.saldoSetelah)}</div>
+        <div class="text-sm font-600 text-gray-800 truncate">${escapeHtml(it.item)}</div>
+        <div class="font-mono text-[10px] text-gray-500">${formatWaktu(it.waktu)} • saldo sisa ${formatRupiah(it.saldoSetelah)}</div>
       </div>
       <div class="text-right shrink-0">
         <div class="font-disp font-700 text-[var(--rose)] text-sm">- ${formatRupiah(it.jumlah)}</div>
       </div>
-      ${state.mode==='editor' ? `<button onclick="deletePeng('${it.id}')" class="text-slate-500 hover:text-[var(--rose)] text-xs font-mono ml-1">✕</button>` : ''}
+      ${state.mode==='editor' ? `<button onclick="deletePeng('${it.id}')" class="text-gray-500 hover:text-[var(--rose)] text-xs font-mono ml-1">✕</button>` : ''}
     </div>
   `).join('');
 }
@@ -775,6 +903,68 @@ function escapeHtml(str){
 /* ============================================================
    INIT
    ============================================================ */
+   // isi dropdown tanggal
+for(let i=1;i<=31;i++){
+
+    document
+    .getElementById("filterTanggal")
+    .innerHTML += `<option value="${i}">${i}</option>`;
+
+}
+
+// search realtime
+
+document
+.getElementById("searchDok")
+.addEventListener("input",e=>{
+
+    filterDok.search=e.target.value;
+
+    renderDokumentasi();
+
+});
+
+// filter tanggal
+
+document
+.getElementById("filterTanggal")
+.addEventListener("change",e=>{
+
+    filterDok.tanggal=e.target.value;
+
+    renderDokumentasi();
+
+});
+
+// filter bulan
+
+document
+.getElementById("filterBulan")
+.addEventListener("change",e=>{
+
+    filterDok.bulan=e.target.value;
+
+    renderDokumentasi();
+
+});
+
+// reset
+
+document
+.getElementById("resetFilter")
+.addEventListener("click",()=>{
+
+    filterDok.search="";
+    filterDok.tanggal="";
+    filterDok.bulan="";
+
+    document.getElementById("searchDok").value="";
+    document.getElementById("filterTanggal").value="";
+    document.getElementById("filterBulan").value="";
+
+    renderDokumentasi();
+
+});
 applyModeUI();
 loadAll();
 </script>
