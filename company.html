@@ -1,286 +1,532 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuaca Real-Time Keren</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURAL LOCK // Hand Tracking HUD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #04070a;
+    --panel: #070d12;
+    --cyan: #29f4ea;
+    --cyan-dim: #29f4ea55;
+    --magenta: #ff3ec4;
+    --amber: #ffb02c;
+    --line: #0d2530;
+    --text-dim: #6b8a90;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    height:100%;
+    background: var(--bg);
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    overflow: hidden;
+  }
+  body{
+    background-image:
+      radial-gradient(ellipse at 50% 0%, #0a1820 0%, #04070a 60%),
+      repeating-linear-gradient(0deg, #ffffff05 0px, transparent 1px, transparent 2px);
+  }
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: background-image 1s ease-in-out;
-            background-color: #333; /* Warna default sebelum gambar loading */
-            color: white;
-        }
+  .app{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+    width: 100vw;
+    padding: 14px;
+    gap: 10px;
+  }
 
-        /* Overlay gelap supaya tulisan tetap terbaca walau background terang */
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 0;
-        }
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 8px 16px;
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, #0a141a, #060b0f);
+    position: relative;
+  }
+  .topbar::before, .topbar::after{
+    content:'';
+    position:absolute;
+    top:-1px; bottom:-1px;
+    width: 10px;
+    border-top: 2px solid var(--cyan);
+    border-bottom: 2px solid var(--cyan);
+  }
+  .topbar::before{ left:-1px; border-left: 2px solid var(--cyan); }
+  .topbar::after{ right:-1px; border-right: 2px solid var(--cyan); }
 
-        /* Kartu Cuaca dengan Efek Glassmorphism */
-        .weather-card {
-            position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px); /* Efek blur kaca */
-            -webkit-backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-            transition: transform 0.3s ease;
-        }
+  .brand{
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: #eafcff;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .brand .dot{
+    width:9px; height:9px; border-radius:50%;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
 
-        .weather-card:hover {
-            transform: translateY(-5px);
-        }
+  .status-cluster{ display:flex; gap: 22px; align-items:center; }
+  .stat{ text-align:right; }
+  .stat .label{ font-size: 9px; letter-spacing:2px; color: var(--text-dim); }
+  .stat .value{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:16px; color: var(--cyan); }
 
-        .location {
-            font-size: 2em;
-            font-weight: 600;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
+  /* ---------- MAIN STAGE ---------- */
+  .stage{
+    position: relative;
+    border: 1px solid var(--line);
+    background: #000;
+    overflow: hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .stage::before{
+    content:'';
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(180deg, transparent 0, transparent 3px, #00ffe10a 3px, #00ffe10a 4px);
+    pointer-events:none;
+    z-index: 5;
+  }
+  .corner{
+    position:absolute; width:34px; height:34px;
+    border-color: var(--cyan);
+    z-index: 6;
+    opacity:.85;
+  }
+  .corner.tl{ top:10px; left:10px; border-top:3px solid; border-left:3px solid; }
+  .corner.tr{ top:10px; right:10px; border-top:3px solid; border-right:3px solid; }
+  .corner.bl{ bottom:10px; left:10px; border-bottom:3px solid; border-left:3px solid; }
+  .corner.br{ bottom:10px; right:10px; border-bottom:3px solid; border-right:3px solid; }
 
-        .date {
-            font-size: 1em;
-            font-weight: 300;
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
+  #video{
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    filter: contrast(1.05) saturate(1.05) brightness(.95);
+  }
+  #overlay{
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    z-index: 4;
+  }
 
-        .temp-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+  .center-crosshair{
+    position:absolute; top:50%; left:50%;
+    width:26px; height:26px;
+    transform: translate(-50%,-50%);
+    z-index:6;
+    pointer-events:none;
+    opacity:.5;
+  }
+  .center-crosshair::before, .center-crosshair::after{
+    content:''; position:absolute; background: var(--cyan);
+  }
+  .center-crosshair::before{ top:50%; left:0; width:100%; height:1px; }
+  .center-crosshair::after{ left:50%; top:0; height:100%; width:1px; }
 
-        .temp {
-            font-size: 4em;
-            font-weight: 600;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-        }
+  .boot-overlay{
+    position:absolute; inset:0;
+    background: #04070a;
+    z-index: 20;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap: 18px;
+    text-align:center;
+    padding: 20px;
+    transition: opacity .6s ease;
+  }
+  .boot-overlay.hidden{ opacity:0; pointer-events:none; }
+  .boot-title{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    letter-spacing:5px;
+    font-size: 20px;
+    color: #eafcff;
+  }
+  .boot-sub{ font-size:12px; color: var(--text-dim); max-width: 360px; line-height:1.6; }
+  .boot-btn{
+    margin-top: 8px;
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    letter-spacing:3px;
+    font-size: 14px;
+    padding: 12px 28px;
+    cursor:pointer;
+    position:relative;
+    transition: all .2s ease;
+  }
+  .boot-btn:hover{ background: var(--cyan); color:#04070a; box-shadow:0 0 24px var(--cyan-dim); }
+  .boot-err{ color: var(--magenta); font-size:11px; max-width:360px; }
 
-        .weather-desc {
-            font-size: 1.5em;
-            text-transform: capitalize;
-            margin-bottom: 10px;
-        }
+  /* ---------- BOTTOM PANEL ---------- */
+  .bottombar{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .panel{
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, #0a141a, #060b0f);
+    padding: 10px 14px;
+    position:relative;
+  }
+  .panel .ptitle{
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .panel .pvalue{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size: 22px;
+    color: var(--cyan);
+    letter-spacing:1px;
+  }
+  .panel .pvalue.mag{ color: var(--magenta); }
+  .panel .pvalue.amber{ color: var(--amber); }
+  .panel .psub{ font-size:10px; color: var(--text-dim); margin-top:4px; }
 
-        .icon img {
-            width: 100px;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
-        }
-
-        .details {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.3);
-            padding-top: 20px;
-        }
-
-        .col {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .col span:first-child {
-            font-weight: 600;
-            font-size: 1.2em;
-        }
-
-        .col span:last-child {
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-
-        /* Animasi Loading */
-        .loading {
-            font-size: 1.2em;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
-    </style>
+  @media (max-width: 720px){
+    .bottombar{ grid-template-columns: repeat(2,1fr); }
+    .status-cluster{ gap:12px; }
+    .brand{ font-size:16px; letter-spacing:2px; }
+  }
+</style>
 </head>
 <body>
+<div class="app">
 
-    <div class="overlay"></div>
-
-    <div class="weather-card">
-        <div id="loading-text" class="loading">Mencari lokasi kamu...</div>
-        
-        <div id="weather-content" style="display: none;">
-            <div class="location" id="city">Mendeteksi...</div>
-            <div class="date" id="date">...</div>
-            
-            <div class="icon" id="icon"></div>
-            
-            <div class="temp-box">
-                <div class="temp"><span id="temp-value">0</span>°C</div>
-                <div class="weather-desc" id="desc">...</div>
-            </div>
-
-            <div class="details">
-                <div class="col">
-                    <span id="humidity">0%</span>
-                    <span>Kelembaban</span>
-                </div>
-                <div class="col">
-                    <span id="wind">0 km/j</span>
-                    <span>Angin</span>
-                </div>
-            </div>
-        </div>
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span>NEURAL LOCK</div>
+    <div class="status-cluster">
+      <div class="stat"><div class="label">FPS</div><div class="value" id="fpsVal">--</div></div>
+      <div class="stat"><div class="label">HANDS</div><div class="value" id="handsVal">0</div></div>
+      <div class="stat"><div class="label">LINK</div><div class="value" id="linkVal">OFFLINE</div></div>
     </div>
+  </div>
 
-    <script>
-        // --- KONFIGURASI ---
-        // GANTI TEXT DI BAWAH INI DENGAN API KEY KAMU DARI OPENWEATHERMAP
-        const apiKey = "GANTI_DENGAN_API_KEY_KAMU_DISINI"; 
-        // Contoh: const apiKey = "a1b2c3d4e5f6g7h8i9j0";
-        
-        // URL Gambar Background (Menggunakan Unsplash Source supaya HD)
-        const backgrounds = {
-            clear: "https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1974&auto=format&fit=crop", // Cerah
-            clouds: "https://images.unsplash.com/photo-1534088568595-a066f410bcda?q=80&w=1951&auto=format&fit=crop", // Berawan/Mendung
-            rain: "https://images.unsplash.com/photo-1519692933481-e162a57d6721?q=80&w=2070&auto=format&fit=crop", // Hujan
-            thunderstorm: "https://images.unsplash.com/photo-1605727216801-e27ce1ca0728?q=80&w=1974&auto=format&fit=crop", // Badai
-            snow: "https://images.unsplash.com/photo-1477601263568-180e2c6d046e?q=80&w=2070&auto=format&fit=crop", // Salju
-            mist: "https://images.unsplash.com/photo-1485236715568-ddc5ee6ca227?q=80&w=1974&auto=format&fit=crop", // Kabut
-            default: "https://images.unsplash.com/photo-1592210454132-328629a9e535?q=80&w=2070&auto=format&fit=crop" // Default
-        };
+  <div class="stage" id="stage">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+    <div class="center-crosshair"></div>
 
-        const weatherContent = document.getElementById('weather-content');
-        const loadingText = document.getElementById('loading-text');
+    <div class="boot-overlay" id="bootOverlay">
+      <div class="boot-title">HAND TRACKING HUD</div>
+      <div class="boot-sub">Aktifkan kamera buat mulai tracking. Semua proses jalan langsung di browser kamu — nggak ada video yang dikirim ke server manapun.</div>
+      <button class="boot-btn" id="startBtn">▶ AKTIFKAN KAMERA</button>
+      <div class="boot-err" id="bootErr"></div>
+    </div>
+  </div>
 
-        // Fungsi untuk mendapatkan tanggal hari ini
-        function getDate() {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const today = new Date();
-            return today.toLocaleDateString('id-ID', options);
-        }
+  <div class="bottombar">
+    <div class="panel">
+      <div class="ptitle">GESTURE</div>
+      <div class="pvalue" id="gestureVal">—</div>
+      <div class="psub" id="gestureSub">menunggu tangan...</div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">WRIST POSITION</div>
+      <div class="pvalue amber" id="posVal">X: -- Y: --</div>
+      <div class="psub">normalized koordinat 0.00–1.00</div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">SPREAD / SCALE</div>
+      <div class="pvalue mag" id="spreadVal">--</div>
+      <div class="psub">jarak antar landmark tangan</div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">HANDEDNESS</div>
+      <div class="pvalue" id="sideVal">—</div>
+      <div class="psub" id="confVal">confidence --</div>
+    </div>
+  </div>
 
-        // Fungsi utama mendapatkan cuaca berdasarkan koordinat
-        function getWeather(lat, lon) {
-            const apiURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=id&appid=${apiKey}`;
+</div>
 
-            fetch(apiURL)
-                .then(response => response.json())
-                .then(data => {
-                    displayWeather(data);
-                })
-                .catch(error => {
-                    loadingText.innerText = "Gagal memuat cuaca. Cek API Key.";
-                    console.error("Error:", error);
-                });
-        }
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
 
-        // Fungsi menampilkan data ke HTML
-        function displayWeather(data) {
-            const { name } = data;
-            const { icon, description, main } = data.weather[0];
-            const { temp, humidity } = data.main;
-            const { speed } = data.wind;
+<script>
+(function(){
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('overlay');
+  const ctx = canvas.getContext('2d');
+  const stage = document.getElementById('stage');
+  const startBtn = document.getElementById('startBtn');
+  const bootOverlay = document.getElementById('bootOverlay');
+  const bootErr = document.getElementById('bootErr');
 
-            // Update Text HTML
-            document.getElementById('city').innerText = name; // Ini akan otomatis jadi "Kandanghaur" kalau kamu disana
-            document.getElementById('date').innerText = getDate();
-            document.getElementById('temp-value').innerText = Math.round(temp);
-            document.getElementById('desc').innerText = description;
-            document.getElementById('humidity').innerText = humidity + "%";
-            document.getElementById('wind').innerText = speed + " km/j";
-            
-            // Update Icon
-            document.getElementById('icon').innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="icon cuaca">`;
+  const fpsVal = document.getElementById('fpsVal');
+  const handsVal = document.getElementById('handsVal');
+  const linkVal = document.getElementById('linkVal');
+  const gestureVal = document.getElementById('gestureVal');
+  const gestureSub = document.getElementById('gestureSub');
+  const posVal = document.getElementById('posVal');
+  const spreadVal = document.getElementById('spreadVal');
+  const sideVal = document.getElementById('sideVal');
+  const confVal = document.getElementById('confVal');
 
-            // Ganti Background sesuai kondisi cuaca
-            changeBackground(main);
+  // 21-point hand connections (MediaPipe topology)
+  const CONNECTIONS = [
+    [0,1],[1,2],[2,3],[3,4],
+    [0,5],[5,6],[6,7],[7,8],
+    [5,9],[9,10],[10,11],[11,12],
+    [9,13],[13,14],[14,15],[15,16],
+    [13,17],[17,18],[18,19],[19,20],
+    [0,17]
+  ];
+  const TIPS = [4,8,12,16,20];
 
-            // Tampilkan konten, sembunyikan loading
-            loadingText.style.display = "none";
-            weatherContent.style.display = "block";
-        }
+  let lastTime = performance.now();
+  let frameCount = 0;
+  let fps = 0;
+  let scanPhase = 0;
 
-        // Fungsi logika ganti background
-        function changeBackground(weatherMain) {
-            let bgUrl = backgrounds.default;
-            const condition = weatherMain.toLowerCase();
+  function resizeCanvas(){
+    const rect = stage.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+  }
+  window.addEventListener('resize', resizeCanvas);
 
-            if (condition.includes('clear')) bgUrl = backgrounds.clear;
-            else if (condition.includes('cloud')) bgUrl = backgrounds.clouds;
-            else if (condition.includes('rain') || condition.includes('drizzle')) bgUrl = backgrounds.rain;
-            else if (condition.includes('thunder')) bgUrl = backgrounds.thunderstorm;
-            else if (condition.includes('snow')) bgUrl = backgrounds.snow;
-            else if (condition.includes('mist') || condition.includes('haze') || condition.includes('fog')) bgUrl = backgrounds.mist;
+  function dist(a,b){
+    return Math.hypot(a.x-b.x, a.y-b.y);
+  }
 
-            document.body.style.backgroundImage = `url('${bgUrl}')`;
-        }
+  // simple gesture heuristic based on finger extension
+  function detectGesture(lm){
+    const wrist = lm[0];
+    const extended = [8,12,16,20].map((tipIdx, i) => {
+      const pipIdx = [6,10,14,18][i];
+      return dist(lm[tipIdx], wrist) > dist(lm[pipIdx], wrist) * 1.15;
+    });
+    const thumbExtended = dist(lm[4], lm[17]) > dist(lm[2], lm[17]) * 1.05;
+    const extCount = extended.filter(Boolean).length;
 
-        // Fungsi mendapatkan lokasi pengguna
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    // Berhasil dapat lokasi
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    getWeather(lat, lon);
-                }, error => {
-                    // User menolak akses lokasi
-                    loadingText.innerText = "Akses lokasi ditolak. Aktifkan GPS browser.";
-                    // Default fallback ke Jakarta (opsional)
-                    // getWeather(-6.2088, 106.8456); 
-                });
-            } else {
-                loadingText.innerText = "Browser tidak support Geolocation.";
-            }
-        }
+    if (extCount === 4 && thumbExtended) return { label: 'OPEN PALM', sub: 'semua jari terbuka', color: '#29f4ea' };
+    if (extCount === 0 && !thumbExtended) return { label: 'FIST', sub: 'tangan mengepal', color: '#ff3ec4' };
+    if (extended[0] && !extended[1] && !extended[2] && !extended[3]) return { label: 'POINTING', sub: 'telunjuk terangkat', color: '#ffb02c' };
+    if (extended[0] && extended[1] && !extended[2] && !extended[3]) return { label: 'PEACE', sub: 'dua jari terangkat', color: '#29f4ea' };
+    if (thumbExtended && !extended[0] && !extended[1] && !extended[2] && !extended[3]) return { label: 'THUMBS UP', sub: 'jempol terangkat', color: '#ffb02c' };
+    return { label: 'TRACKING', sub: `${extCount} jari terdeteksi`, color: '#29f4ea' };
+  }
 
-        // Jalankan saat halaman dibuka
-        window.addEventListener('load', () => {
-            // Cek apakah API Key sudah diisi
-            if(apiKey === "229e153caeb28ad11fae20b5c765fb8b"){
-                loadingText.innerText = "Harap masukkan API Key di kodingan dulu!";
-                alert("Kamu belum memasukkan API KEY di dalam kode. Buka file index.html dengan text editor dan cari baris 'const apiKey'.");
-            } else {
-                getLocation();
-            }
-        });
+  function drawReticleBox(minX, minY, maxX, maxY, color){
+    const w = maxX - minX, h = maxY - minY;
+    const pad = Math.max(w,h) * 0.18;
+    const x0 = minX - pad, y0 = minY - pad, x1 = maxX + pad, y1 = maxY + pad;
+    const bw = x1 - x0, bh = y1 - y0;
+    const clen = Math.min(bw, bh) * 0.22;
 
-    </script>
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 12;
+
+    // four corner brackets
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 + clen); ctx.lineTo(x0, y0); ctx.lineTo(x0 + clen, y0);
+    ctx.moveTo(x1 - clen, y0); ctx.lineTo(x1, y0); ctx.lineTo(x1, y0 + clen);
+    ctx.moveTo(x1, y1 - clen); ctx.lineTo(x1, y1); ctx.lineTo(x1 - clen, y1);
+    ctx.moveTo(x0 + clen, y1); ctx.lineTo(x0, y1); ctx.lineTo(x0, y1 - clen);
+    ctx.stroke();
+
+    // thin full box, low opacity
+    ctx.globalAlpha = 0.25;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, bw, bh);
+    ctx.globalAlpha = 1;
+
+    // scanning horizontal line
+    const scanY = y0 + ((Math.sin(scanPhase) + 1) / 2) * bh;
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath();
+    ctx.moveTo(x0, scanY);
+    ctx.lineTo(x1, scanY);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    ctx.shadowBlur = 0;
+    return { x0, y0, x1, y1 };
+  }
+
+  function drawLabel(text, x, y, color){
+    ctx.font = "700 12px 'JetBrains Mono', monospace";
+    const padX = 6;
+    const tw = ctx.measureText(text).width;
+    ctx.fillStyle = 'rgba(4,7,10,0.85)';
+    ctx.fillRect(x, y - 16, tw + padX*2, 18);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x, y - 16, tw + padX*2, 18);
+    ctx.fillStyle = color;
+    ctx.fillText(text, x + padX, y - 3);
+  }
+
+  function onResults(results){
+    resizeCanvasIfNeeded();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    scanPhase += 0.06;
+
+    const numHands = results.multiHandLandmarks ? results.multiHandLandmarks.length : 0;
+    handsVal.textContent = numHands;
+
+    if (!numHands){
+      gestureVal.textContent = '—';
+      gestureVal.style.color = '#29f4ea';
+      gestureSub.textContent = 'menunggu tangan...';
+      posVal.textContent = 'X: -- Y: --';
+      spreadVal.textContent = '--';
+      sideVal.textContent = '—';
+      confVal.textContent = 'confidence --';
+      return;
+    }
+
+    results.multiHandLandmarks.forEach((lm, idx) => {
+      // mirror x because video is displayed mirrored
+      const pts = lm.map(p => ({ x: (1 - p.x) * canvas.width, y: p.y * canvas.height, z: p.z }));
+
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      pts.forEach(p => {
+        minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
+        minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+      });
+
+      const handedness = results.multiHandedness && results.multiHandedness[idx];
+      const gesture = detectGesture(lm);
+      const color = gesture.color;
+
+      // skeleton
+      ctx.strokeStyle = color + 'cc';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 6;
+      CONNECTIONS.forEach(([a,b]) => {
+        ctx.beginPath();
+        ctx.moveTo(pts[a].x, pts[a].y);
+        ctx.lineTo(pts[b].x, pts[b].y);
+        ctx.stroke();
+      });
+      ctx.shadowBlur = 0;
+
+      // joints
+      pts.forEach((p, i) => {
+        const isTip = TIPS.includes(i);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, isTip ? 5 : 3, 0, Math.PI*2);
+        ctx.fillStyle = isTip ? color : '#eafcff';
+        ctx.shadowColor = color;
+        ctx.shadowBlur = isTip ? 10 : 0;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      // reticle box
+      const box = drawReticleBox(minX, minY, maxX, maxY, color);
+      const label = `${handedness ? handedness.label.toUpperCase() : 'HAND'} · ${gesture.label}`;
+      drawLabel(label, box.x0, box.y0, color);
+
+      if (idx === 0){
+        gestureVal.textContent = gesture.label;
+        gestureVal.style.color = color;
+        gestureSub.textContent = gesture.sub;
+        posVal.textContent = `X: ${lm[0].x.toFixed(2)} Y: ${lm[0].y.toFixed(2)}`;
+        spreadVal.textContent = dist(lm[0], lm[9]).toFixed(3);
+        sideVal.textContent = handedness ? handedness.label.toUpperCase() : '—';
+        confVal.textContent = `confidence ${handedness ? (handedness.score*100).toFixed(0) : '--'}%`;
+      }
+    });
+
+    // fps calc
+    frameCount++;
+    const now = performance.now();
+    if (now - lastTime >= 500){
+      fps = Math.round((frameCount * 1000) / (now - lastTime));
+      fpsVal.textContent = fps;
+      frameCount = 0;
+      lastTime = now;
+    }
+  }
+
+  let lastW = 0, lastH = 0;
+  function resizeCanvasIfNeeded(){
+    const rect = stage.getBoundingClientRect();
+    if (rect.width !== lastW || rect.height !== lastH){
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      lastW = rect.width; lastH = rect.height;
+    }
+  }
+
+  let hands, camera;
+
+  async function start(){
+    startBtn.disabled = true;
+    startBtn.textContent = 'MENGHUBUNGKAN...';
+    bootErr.textContent = '';
+    try{
+      hands = new Hands({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+      });
+      hands.setOptions({
+        maxNumHands: 2,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.6,
+        minTrackingConfidence: 0.6
+      });
+      hands.onResults(onResults);
+
+      resizeCanvas();
+
+      camera = new Camera(video, {
+        onFrame: async () => { await hands.send({ image: video }); },
+        width: 960,
+        height: 720
+      });
+      await camera.start();
+
+      linkVal.textContent = 'ONLINE';
+      linkVal.style.color = '#29f4ea';
+      bootOverlay.classList.add('hidden');
+      setTimeout(() => { bootOverlay.style.display = 'none'; }, 650);
+    } catch(err){
+      console.error(err);
+      startBtn.disabled = false;
+      startBtn.textContent = '▶ AKTIFKAN KAMERA';
+      bootErr.textContent = 'Gagal akses kamera. Pastikan izin kamera diizinkan dan halaman diakses via HTTPS atau localhost. (' + (err.message || err) + ')';
+    }
+  }
+
+  startBtn.addEventListener('click', start);
+})();
+</script>
 </body>
 </html>
